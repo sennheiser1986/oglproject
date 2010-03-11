@@ -641,7 +641,7 @@ class Atom {
 					glRotatef(rotation[i], 0.0f, 1.0f, 0.0f);
 				}
 				if(vecNum[i] == 2) {
-					glRotatef(rotation[i], 0.0f, 0.0f, 1.0f);
+					glRotatef(rotation[i], 1.0f, 1.0f, 0.0f);
 				}
 				//glTranslatef(0, sin(speed[shellNumber[i]-1] * angle + phase[i]) * radius[shellNumber[i]-1] * sinScale,
 				//	cos(speed[shellNumber[i]-1] * angle + phase[i]) * radius[shellNumber[i]-1] * cosScale);	
