@@ -141,7 +141,6 @@ class BoundingBox {
 				{otherX + otherW/2, otherY + otherH/2, otherZ - otherW/2},
 				{otherX - otherW/2, otherY + otherH/2, otherZ - otherW/2}
 			};
-			cout << otherTop[0][1] << " " << otherTop[0][2] << " " << otherTop[0][3] <<  endl;
 
 			float otherBottom[4][3] = {
 				{otherX - otherW/2, otherY - otherH/2, otherZ + otherW/2},
@@ -262,6 +261,7 @@ class Bunker {
 	private:
 		float w; //Width
 		float h; //Height
+		float r; //Sphere radius
 		float x; //Xpos
 		float y; //Ypos
 		float z; //Zpos
@@ -277,6 +277,7 @@ class Bunker {
 			x = xIn;
 			y = yIn;
 			z = zIn;
+			r = sqrt(2* pow(w/2,2));
 			bb = BoundingBox(w,h,x,y,z);
 		}
 		
@@ -305,6 +306,12 @@ class Bunker {
 
 		float getZ() {
 			return z;
+		}
+
+		float getDistance(float xIn, float yIn, float zIn) {
+			// (distance to center) - radius
+			cout << r << endl;
+			return sqrt(pow((xIn - x),2) + pow((yIn - y),2) + pow((zIn - z),2)) - r;
 		}
 
 		void draw() {
@@ -516,10 +523,11 @@ class Cylinder {
 
 class Atom {
 	private:
-			float centerX;
-			float centerY;
-			float centerZ;
-			 int numElectrons;
+			float x;
+			float y;
+			float z;
+			float r;
+			int numElectrons;
 			// electrons per shell <=  2 * [(shellNumber) ^ 2]
 			int *radius;
 			int *speed;
@@ -528,8 +536,8 @@ class Atom {
 			int *rotation;
 			int *vecNum;
 			bool *direction;
-			int cosScale;
-			int sinScale;
+			float cosScale;
+			float sinScale;
 			clock_t startTime;
 			clock_t atomTime;
 
@@ -547,15 +555,15 @@ class Atom {
 				startTime = clock();
 				int minRad = 10;
 				int ra[] = {minRad,minRad + 4,minRad + 8,minRad + 12,minRad + 16,minRad + 20,minRad + 24};	
-				int s[] = {50,45,40,35,30,25,20};
+				int s[] = {200,190,180,170,160,150,140};
 				int k = 0;
 				for(k = 0; k < 7; k++) {
 					radius[k] = ra[k];
 					speed[k] = s[k];
 				}								
 
-				cosScale = 5;
-				sinScale = 5;
+				cosScale = 1;
+				sinScale = 0.7;
 				//assign each electron to their shell
 				//give them a random phase shift
 				//and a random rotation
@@ -573,25 +581,31 @@ class Atom {
 					hd = !(hd);
 					direction[i] = hd;
 					
-					cout <<  i << " " << shellNumber[i] << " " << rotation[i] << " " << speed[shellNumber[i]-1] << " "  << phase[i] << endl;
-					cout << endl;
+					//cout <<  i << " " << shellNumber[i] << " " << rotation[i] << " " << speed[shellNumber[i]-1] << " "  << phase[i] << endl;
+					//cout << endl;
 				}
+				r = radius[shellNum-1];
 			}
 	public:	
 		Atom() {
 
 		}
 
-		Atom(float x, float y, float z, int numElec) {
-			centerX = x;
-			centerY = y;
-			centerZ = z;
+		Atom(float xIn, float yIn, float zIn, int numElec) {
+			x = xIn;
+			y = yIn;
+			z = zIn;
 			numElectrons = numElec;
 			init();
 		}
 
 		~Atom() {
 
+		}
+
+		float getDistance(float xIn, float yIn, float zIn) {
+			// (distance to center) - radius
+			return sqrt(pow((xIn - x),2) + pow((yIn - y),2) + pow((zIn - z),2)) - r;
 		}
 
 		void draw() {
@@ -601,7 +615,7 @@ class Atom {
 			
 			glColor3f(0.0f, 1.0f, 1.0f);
 			glPushMatrix();
-			glTranslatef(centerX, centerY, -100.0f);
+			glTranslatef(x, y, z);
 			glutSolidSphere(1.0,32,32);
 			glPopMatrix();			
 			
@@ -616,9 +630,9 @@ class Atom {
 					angFreq = angFreq * -1;
 				}
 				//cout << time << " " << angFreq << " " << angFreq * time << endl;
-				cout << amplitude << " " << amplitude * sin(angFreq * time + thisPhase) << " " << amplitude * cos(angFreq * time + thisPhase) << endl;
+				//cout << amplitude << " " << amplitude * sin(angFreq * time + thisPhase) << " " << amplitude * cos(angFreq * time + thisPhase) << endl;
 				glPushMatrix();
-				glTranslatef(centerX, centerY, -100.0f);	
+				glTranslatef(x, y, z);	
 
 				if(vecNum[i] == 0) {
 					glRotatef(rotation[i], 1.0f, 0.0f, 0.0f);
@@ -631,8 +645,8 @@ class Atom {
 				}
 				//glTranslatef(0, sin(speed[shellNumber[i]-1] * angle + phase[i]) * radius[shellNumber[i]-1] * sinScale,
 				//	cos(speed[shellNumber[i]-1] * angle + phase[i]) * radius[shellNumber[i]-1] * cosScale);	
-				glTranslatef(0, amplitude * sin(angFreq * time + thisPhase),
-					amplitude * cos(angFreq * time + thisPhase));	
+				glTranslatef(0, amplitude * sin(angFreq * time + thisPhase) * sinScale,
+					amplitude * cos(angFreq * time + thisPhase) * cosScale);	
 				glutSolidSphere(0.5,32,32);
 				glPopMatrix();
 			}
@@ -708,6 +722,15 @@ void handleKeypress(unsigned char key, int x1, int y1) {
 	keys[(int) key] = true;
 }
 
+bool collides() {
+	return (bunker1.getDistance(xPos, yPos, zPos) < 10) ||
+	(bunker2.getDistance(xPos, yPos, zPos) < 10) ||
+	(atom1.getDistance(xPos, yPos, zPos) < 10) ||
+	(atom2.getDistance(xPos, yPos, zPos) < 10) ||
+	(atom3.getDistance(xPos, yPos, zPos) < 10) ||
+	(atom4.getDistance(xPos, yPos, zPos) < 10);
+}
+
 void keyboardHandler() {
 	float xrotrad, yrotrad;
 	float speed = 0.3;
@@ -746,12 +769,18 @@ void keyboardHandler() {
 	if((keys['w'] || keys['s'])  && (keys['a'] || keys['d'])) {
 		speed = speed / 2;
 	}
+
+	bool collision = false;
+	float oldXPos = xPos;
+	float oldZPos = zPos;
+
 	if(keys['w']){  // move camera closer
 		cout << "w" << " " << endl;
 		yrotrad = (yrot / 180 * 3.141592654f);
 		xrotrad = (xrot / 180 * 3.141592654f);
+	
 		xPos += float(sin(yrotrad)) * speed * keySens;
-		zPos -= float(cos(yrotrad)) * speed * keySens;
+		zPos -= float(cos(yrotrad)) * speed * keySens;		
 	}
 	if(keys['s']){  // move camera farther
 		yrotrad = (yrot / 180 * 3.141592654f);
@@ -769,6 +798,12 @@ void keyboardHandler() {
 		xPos += float(cos(yrotrad)) * speed * keySens;
 		zPos += float(sin(yrotrad)) * speed * keySens;
 	}
+
+	if(collides()) {
+		xPos = oldXPos;
+		zPos = oldZPos;
+	}
+	
 	if(keys['q']){  // rotate camera left
 		yrot -= 1.0f * keySens; 
 	}
@@ -800,16 +835,6 @@ void keyboardHandler() {
 	if (yrot > 360) {
 		yrot -= 360;
 	}	
-
-	if((keys['w'] || keys['s'])  || (keys['a'] || keys['d'])) {
-		cout << xPos << " " << yPos << " " << zPos << endl;
-		pcBB.setX(xPos);
-		pcBB.setY(yPos);
-		pcBB.setZ(zPos);
-		bunker1.collidesWithPC(pcBB);
-		//cout << pcBB.getX() << " " << pcBB.getY() << " " << pcBB.getZ() << endl;
-	}
- 
 }
 
 void mouseMotion(int x, int y) {
@@ -834,7 +859,6 @@ void mouseMotion(int x, int y) {
 	if (yrot > 360) {
 		yrot -= 360;
 	}
-	cout << "rotation" << " " << xrot << " " << yrot << endl;
 
 	mouseY = y;
 	mouseX = x;
@@ -1000,14 +1024,14 @@ void drawSkyBox() {
 	GLfloat lightPos[] = {0, 0, -side/2 + 10, 1.0f};
 	GLfloat lightDir[] = {0.0f, -1.0f, -1.0f};
 	
-	//glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLightColor);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLightColor);
 	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
 	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lightDir);
 	glEnable(GL_LIGHT0);
 
-	//glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLightColor);
-	//glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLightColor);
-	//glEnable(GL_LIGHT1);
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLightColor);
+	glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLightColor);
+	glEnable(GL_LIGHT1);
 
 	glEnable(GL_TEXTURE_2D);
 
