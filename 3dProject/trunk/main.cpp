@@ -580,7 +580,8 @@ class Atom {
 			glPushMatrix();
 			glTranslatef(centerX, centerY, -100.0f);
 			glutSolidSphere(1.0,32,32);
-			glPopMatrix();
+			glPopMatrix();			
+			cout << sin(speed[shellNumber[0]-1] * angle + phase[0]) << " " << cos(speed[shellNumber[0]-1] * angle + phase[0]) << endl;
 			for(i = 0; i < numElectrons; i++) {
 				glPushMatrix();
 				glTranslatef(centerX, centerY, -100.0f);	
@@ -1414,7 +1415,7 @@ int main(int argc, char** argv) {
 	bunker1 = Bunker(HORI_SIZE, VERTI_SIZE, 0, 0, -100);
 	bunker2 = Bunker(HORI_SIZE, VERTI_SIZE, 120, 0, -100);
 	cylinder1 = Cylinder(10.0f, 1.0f, 350, 0, -100);
-	atom1 = Atom(-100.0f, PLAYER_EYE_HEIGHT, -100.0f, 12);
+	atom1 = Atom(-100.0f, PLAYER_EYE_HEIGHT, -100.0f, 5);
 
 	glutDisplayFunc(drawScene);
 	glutKeyboardFunc(handleKeypress);
