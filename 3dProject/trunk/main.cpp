@@ -12,6 +12,7 @@
 
 #include "imageloader.h"
 #include "vec3f.h"
+#define PI 3.14159265
 
 using namespace std;
 
@@ -513,9 +514,100 @@ class Cylinder {
 		}
 };
 
+class Atom {
+	private:
+			float centerX;
+			float centerY;
+			float centerZ;
+			 int numElectrons;
+			// electrons per shell <=  2 * [(shellNumber) ^ 2]
+			float *radius;
+			float *speed;
+			int *shellNumber;
+			int *phase;
+			int *rotation;
+			float cosScale;
+			float sinScale;
+
+			void init() {
+				float ra[] = {5.0f, 5.5f, 6.0f, 6.5f, 7.0f, 7.5f, 8.0f};
+				radius = ra;
+				float s[] = {1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f};
+				speed = s;
+				int *p = new int[numElectrons];
+				phase = p;
+				int *ro = new int[numElectrons];
+				rotation = ro;
+
+				cosScale = 0.1f;
+				sinScale = 0.12f;
+				//assign each electron to their shell
+				//give them a random phase shift
+				//and a random rotation
+				int shellNum = 1;
+				int i = 1;
+				for(i = 1; i < numElectrons; i++) {
+					if( i >= (2 * pow((double)shellNum, 2) + (2 * pow((double)shellNum - 1, 2)) + 1)) {
+						shellNum++;
+					}
+					shellNumber[i] = shellNum;
+					phase[i] = rand() % 360 + 1;
+					rotation[i] = rand() % 360 + 1;
+					
+				cout <<  i << " " << shellNumber[i] << " " << rotation[i] << " " << speed[shellNumber[i]-1] << " "  << phase[i] << endl;
+				}
+			}
+	public:	
+		Atom() {
+
+		}
+
+		Atom(float x, float y, float z, const int numElec) {
+			centerX = x;
+			centerY = y;
+			centerZ = z;
+			numElectrons = numElec;
+			init();
+		}
+
+		~Atom() {
+
+		}
+
+		void draw(float angle) {
+			angle = angle * PI / 180;
+			int i;
+			glPushMatrix();
+			glTranslatef(centerX, centerY, -100.0f);
+			glutSolidSphere(1.0,32,32);
+			glPopMatrix();
+			for(i = 0; i < numElectrons; i++) {
+				glPushMatrix();
+				glTranslatef(centerX, centerY, -100.0f);	
+				int r = rand() % 3;
+				if(r == 0) {
+					glRotatef(rotation[i], 1.0f, 0.0f, 0.0f);
+				}
+				if(r == 1) {
+					glRotatef(rotation[i], 0.0f, 1.0f, 0.0f);
+				}
+				if(r == 2) {
+					glRotatef(rotation[i], 0.0f, 0.0f, 1.0f);
+				}
+				//glTranslatef(0, sin(speed[shellNumber[i]-1] * angle + phase[i]) * radius[shellNumber[i]-1] * sinScale,
+				//	cos(speed[shellNumber[i]-1] * angle + phase[i]) * radius[shellNumber[i]-1] * cosScale);	
+				glTranslatef(0, sin(speed[shellNumber[i]-1] * angle + phase[i]) * radius[shellNumber[i]-1] * sinScale,
+					cos(speed[shellNumber[i]-1] * angle + phase[i]) * radius[shellNumber[i]-1] * cosScale);	
+				glutSolidSphere(0.5,32,32);
+				glPopMatrix();
+			}
+		}
+};
+
 Bunker bunker1 ;
 Bunker bunker2 ;
 Cylinder cylinder1;
+Atom atom1;
 BoundingBox pcBB = BoundingBox(10.0f,PLAYER_EYE_HEIGHT,xPos,yPos,zPos);
 
 void orthogonalStart() {
@@ -1097,55 +1189,95 @@ void drawWeirdthing() {
 	float centerX = -100.0f;
 	float centerY = PLAYER_EYE_HEIGHT;
 	float centerZ = -100.0f;
-	glEnable(GL_COLOR_MATERIAL);
-	glColor3f(1.0f, 0.3f, 0.3f);
+	const int numElectrons = 14; // = Si
+	// electrons per shell <=  2 * [(shellNumber) ^ 2]
+	float radius[] = {5.0f,7.0f,9.0f,11.0f,13.0f,15.0f,17.0f};
+	float speed[] = {1.7f,1.6f,1.5f,1.4f,1.3f,1.2f,1.1f,1.0f};
+	int shellNumber [numElectrons];
+	int phase [numElectrons];
+	int rotation [numElectrons];
+	float cosScale = 1.0f;
+	float sinScale = 0.65f;
 
-	glPushMatrix();
-	glTranslatef(centerX, centerY, -100.0f);
-	glutSolidSphere(1.0,32,32);
-	glPopMatrix();
+	//assign each electron to their shell
+	//give them a random phase shift
+	//and a random rotation
+	int shellNum = 1;
+	int i = 1;
+	for(i = 1; i < numElectrons; i++) {
+		if( i >= (2 * pow((double)shellNum, 2) + (2 * pow((double)shellNum - 1, 2)) + 1)) {
+			shellNum++;
+		}
+		shellNumber[i] = shellNum;
+		phase[i] = rand() % 360 + 1;
+		rotation[i] = rand() % 360 + 1;
+	}
 	
-	glColor3f(0.1f, 0.1f, 0.8f);
+	//glEnable(GL_COLOR_MATERIAL);
+	//glColor3f(1.0f, 0.3f, 0.3f);
 
-	glPushMatrix();
-	glTranslatef(centerX, centerY, -100.0f);	
-	glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
-	glTranslatef(0, sin(weirdAngle + 123) * 8.0f, cos(weirdAngle + 85) * 10.0f);	
-	glutSolidSphere(0.5,32,32);
-	glPopMatrix();
+	for(i = i; i < numElectrons; i++) {
+		glPushMatrix();
+		glTranslatef(centerX, centerY, -100.0f);	
+		glRotatef(rotation[i], 0.0f, 1.0f, 0.0f);
+		glTranslatef(0, sin(speed[shellNumber[i]-1] * weirdAngle + phase[i]) * radius[shellNumber[i]-1] * sinScale,
+			cos(speed[shellNumber[i]-1] * weirdAngle + phase[i]) * radius[shellNumber[i]-1] * cosScale);	
+		glutSolidSphere(0.5,32,32);
+		glPopMatrix();
+	}
+	//glPushMatrix();
+	//glTranslatef(centerX, centerY, -100.0f);
+	//glutSolidSphere(1.0,32,32);
+	//glPopMatrix();
+	//
+	//glColor3f(0.1f, 0.1f, 0.8f);
 
-	glPushMatrix();
-	glTranslatef(centerX, centerY, -100.0f);	
-	glRotatef(60.0f, 1.0f, 0.0f, 1.0f);
-	glTranslatef(0, sin(-weirdAngle + 35) * 12.0f, cos(-weirdAngle + 63) * 10.0f);	
-	glutSolidSphere(0.5,32,32);
-	glPopMatrix();
+	//glPushMatrix();
+	//glTranslatef(centerX, centerY, -100.0f);	
+	//glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
+	//glTranslatef(0, sin(weirdAngle + 123) * energyLevel[0], cos(weirdAngle + 85) * energyLevel[0]);	
+	//glutSolidSphere(0.5,32,32);
+	//glPopMatrix();
 
-	glPushMatrix();
-	glTranslatef(centerX, centerY, -100.0f);	
-	glRotatef(60.0f, 1.0f, 0.0f, 1.0f);
-	glTranslatef(0, sin(-weirdAngle + 25) * 10.0f, cos(weirdAngle + 70) * 8.0f);	
-	glutSolidSphere(0.5,32,32);
-	glPopMatrix();
-	
-	float newCx = centerX + cos(weirdAngle) * 10.0f;
-	float newCy = centerY + sin(weirdAngle) * 8.0f;
-	glPushMatrix();
-	glTranslatef(newCx, newCy, -100.0f);
-	glutSolidSphere(0.5,32,32);
-	glPopMatrix();
+	//glPushMatrix();
+	//glTranslatef(centerX, centerY, -100.0f);	
+	//glRotatef(60.0f, 1.0f, 0.0f, 1.0f);
+	//glTranslatef(0, sin(-weirdAngle + 35) * energyLevel[0], cos(-weirdAngle + 63) * energyLevel[0]);	
+	//glutSolidSphere(0.5,32,32);
+	//glPopMatrix();
 
-	glColor3f(1.0f, 1.0f, 1.0f);
+	//glPushMatrix();
+	//glTranslatef(centerX, centerY, -100.0f);	
+	//glRotatef(100.0f, 1.0f, 0.0f, 1.0f);
+	//glTranslatef(0, sin(-weirdAngle + 25) * energyLevel[2], cos(weirdAngle + 70) * energyLevel[2]);	
+	//glutSolidSphere(0.5,32,32);
+	//glPopMatrix();
 
-	glPushMatrix();
-	glTranslatef(newCx - horiOff, newCy, -100.0f);
-	glutSolidSphere(0.25,32,32);
-	glPopMatrix();
-	glPushMatrix();
-	glTranslatef(newCx + horiOff, newCy + vertiOff, -100.0f);
-	glutSolidSphere(0.25,32,32);
-	glPopMatrix();
-	
+	//glPushMatrix();
+	//glTranslatef(centerX, centerY, -100.0f);	
+	//glRotatef(75.0f, 1.0f, 0.0f, 1.0f);
+	//glTranslatef(0, sin(-weirdAngle - 25) * energyLevel[2], cos(weirdAngle + 15) * energyLevel[2]);	
+	//glutSolidSphere(0.5,32,32);
+	//glPopMatrix();
+	//
+	//float newCx = centerX + cos(weirdAngle) * energyLevel[4];
+	//float newCy = centerY + sin(weirdAngle) * energyLevel[4];
+	//glPushMatrix();
+	//glTranslatef(newCx, newCy, -100.0f);
+	//glutSolidSphere(0.5,32,32);
+	//glPopMatrix();
+
+	//glColor3f(1.0f, 1.0f, 1.0f);
+
+	//glPushMatrix();
+	//glTranslatef(newCx - horiOff, newCy, -100.0f);
+	//glutSolidSphere(0.25,32,32);
+	//glPopMatrix();
+	//glPushMatrix();
+	//glTranslatef(newCx + horiOff, newCy + vertiOff, -100.0f);
+	//glutSolidSphere(0.25,32,32);
+	//glPopMatrix();
+	//
 }
 
 void drawFloor(float y) {
@@ -1212,7 +1344,8 @@ void drawScene() {
 	bunker1.draw();	
 	bunker2.draw();	
 	cylinder1.draw();	
-	drawWeirdthing();
+	atom1.draw(weirdAngle);
+	//drawWeirdthing();
 
 	glutSwapBuffers();
 }
@@ -1223,7 +1356,7 @@ void update(int value) {
 	//	_angle -= 360;
 	//}
 
-	weirdAngle += 0.1f;
+	weirdAngle += 0.005f;
 	if (weirdAngle > 360) {
 		weirdAngle -= 360;
 	}
@@ -1281,6 +1414,7 @@ int main(int argc, char** argv) {
 	bunker1 = Bunker(HORI_SIZE, VERTI_SIZE, 0, 0, -100);
 	bunker2 = Bunker(HORI_SIZE, VERTI_SIZE, 120, 0, -100);
 	cylinder1 = Cylinder(10.0f, 1.0f, 350, 0, -100);
+	atom1 = Atom(-100.0f, PLAYER_EYE_HEIGHT, -100.0f, 12);
 
 	glutDisplayFunc(drawScene);
 	glutKeyboardFunc(handleKeypress);
