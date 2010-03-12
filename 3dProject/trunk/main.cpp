@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <ctime>
+#include <list>
 
 #ifdef __APPLE__
 #include <OpenGL/OpenGL.h>
@@ -310,7 +311,7 @@ class Bunker {
 
 		float getDistance(float xIn, float yIn, float zIn) {
 			// (distance to center) - radius
-			cout << r << endl;
+			//cout << r << endl;
 			return sqrt(pow((xIn - x),2) + pow((yIn - y),2) + pow((zIn - z),2)) - r;
 		}
 
@@ -655,6 +656,74 @@ class Atom {
 		}
 };
 
+class Bullet {
+	private:
+		float x;
+		float y;
+		float z;
+		float speed;
+		float xrotrad;
+		float yrotrad;
+		float maxTime;
+		clock_t startTime;
+		clock_t bulletTime;
+		list<Bullet> theList;
+
+	public:
+		Bullet() {
+
+		}
+
+		~Bullet() {
+		}
+
+		Bullet(float xIn, float yIn, float zIn, float xRotIn, float yRotIn) {
+			x = xIn;
+			y = yIn;
+			z = zIn;
+			xrotrad = xRotIn;
+			yrotrad = yRotIn;
+			startTime = bulletTime = clock();
+			speed = 100;
+			maxTime = 5;
+		}
+
+			
+		//http://artis.imag.fr/~Xavier.Decoret/resources/C++/operator==.html
+		bool Bullet::operator==(const Bullet& other) const {
+			cout << "mine: " << x << "    other: " << other.x << endl;
+			return (
+				(x == other.x) &&
+				(y == other.y) &&
+				(z == other.z) &&
+				(xrotrad == other.xrotrad) &&
+				(yrotrad == other.yrotrad)
+			);
+		}
+
+		bool move() {
+			bulletTime = clock();
+			float time = (float)(bulletTime - startTime) / CLOCKS_PER_SEC;
+			if(time > maxTime) {
+				cout << "killit" << endl;
+				return true;
+			} else {
+				x += float(sin(yrotrad)) * speed * time;
+				z -= float(cos(yrotrad)) * speed * time;
+				y -= float(sin(xrotrad)) * speed * time;
+				glPushMatrix();
+				glTranslatef(x,y,z);
+				glutSolidSphere(0.1,32,32);
+				glPopMatrix();
+				cout << time << " " << x << " " << y << " " << z << endl;
+
+				return false;
+			}
+		}
+};
+
+list<Bullet> bulletList;
+
 Bunker bunker1 ;
 Bunker bunker2 ;
 Cylinder cylinder1;
@@ -734,6 +803,8 @@ bool collides() {
 void keyboardHandler() {
 	float xrotrad, yrotrad;
 	float speed = 0.3;
+	yrotrad = (yrot / 180 * 3.141592654f);
+	xrotrad = (xrot / 180 * 3.141592654f);
 
 	if(keys[27]){  //Escape key
 		exit(0);
@@ -757,6 +828,13 @@ void keyboardHandler() {
 			spaceDown = true;
 			pressTime = clock();
 			gunOn = true;
+			
+			Bullet bullet = Bullet(xPos, yPos, zPos, xrotrad, yrotrad);
+			Bullet bullet1 = Bullet(xPos, yPos, zPos, xrotrad, yrotrad);
+			if(bullet==bullet1) {
+				cout << "ok" << endl;
+			}
+			bulletList.push_back(bullet);
 		}
 	} else {		
 		if(spaceDown) {
@@ -775,26 +853,19 @@ void keyboardHandler() {
 	float oldZPos = zPos;
 
 	if(keys['w']){  // move camera closer
-		cout << "w" << " " << endl;
-		yrotrad = (yrot / 180 * 3.141592654f);
-		xrotrad = (xrot / 180 * 3.141592654f);
-	
+		cout << "w" << " " << endl;	
 		xPos += float(sin(yrotrad)) * speed * keySens;
 		zPos -= float(cos(yrotrad)) * speed * keySens;		
 	}
 	if(keys['s']){  // move camera farther
-		yrotrad = (yrot / 180 * 3.141592654f);
-		xrotrad = (xrot / 180 * 3.141592654f);
 		xPos -= float(sin(yrotrad)) * speed * keySens;
 		zPos += float(cos(yrotrad)) * speed * keySens;
 	}
 	if(keys['a']){  // move camera left
-		yrotrad = (yrot / 180 * 3.141592654f);
 		xPos -= float(cos(yrotrad)) * speed * keySens;
 		zPos -= float(sin(yrotrad)) * speed * keySens;
 	}
-	if(keys['d']){  // move camera right			
-		yrotrad = (yrot / 180 * 3.141592654f);
+	if(keys['d']){  // move camera right	
 		xPos += float(cos(yrotrad)) * speed * keySens;
 		zPos += float(sin(yrotrad)) * speed * keySens;
 	}
@@ -1412,6 +1483,18 @@ void drawScene() {
 	atom1.draw();
 	atom2.draw();
 	atom3.draw();
+	 
+	list<Bullet> copyList(bulletList);
+
+	list<Bullet>::iterator it;
+
+	for (it = copyList.begin() ; it != copyList.end(); it++ ) {
+		Bullet b = *it;
+		if(b.move()) {
+			bulletList.remove(b);
+		}
+	}
+
 	//drawWeirdthing();
 
 	glutSwapBuffers();
