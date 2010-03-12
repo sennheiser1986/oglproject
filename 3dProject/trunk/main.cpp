@@ -691,13 +691,14 @@ class Bullet {
 			
 		//http://artis.imag.fr/~Xavier.Decoret/resources/C++/operator==.html
 		bool Bullet::operator==(const Bullet& other) const {
-			cout << "mine: " << x << "    other: " << other.x << endl;
+			//cout << "mine: " << x << "    other: " << other.x << endl;
 			return (
 				(x == other.x) &&
 				(y == other.y) &&
 				(z == other.z) &&
 				(xrotrad == other.xrotrad) &&
-				(yrotrad == other.yrotrad)
+				(yrotrad == other.yrotrad) &&
+				(startTime == other.startTime) 
 			);
 		}
 
@@ -710,12 +711,13 @@ class Bullet {
 			} else {
 				x += float(sin(yrotrad)) * speed * time;
 				z -= float(cos(yrotrad)) * speed * time;
-				y -= float(sin(xrotrad)) * speed * time;
+				y -= float(sin(xrotrad)) * speed * time * 1.5;
+				cout << float(sin(xrotrad)) * 180 / 3.141592654f << endl;
 				glPushMatrix();
 				glTranslatef(x,y,z);
 				glutSolidSphere(0.1,32,32);
 				glPopMatrix();
-				cout << time << " " << x << " " << y << " " << z << endl;
+				//cout << time << " " << x << " " << y << " " << z << endl;
 
 				return false;
 			}
@@ -817,23 +819,19 @@ void keyboardHandler() {
 		if(diff > 0.1) {
 			gunOn = !(gunOn);
 		}
-		cout << pressTime << " " << releaseTime << endl;
+		//cout << pressTime << " " << releaseTime << endl;
 	} else {
 		_textureGun = _textureGunOff;
 	}
 
 	if(keys[' ']) {		
 		if(!spaceDown) {
-			cout << "down" << " "  << endl;
+			//cout << "down" << " "  << endl;
 			spaceDown = true;
 			pressTime = clock();
 			gunOn = true;
 			
 			Bullet bullet = Bullet(xPos, yPos, zPos, xrotrad, yrotrad);
-			Bullet bullet1 = Bullet(xPos, yPos, zPos, xrotrad, yrotrad);
-			if(bullet==bullet1) {
-				cout << "ok" << endl;
-			}
 			bulletList.push_back(bullet);
 		}
 	} else {		
@@ -1487,11 +1485,15 @@ void drawScene() {
 	list<Bullet> copyList(bulletList);
 
 	list<Bullet>::iterator it;
-
+	
+	cout << bulletList.size() << endl;
+	
 	for (it = copyList.begin() ; it != copyList.end(); it++ ) {
 		Bullet b = *it;
 		if(b.move()) {
+			cout << "removing bullet" << endl;
 			bulletList.remove(b);
+			cout << bulletList.size() << endl;
 		}
 	}
 
