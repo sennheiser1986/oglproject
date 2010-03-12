@@ -706,14 +706,15 @@ class Bullet {
 			bulletTime = clock();
 			float time = (float)(bulletTime - startTime) / CLOCKS_PER_SEC;
 			if(time > maxTime) {
-				cout << "killit" << endl;
+				//cout << "killit" << endl;
 				return true;
 			} else {
 				x += float(sin(yrotrad)) * speed * time;
 				z -= float(cos(yrotrad)) * speed * time;
-				y -= float(sin(xrotrad)) * speed * time * 1.5;
-				cout << float(sin(xrotrad)) * 180 / 3.141592654f << endl;
+				//y -= speed * time;
+				float yrot = yrotrad * 180 / PI;
 				glPushMatrix();
+				glRotatef(yrot,1,0,0);
 				glTranslatef(x,y,z);
 				glutSolidSphere(0.1,32,32);
 				glPopMatrix();
@@ -836,7 +837,7 @@ void keyboardHandler() {
 		}
 	} else {		
 		if(spaceDown) {
-			cout << "up" << " " << endl;
+			//cout << "up" << " " << endl;
 			spaceDown = false;
 			releaseTime = clock();
 		}
@@ -851,7 +852,7 @@ void keyboardHandler() {
 	float oldZPos = zPos;
 
 	if(keys['w']){  // move camera closer
-		cout << "w" << " " << endl;	
+		//cout << "w" << " " << endl;	
 		xPos += float(sin(yrotrad)) * speed * keySens;
 		zPos -= float(cos(yrotrad)) * speed * keySens;		
 	}
@@ -928,6 +929,8 @@ void mouseMotion(int x, int y) {
 	if (yrot > 360) {
 		yrot -= 360;
 	}
+
+	cout << "Yaw: " << xrot << " Pitch: " << yrot << endl;
 
 	mouseY = y;
 	mouseX = x;
@@ -1486,14 +1489,14 @@ void drawScene() {
 
 	list<Bullet>::iterator it;
 	
-	cout << bulletList.size() << endl;
+	//cout << bulletList.size() << endl;
 	
 	for (it = copyList.begin() ; it != copyList.end(); it++ ) {
 		Bullet b = *it;
 		if(b.move()) {
-			cout << "removing bullet" << endl;
+			//cout << "removing bullet" << endl;
 			bulletList.remove(b);
-			cout << bulletList.size() << endl;
+			//cout << bulletList.size() << endl;
 		}
 	}
 
