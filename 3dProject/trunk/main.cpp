@@ -4,6 +4,12 @@
 #include <ctime>
 #include <list>
 
+#include "StaticObject.h"
+#include "Bunker.h"
+#include "Atom.h"
+#include "SittingDuck.h"
+#include "Bullet.h"
+
 #ifdef __APPLE__
 #include <OpenGL/OpenGL.h>
 #include <GLUT/glut.h>
@@ -258,205 +264,6 @@ class BoundingBox {
 
 };
 
-class Bunker {
-	private:
-		float w; //Width
-		float h; //Height
-		float r; //Sphere radius
-		float x; //Xpos
-		float y; //Ypos
-		float z; //Zpos
-		BoundingBox bb;
-	public:
-		Bunker() {
-
-		}
-
-		Bunker(float wIn, float hIn, float xIn, float yIn, float zIn) {
-			w = wIn;
-			h = hIn;
-			x = xIn;
-			y = yIn;
-			z = zIn;
-			r = sqrt(2* pow(w/2,2));
-			bb = BoundingBox(w,h,x,y,z);
-		}
-		
-		~Bunker() {
-		}
-
-		bool collidesWithPC(BoundingBox otherBox) {
-			return bb.collidesWith(otherBox);
-		}
-		
-		float getWidth() {
-			return w;
-		}
-		
-		float getHeight() {
-			return h;
-		}
-
-		float getX() {
-			return x;
-		}
-
-		float getY() {
-			return y;
-		}
-
-		float getZ() {
-			return z;
-		}
-
-		float getDistance(float xIn, float yIn, float zIn) {
-			// (distance to center) - radius
-			//cout << r << endl;
-			return sqrt(pow((xIn - x),2) + pow((yIn - y),2) + pow((zIn - z),2)) - r;
-		}
-
-		void draw() {
-			glPushMatrix();
-			glTranslatef(x, y + (h / 2), z);
-			//glRotatef(0.0f, 1.0f, 0.0f, 0.0f);
-			//glRotatef(0.0f, 0.0f, 1.0f, 0.0f);
-			glEnable(GL_TEXTURE_2D);
-			glEnable(GL_BLEND);  
-			glEnable(GL_ALPHA_TEST);
-			glAlphaFunc(GL_GREATER,0.1f); 
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			
-			
-			//Top face	
-			//glBindTexture(GL_TEXTURE_2D, _textureTop);		
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			//glBegin(GL_QUADS);
-			//glNormal3f(0.0, 1.0f, 0.0f);
-			//glTexCoord2f(0.0f, 1.0f);
-			//glVertex3f(-HORI_SIZE / 2, VERTI_SIZE / 2, -HORI_SIZE / 2);
-			//glTexCoord2f(0.0f, 0.0f);
-			//glVertex3f(-HORI_SIZE / 2, VERTI_SIZE / 2, HORI_SIZE / 2);
-			//glTexCoord2f(1.0f, 1.0f);
-			//glVertex3f(HORI_SIZE / 2, VERTI_SIZE / 2, HORI_SIZE / 2);
-			//glTexCoord2f(1.0f, 1.0f);
-			//glVertex3f(HORI_SIZE / 2, VERTI_SIZE / 2, -HORI_SIZE / 2);
-			
-			//Bottom face
-			glNormal3f(0.0, -1.0f, 0.0f);
-			glVertex3f(-w / 2, -h / 2, -w / 2);
-			glVertex3f(w / 2, -h / 2, -w / 2);
-			glVertex3f(w / 2, -h / 2, w / 2);
-			glVertex3f(-w / 2, -h / 2, w / 2);
-			
-			//Left face
-			glEnd();
-			glBindTexture(GL_TEXTURE_2D, _textureLeft);		
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-			
-			glBegin(GL_QUADS);
-
-			glNormal3f(-1.0, 0.0f, 0.0f);
-			//  x  y  z
-			// -1 -1 -1 = bottom left
-			glTexCoord2f(0.0f, 0.0f);
-			glVertex3f(-w / 2, -h / 2, -w / 2);
-			// -1 -1  1 = bottom right
-			glTexCoord2f(1.0f, 0.0f);
-			glVertex3f(-w / 2, -h / 2, w / 2);
-			// -1  1  1 = top right
-			glTexCoord2f(1.0f, 1.0f);
-			glVertex3f(-w / 2, h / 2, w / 2);
-			// -1  1 -1 = top left
-			glTexCoord2f(0.0f, 1.0f);
-			glVertex3f(-w / 2, h / 2, -w / 2);
-			
-			//Right face
-			glEnd();
-			glBindTexture(GL_TEXTURE_2D, _textureRight);		
-			//glTexParameteri(GL_TEzxxXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glBegin(GL_QUADS);
-
-			glNormal3f(1.0, 0.0f, 0.0f);
-			glTexCoord2f(1.0f, 0.0f);
-			// x  y  z
-			// 1 -1 -1  = bottom right
-			glVertex3f(w / 2, -h / 2, -w / 2);
-			glTexCoord2f(1.0f, 1.0f);
-			// 1  1 -1  = top right
-			glVertex3f(w / 2, h / 2, -w / 2);
-			glTexCoord2f(0.0f, 1.0f);
-			// 1  1  1  = top left
-			glVertex3f(w / 2, h / 2, w / 2);
-			glTexCoord2f(0.0f, 0.0f);
-			// 1 -1  1  = bottom left
-			glVertex3f(w / 2, -h / 2, w / 2);
-			
-			
-			//Front face
-			glEnd();
-
-			glBindTexture(GL_TEXTURE_2D, _textureFront);		
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glBegin(GL_QUADS);
-
-			glNormal3f(0.0, 0.0f, -1.0f);
-			glTexCoord2f(0.0f, 0.0f);
-			// -1 -1  1 = bottom left
-			glVertex3f(-w / 2, -h / 2, w / 2);
-			glTexCoord2f(1.0f, 0.0f);
-			//  1 -1  1 = bottom right
-			glVertex3f(w / 2, -h / 2, w / 2);
-			glTexCoord2f(1.0f, 1.0f);
-			//  1  1  1 = top right
-			glVertex3f(w / 2,  h / 2, w / 2);
-			glTexCoord2f(0.0f, 1.0f);
-			// -1  1  1 = top left
-			glVertex3f(-w / 2,  h / 2, w / 2);
-			
-			
-			glEnd();
-			
-			//Back face
-			glBindTexture(GL_TEXTURE_2D, _textureBack);		
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			///glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glBegin(GL_QUADS);
-
-			glNormal3f(0.0, 0.0f, -1.0f);
-			glTexCoord2f(1.0f, 0.0f);
-			// -1 -1 -1
-			glVertex3f(-w / 2, -h / 2, -w / 2);
-			glTexCoord2f(1.0f, 1.0f);
-			// -1  1 -1
-			glVertex3f(-w / 2, h / 2, -w / 2);
-			glTexCoord2f(0.0f, 1.0f);
-			//  1  1 -1
-			glVertex3f(w / 2, h / 2, -w / 2);
-			glTexCoord2f(0.0f, 0.0f);
-			//  1 -1 -1
-			glVertex3f(w / 2, -h / 2, -w / 2);
-			
-			glEnd();
-			glDisable(GL_TEXTURE_2D);
-			glPopMatrix();
-		}
-};
-
 class Cylinder {
 	private:
 		float r; //radius
@@ -522,218 +329,15 @@ class Cylinder {
 		}
 };
 
-class Atom {
-	private:
-			float x;
-			float y;
-			float z;
-			float r;
-			int numElectrons;
-			// electrons per shell <=  2 * [(shellNumber) ^ 2]
-			int *radius;
-			int *speed;
-			int *shellNumber;
-			int *phase;
-			int *rotation;
-			int *vecNum;
-			bool *direction;
-			float cosScale;
-			float sinScale;
-			clock_t startTime;
-			clock_t atomTime;
-
-			void init() {
-				radius = new int[7];
-				speed = new int[7];
-				rotation = new int[numElectrons];
-				phase = new int[numElectrons];
-				shellNumber = new int [numElectrons];
-				vecNum = new int [numElectrons];
-				direction = new bool [numElectrons];
-				
-				bool hd = true;
-
-				startTime = clock();
-				int minRad = 10;
-				int ra[] = {minRad,minRad + 4,minRad + 8,minRad + 12,minRad + 16,minRad + 20,minRad + 24};	
-				int s[] = {200,190,180,170,160,150,140};
-				int k = 0;
-				for(k = 0; k < 7; k++) {
-					radius[k] = ra[k];
-					speed[k] = s[k];
-				}								
-
-				cosScale = 1;
-				sinScale = 0.7;
-				//assign each electron to their shell
-				//give them a random phase shift
-				//and a random rotation
-				int shellNum = 1;
-				int i = 0;
-				for(i = 0; i < numElectrons; i++) {
-					if( i >= (2 * pow((double)shellNum, 2) + (2 * pow((double)shellNum - 1, 2)) + 1)) {
-						shellNum++;
-					}
-					shellNumber[i] = shellNum;
-					phase[i] = rand() % 360 + 1;
-					rotation[i] = rand() % 360 + 1;
-					vecNum[i] = rand() % 3;
-
-					hd = !(hd);
-					direction[i] = hd;
-					
-					//cout <<  i << " " << shellNumber[i] << " " << rotation[i] << " " << speed[shellNumber[i]-1] << " "  << phase[i] << endl;
-					//cout << endl;
-				}
-				r = radius[shellNum-1];
-			}
-	public:	
-		Atom() {
-
-		}
-
-		Atom(float xIn, float yIn, float zIn, int numElec) {
-			x = xIn;
-			y = yIn;
-			z = zIn;
-			numElectrons = numElec;
-			init();
-		}
-
-		~Atom() {
-
-		}
-
-		float getDistance(float xIn, float yIn, float zIn) {
-			// (distance to center) - radius
-			return sqrt(pow((xIn - x),2) + pow((yIn - y),2) + pow((zIn - z),2)) - r;
-		}
-
-		void draw() {
-			atomTime = clock();
-			double time = (double)(atomTime - startTime) / CLOCKS_PER_SEC;
-			glEnable(GL_COLOR_MATERIAL);
-			
-			glColor3f(0.0f, 1.0f, 1.0f);
-			glPushMatrix();
-			glTranslatef(x, y, z);
-			glutSolidSphere(1.0,32,32);
-			glPopMatrix();			
-			
-			glColor3f(1.0f, 0.0f, 1.0f);
-			//Scout << sin(speed[shellNumber[0]-1] * angle + phase[0]) << " " << cos(speed[shellNumber[0]-1] * angle + phase[0]) << endl;
-			int i;
-			for(i = 0; i < numElectrons; i++) {
-				float amplitude = radius[shellNumber[i]-1];
-				float thisPhase = phase[i] * PI / 180;
-				float angFreq = speed[shellNumber[i]-1] * PI / 180;
-				if(direction[i]) {
-					angFreq = angFreq * -1;
-				}
-				//cout << time << " " << angFreq << " " << angFreq * time << endl;
-				//cout << amplitude << " " << amplitude * sin(angFreq * time + thisPhase) << " " << amplitude * cos(angFreq * time + thisPhase) << endl;
-				glPushMatrix();
-				glTranslatef(x, y, z);	
-
-				if(vecNum[i] == 0) {
-					glRotatef(rotation[i], 1.0f, 0.0f, 0.0f);
-				}
-				if(vecNum[i] == 1) {
-					glRotatef(rotation[i], 0.0f, 1.0f, 0.0f);
-				}
-				if(vecNum[i] == 2) {
-					glRotatef(rotation[i], 1.0f, 1.0f, 0.0f);
-				}
-				//glTranslatef(0, sin(speed[shellNumber[i]-1] * angle + phase[i]) * radius[shellNumber[i]-1] * sinScale,
-				//	cos(speed[shellNumber[i]-1] * angle + phase[i]) * radius[shellNumber[i]-1] * cosScale);	
-				glTranslatef(0, amplitude * sin(angFreq * time + thisPhase) * sinScale,
-					amplitude * cos(angFreq * time + thisPhase) * cosScale);	
-				glutSolidSphere(0.5,32,32);
-				glPopMatrix();
-			}
-			glColor3f(1.0f, 1.0f, 1.0f);
-			glDisable(GL_COLOR_MATERIAL);
-		}
-};
-
-class Bullet {
-	private:
-		float x;
-		float y;
-		float z;
-		float speed;
-		float xrotrad;
-		float yrotrad;
-		float maxTime;
-		clock_t startTime;
-		clock_t bulletTime;
-		list<Bullet> theList;
-
-	public:
-		Bullet() {
-
-		}
-
-		~Bullet() {
-		}
-
-		Bullet(float xIn, float yIn, float zIn, float xRotIn, float yRotIn) {
-			x = xIn;
-			y = yIn;
-			z = zIn;
-			xrotrad = xRotIn;
-			yrotrad = yRotIn;
-			startTime = bulletTime = clock();
-			speed = 100;
-			maxTime = 5;
-		}
-
-			
-		//http://artis.imag.fr/~Xavier.Decoret/resources/C++/operator==.html
-		bool Bullet::operator==(const Bullet& other) const {
-			//cout << "mine: " << x << "    other: " << other.x << endl;
-			return (
-				(x == other.x) &&
-				(y == other.y) &&
-				(z == other.z) &&
-				(xrotrad == other.xrotrad) &&
-				(yrotrad == other.yrotrad) &&
-				(startTime == other.startTime) 
-			);
-		}
-
-		bool move() {
-			bulletTime = clock();
-			float time = (float)(bulletTime - startTime) / CLOCKS_PER_SEC;
-			if(time > maxTime) {
-				//cout << "killit" << endl;
-				return true;
-			} else {
-				x += float(sin(yrotrad)) * speed * time;
-				z -= float(cos(yrotrad)) * speed * time;
-				//y -= speed * time;
-				float yrot = yrotrad * 180 / PI;
-				glPushMatrix();
-				glRotatef(yrot,1,0,0);
-				glTranslatef(x,y,z);
-				glutSolidSphere(0.1,32,32);
-				glPopMatrix();
-				//cout << time << " " << x << " " << y << " " << z << endl;
-
-				return false;
-			}
-		}
-};
-
 list<Bullet> bulletList;
-
-Bunker bunker1 ;
-Bunker bunker2 ;
+Bunker bunker1;
+Bunker bunker2;
 Cylinder cylinder1;
 Atom atom1;
 Atom atom2;
 Atom atom3;
 Atom atom4;
+SittingDuck sittingDuck1;
 BoundingBox pcBB = BoundingBox(10.0f,PLAYER_EYE_HEIGHT,xPos,yPos,zPos);
 
 void orthogonalStart() {
@@ -795,6 +399,8 @@ void handleKeypress(unsigned char key, int x1, int y1) {
 }
 
 bool collides() {
+	//cout << atom1.getDistance(xPos, yPos, zPos) << " " << atom1.getR() << endl;
+	
 	return (bunker1.getDistance(xPos, yPos, zPos) < 10) ||
 	(bunker2.getDistance(xPos, yPos, zPos) < 10) ||
 	(atom1.getDistance(xPos, yPos, zPos) < 10) ||
@@ -868,12 +474,15 @@ void keyboardHandler() {
 		xPos += float(cos(yrotrad)) * speed * keySens;
 		zPos += float(sin(yrotrad)) * speed * keySens;
 	}
-
-	if(collides()) {
-		xPos = oldXPos;
-		zPos = oldZPos;
-	}
 	
+	//collision detection
+	if(keys['w'] || keys['s']  || keys['a'] || keys['d']) {
+		if(collides()) {
+			xPos = oldXPos;
+			zPos = oldZPos;
+		}
+	}
+
 	if(keys['q']){  // rotate camera left
 		yrot -= 1.0f * keySens; 
 	}
@@ -882,12 +491,18 @@ void keyboardHandler() {
 	}
 	if(keys['z']){  // move gun left
 		_textureFront = _textureFGL;
+		bunker1.changeTexture(_textureFront, 0);
+		bunker2.changeTexture(_textureFront, 0);
 	}
 	if(keys['c']){  // move gun right
 		_textureFront = _textureFGR;
+		bunker1.changeTexture(_textureFront, 0);
+		bunker2.changeTexture(_textureFront, 0);
 	}
 	if(keys['x']){  // center gun 
 		_textureFront = _textureFGC;
+		bunker1.changeTexture(_textureFront, 0);
+		bunker2.changeTexture(_textureFront, 0);
 	}
 
 	if (xrot > 360) {
@@ -914,12 +529,12 @@ void mouseMotion(int x, int y) {
 	xrot += (float) diffy;
 	yrot += (float) diffx;
 	
-	if (xrot > 75) {
-		xrot = 75;
+	if (xrot > 22) {
+		xrot = 22;
 	}
 
-	if (xrot < -75) {
-		xrot = -75;
+	if (xrot < -40) {
+		xrot = -40;
 	}
 
 	if (yrot < -360) {
@@ -930,7 +545,7 @@ void mouseMotion(int x, int y) {
 		yrot -= 360;
 	}
 
-	cout << "Yaw: " << xrot << " Pitch: " << yrot << endl;
+	//cout << "Yaw: " << xrot << " Pitch: " << yrot << endl;
 
 	mouseY = y;
 	mouseX = x;
@@ -1088,7 +703,9 @@ void handleResize(int w, int h) {
 
 void drawSkyBox() {
 	glPushMatrix();
-	glTranslatef(xPos, yPos, zPos);
+	//glTranslatef(-xPos, -yPos, -zPos);
+	glRotatef(xrot, 1, 0, 0);
+	glRotatef(yrot, 0, 1, 0);
 	float side = 1000.0f;
 
 	GLfloat diffuseLightColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -1222,33 +839,49 @@ void drawSkyBox() {
 	glPopMatrix();
 }
 
-void camera() {	
-	//look straight ahead
-	gluLookAt(0.0, 0.0, 0.0, 0.0, 0.0, -5.0, 0.0, 1.0, 0.0);
 
+void drawBullets() {
+	list<Bullet> copyList(bulletList);
+	list<Bullet>::iterator it;	
+	//cout << bulletList.size() << endl;
 	
+	for (it = copyList.begin() ; it != copyList.end(); it++ ) {
+		Bullet b = *it;
+		cout << b.getX() << " " << b.getY() << " " << b.getZ() << endl;
+		cout << sittingDuck1.getDistance(b.getX(), b.getY(), b.getZ()) << endl;
+		if(sittingDuck1.getDistance(b.getX(), b.getY(), b.getZ()) == 0) {
+			sittingDuck1.hit();
+		}
+		if(b.move()) {
+			//cout << "removing bullet" << endl;
+			bulletList.remove(b);
+			//cout << bulletList.size() << endl;
+		}
+	}
+}
+
+void camera() {	
 	GLfloat lightPos[] = {0, 0, -5.0f, 1.0f};
 	GLfloat diffuseLightColor[] = {0.4f, 0.4f, 0.4f, 1.0f};
 	glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuseLightColor);
 	glLightfv(GL_LIGHT2, GL_POSITION, lightPos);
 	glEnable(GL_LIGHT2);
-
-
-	//crosshairs
 	glDisable(GL_LIGHT0);
-	float crossSize = 0.05f;
+
+	glPushMatrix();
 	glBegin(GL_QUADS);
 	glNormal3f(0.0f, 0.0f, 1.0f);
 	// -1 -1  1 = bottom left
-	glVertex3f(-crossSize / 2 , -crossSize / 2, -10.0f);
+	glVertex3f(-0.01f, -0.01f, -10.0f);
 	//  1 -1  1 = bottom right
-	glVertex3f(crossSize / 2, -crossSize / 2, -10.0f);
+	glVertex3f(0.01f, -0.01f, -10.0f);
 	//  1  1  1 = top right
-	glVertex3f(crossSize / 2,  crossSize / 2, -10.0f);
+	glVertex3f(0.01f,  0.01f, -10.0f);
 	// -1  1  1 = top left
-	glVertex3f(-crossSize / 2,  crossSize / 2, -10.0f);	
+	glVertex3f(-0.01f,  0.01f, -10.0f);	
 	glEnd();
-
+	glPopMatrix();
+	
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);  
 	glEnable(GL_ALPHA_TEST);
@@ -1285,16 +918,16 @@ void camera() {
 	glDisable(GL_LIGHT2);
 	glEnable(GL_LIGHT0);
 
-	scale = 0.38f;
+	scale = 0.50f;
 	width = 16 * scale;
 	height = 9 * scale;
 
 	//gun
-	glBindTexture(GL_TEXTURE_2D, _textureGun);	
+	glBindTexture(GL_TEXTURE_2D, _textureGun);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glPushMatrix();
-	glTranslatef(7.0f,-4.0f,0.0f);
+	glTranslatef(7.0f,-5.0f,0.0f);
 	glBegin(GL_QUADS);
 	glNormal3f(0.0f, 0.0f, 1.0f);
 	// -1 -1  1 = bottom left
@@ -1312,109 +945,13 @@ void camera() {
 	glEnd();
 	glPopMatrix();
 
-	
-	
-
 	glDisable(GL_ALPHA_TEST);
-	glDisable(GL_BLEND); 
-	glRotatef(xrot,1.0,0.0,0.0);  //rotate our camera
-    glRotatef(yrot,0.0,1.0,0.0); 
-	glTranslatef(-xPos, -yPos, -zPos);
-}
+	glDisable(GL_BLEND);
 
-void drawWeirdthing() {
-	//float centerX = -100.0f;
-	//float centerY = PLAYER_EYE_HEIGHT;
-	//float centerZ = -100.0f;
-	//const int numElectrons = 14; // = Si
-	//// electrons per shell <=  2 * [(shellNumber) ^ 2]
-	//float radius[] = {5.0f,7.0f,9.0f,11.0f,13.0f,15.0f,17.0f};
-	//float speed[] = {1.7f,1.6f,1.5f,1.4f,1.3f,1.2f,1.1f,1.0f};
-	//int shellNumber [numElectrons];
-	//int phase [numElectrons];
-	//int rotation [numElectrons];
-	//float cosScale = 1.0f;
-	//float sinScale = 0.65f;
-
-	////assign each electron to their shell
-	////give them a random phase shift
-	////and a random rotation
-	//int shellNum = 1;
-	//int i = 1;
-	//for(i = 1; i < numElectrons; i++) {
-	//	if( i >= (2 * pow((double)shellNum, 2) + (2 * pow((double)shellNum - 1, 2)) + 1)) {
-	//		shellNum++;
-	//	}
-	//	shellNumber[i] = shellNum;
-	//	phase[i] = rand() % 360 + 1;
-	//	rotation[i] = rand() % 360 + 1;
-	//}
-	
-	//glEnable(GL_COLOR_MATERIAL);
-	//glColor3f(1.0f, 0.3f, 0.3f);
-
-	//for(i = i; i < numElectrons; i++) {
-	//	glPushMatrix();
-	//	glTranslatef(centerX, centerY, -100.0f);	
-	//	glRotatef(rotation[i], 0.0f, 1.0f, 0.0f);
-	//	glTranslatef(0, sin(speed[shellNumber[i]-1] * weirdAngle + phase[i]) * radius[shellNumber[i]-1] * sinScale,
-	//		cos(speed[shellNumber[i]-1] * weirdAngle + phase[i]) * radius[shellNumber[i]-1] * cosScale);	
-	//	glutSolidSphere(0.5,32,32);
-	//	glPopMatrix();
-	//}
-	//glPushMatrix();
-	//glTranslatef(centerX, centerY, -100.0f);
-	//glutSolidSphere(1.0,32,32);
-	//glPopMatrix();
-	//
-	//glColor3f(0.1f, 0.1f, 0.8f);
-
-	//glPushMatrix();
-	//glTranslatef(centerX, centerY, -100.0f);	
-	//glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
-	//glTranslatef(0, sin(weirdAngle + 123) * energyLevel[0], cos(weirdAngle + 85) * energyLevel[0]);	
-	//glutSolidSphere(0.5,32,32);
-	//glPopMatrix();
-
-	//glPushMatrix();
-	//glTranslatef(centerX, centerY, -100.0f);	
-	//glRotatef(60.0f, 1.0f, 0.0f, 1.0f);
-	//glTranslatef(0, sin(-weirdAngle + 35) * energyLevel[0], cos(-weirdAngle + 63) * energyLevel[0]);	
-	//glutSolidSphere(0.5,32,32);
-	//glPopMatrix();
-
-	//glPushMatrix();
-	//glTranslatef(centerX, centerY, -100.0f);	
-	//glRotatef(100.0f, 1.0f, 0.0f, 1.0f);
-	//glTranslatef(0, sin(-weirdAngle + 25) * energyLevel[2], cos(weirdAngle + 70) * energyLevel[2]);	
-	//glutSolidSphere(0.5,32,32);
-	//glPopMatrix();
-
-	//glPushMatrix();
-	//glTranslatef(centerX, centerY, -100.0f);	
-	//glRotatef(75.0f, 1.0f, 0.0f, 1.0f);
-	//glTranslatef(0, sin(-weirdAngle - 25) * energyLevel[2], cos(weirdAngle + 15) * energyLevel[2]);	
-	//glutSolidSphere(0.5,32,32);
-	//glPopMatrix();
-	//
-	//float newCx = centerX + cos(weirdAngle) * energyLevel[4];
-	//float newCy = centerY + sin(weirdAngle) * energyLevel[4];
-	//glPushMatrix();
-	//glTranslatef(newCx, newCy, -100.0f);
-	//glutSolidSphere(0.5,32,32);
-	//glPopMatrix();
-
-	//glColor3f(1.0f, 1.0f, 1.0f);
-
-	//glPushMatrix();
-	//glTranslatef(newCx - horiOff, newCy, -100.0f);
-	//glutSolidSphere(0.25,32,32);
-	//glPopMatrix();
-	//glPushMatrix();
-	//glTranslatef(newCx + horiOff, newCy + vertiOff, -100.0f);
-	//glutSolidSphere(0.25,32,32);
-	//glPopMatrix();
-	//
+	drawSkyBox();
+	float yrotrad = yrot / 180 * PI;
+	float xrotrad = xrot / 180 * PI;
+	gluLookAt(xPos, yPos, zPos, xPos + sin(yrotrad), yPos - sin(xrotrad), zPos - cos(yrotrad), 0, 1, 0);
 }
 
 void drawFloor(float y) {
@@ -1445,11 +982,6 @@ void drawFloor(float y) {
 	glDisable(GL_TEXTURE_2D);
 }
 
-void drawLight() {
-	glPushMatrix();
-	
-	glPopMatrix();
-}
 
 void drawScene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
@@ -1457,9 +989,8 @@ void drawScene() {
 	glLoadIdentity();
 	
 	keyboardHandler();
-	camera();
-	drawLight();
-	drawSkyBox();
+	camera();	
+	drawBullets();
 	//orthogonalStart();
 	//glBegin(GL_QUADS);	
 	//glVertex2f(300, 300);
@@ -1481,27 +1012,10 @@ void drawScene() {
 	bunker1.draw();	
 	bunker2.draw();	
 	cylinder1.draw();	
+	sittingDuck1.draw();
 	atom1.draw();
 	atom2.draw();
 	atom3.draw();
-	 
-	list<Bullet> copyList(bulletList);
-
-	list<Bullet>::iterator it;
-	
-	//cout << bulletList.size() << endl;
-	
-	for (it = copyList.begin() ; it != copyList.end(); it++ ) {
-		Bullet b = *it;
-		if(b.move()) {
-			//cout << "removing bullet" << endl;
-			bulletList.remove(b);
-			//cout << bulletList.size() << endl;
-		}
-	}
-
-	//drawWeirdthing();
-
 	glutSwapBuffers();
 }
 
@@ -1547,6 +1061,9 @@ void update(int value) {
 }
 
 int main(int argc, char** argv) {
+	int seed = 1268511395;
+	srand(seed);
+	cout << "*Using seed: " << seed << endl;
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	
@@ -1566,12 +1083,14 @@ int main(int argc, char** argv) {
 	name += "heightmap.bmp";
 //	_terrain = loadTerrain(name.c_str(), 20);
 
-	bunker1 = Bunker(HORI_SIZE, VERTI_SIZE, 0, 0, -100);
-	bunker2 = Bunker(HORI_SIZE, VERTI_SIZE, 0, 0, 100);
+	int bunkerTextures[] = {_textureFront, _textureRight, _textureBack, _textureLeft};
+	bunker1 = Bunker(HORI_SIZE, VERTI_SIZE, 0, 0, -100, bunkerTextures);
+	bunker2 = Bunker(HORI_SIZE, VERTI_SIZE, 0, 0, 100, bunkerTextures);
 	cylinder1 = Cylinder(10.0f, 1.0f, 350, 0, -100);
 	atom1 = Atom(-100.0f, PLAYER_EYE_HEIGHT, -100.0f, 14); //Si
 	atom2 = Atom(-150.0f, PLAYER_EYE_HEIGHT, -100.0f, 8);  //Oxygen
 	atom3 = Atom(-200.0f, PLAYER_EYE_HEIGHT, -100.0f, 1);  //Hydrogen
+	sittingDuck1 = SittingDuck(100, PLAYER_EYE_HEIGHT, -100.0f, 20);
 
 	glutDisplayFunc(drawScene);
 	glutKeyboardFunc(handleKeypress);
