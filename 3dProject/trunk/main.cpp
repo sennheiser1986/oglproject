@@ -847,7 +847,7 @@ void drawSkyBox() {
 void drawBullets() {
 	list<Bullet> copyList(bulletList);
 	list<Bullet>::iterator it;	
-	cout << bulletList.size() << endl;
+	//cout << bulletList.size() << endl;
 	
 	for (it = copyList.begin() ; it != copyList.end(); it++ ) {
 		Bullet b = *it;
@@ -859,7 +859,7 @@ void drawBullets() {
 			addAgain = false;
 			//cout << bulletList.size() << endl;
 		} else {		
-			cout << sittingDuck1.getDistance(b.getX(), b.getY(), b.getZ()) << endl;
+			//cout << sittingDuck1.getDistance(b.getX(), b.getY(), b.getZ()) << endl;
 			if(sittingDuck1.getDistance(b.getX(), b.getY(), b.getZ()) <= 0) {
 				sittingDuck1.hit();
 				cout << "Hit target, removing bullet" << endl;
