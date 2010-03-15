@@ -27,7 +27,6 @@ const float FLOOR_TEXTURE_SIZE = 15.0f; //The size of each floor "tile"
 const float PLAYER_EYE_HEIGHT  = 18.f;
 const float HORI_SIZE = 100.0f;
 const float VERTI_SIZE = 60.0f;
-
 const int BOUNCE_SIZE = 256;
 
 float _angle = 0.0f;
@@ -330,6 +329,7 @@ class Cylinder {
 };
 
 list<Bullet> bulletList;
+list<SittingDuck> duckList;
 Bunker bunker1;
 Bunker bunker2;
 Cylinder cylinder1;
@@ -396,6 +396,10 @@ void handleKeyrelease(unsigned char key, int x1, int y1) {
 
 void handleKeypress(unsigned char key, int x1, int y1) {
 	keys[(int) key] = true;
+}
+
+void doBulletsHitTargets() {
+	
 }
 
 bool collides() {
@@ -843,19 +847,28 @@ void drawSkyBox() {
 void drawBullets() {
 	list<Bullet> copyList(bulletList);
 	list<Bullet>::iterator it;	
-	//cout << bulletList.size() << endl;
+	cout << bulletList.size() << endl;
 	
 	for (it = copyList.begin() ; it != copyList.end(); it++ ) {
 		Bullet b = *it;
-		cout << b.getX() << " " << b.getY() << " " << b.getZ() << endl;
-		cout << sittingDuck1.getDistance(b.getX(), b.getY(), b.getZ()) << endl;
-		if(sittingDuck1.getDistance(b.getX(), b.getY(), b.getZ()) == 0) {
-			sittingDuck1.hit();
-		}
+
+		bool addAgain = true;
+		bulletList.remove(b);
 		if(b.move()) {
 			//cout << "removing bullet" << endl;
-			bulletList.remove(b);
+			addAgain = false;
 			//cout << bulletList.size() << endl;
+		} else {		
+			cout << sittingDuck1.getDistance(b.getX(), b.getY(), b.getZ()) << endl;
+			if(sittingDuck1.getDistance(b.getX(), b.getY(), b.getZ()) <= 0) {
+				sittingDuck1.hit();
+				cout << "Hit target, removing bullet" << endl;
+				addAgain = false;
+			}			
+		}
+		if(addAgain) {
+			//cout << "check" << endl;
+			bulletList.push_back(b);
 		}
 	}
 }
@@ -1090,7 +1103,9 @@ int main(int argc, char** argv) {
 	atom1 = Atom(-100.0f, PLAYER_EYE_HEIGHT, -100.0f, 14); //Si
 	atom2 = Atom(-150.0f, PLAYER_EYE_HEIGHT, -100.0f, 8);  //Oxygen
 	atom3 = Atom(-200.0f, PLAYER_EYE_HEIGHT, -100.0f, 1);  //Hydrogen
-	sittingDuck1 = SittingDuck(100, PLAYER_EYE_HEIGHT, -100.0f, 20);
+
+	sittingDuck1 = SittingDuck(100, PLAYER_EYE_HEIGHT, -100.0f, 5);
+	duckList.push_back(sittingDuck1);
 
 	glutDisplayFunc(drawScene);
 	glutKeyboardFunc(handleKeypress);

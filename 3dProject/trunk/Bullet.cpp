@@ -1,4 +1,6 @@
 #include "Bullet.h"
+#include <iostream>
+#include <stdlib.h>
 
 #ifdef __APPLE__
 #include <OpenGL/OpenGL.h>
@@ -9,12 +11,12 @@
 
 #define PI  3.14159265
 
+using namespace std;
+
 Bullet::Bullet() {}
 Bullet::~Bullet() {}
-Bullet::Bullet(float xIn, float yIn, float zIn, float xRotIn, float yRotIn) {
-	x = xIn;
-	y = yIn;
-	z = zIn;
+Bullet::Bullet(float xIn, float yIn, float zIn, float xRotIn, float yRotIn)
+: StaticObject (xIn, yIn, zIn) {
 	xrotrad = xRotIn;
 	yrotrad = yRotIn;
 	startTime = bulletTime = clock();
@@ -47,14 +49,15 @@ bool Bullet::move() {
 		float xrot = xrotrad * 180 / PI;
 		float yrot = yrotrad * 180 / PI;
 		glPushMatrix();
-		x += sin(yrotrad) * speed * (time + 0.01);
-		z -= cos(yrotrad) * speed * (time + 0.01);
-		y -= sin(xrotrad) * speed * (time + 0.01);
+		setX(getX() + sin(yrotrad) * speed * (time + 0.01));
+		setZ(getZ() - cos(yrotrad) * speed * (time + 0.01));
+		setY(getY() - sin(xrotrad) * speed * (time + 0.01));
 		glTranslatef(x, y, z);
 		glutSolidSphere(0.1f, 32, 32);
 		
 		glPopMatrix();
-		//cout << time << " " << x << " " << y << " " << z << endl;
+		cout << "Bullet internal coords: " << " " << getX()
+			<< " " << getY() << " " << getZ() << endl;
 
 		return false;
 	}

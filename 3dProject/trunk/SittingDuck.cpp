@@ -43,5 +43,7 @@ void SittingDuck::hit() {
 		greenChan = 0.0f;
 	} else {
 		redChan = 0.0f;
+		blueChan = 1.0f;
+		greenChan = 1.0f;
 	}
 }
