@@ -20,7 +20,7 @@ Bullet::Bullet(float xIn, float yIn, float zIn, float xRotIn, float yRotIn)
 	xrotrad = xRotIn;
 	yrotrad = yRotIn;
 	startTime = bulletTime = clock();
-	speed = 5;
+	speed = 10;
 	maxTime = 5;
 }
 

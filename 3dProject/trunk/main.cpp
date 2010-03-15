@@ -24,12 +24,11 @@
 using namespace std;
 
 const float FLOOR_TEXTURE_SIZE = 15.0f; //The size of each floor "tile"
-const float PLAYER_EYE_HEIGHT  = 18.f;
-const float HORI_SIZE = 100.0f;
-const float VERTI_SIZE = 60.0f;
-const int BOUNCE_SIZE = 256;
+const float PLAYER_EYE_HEIGHT  = 18.f;  //eye height
 
-float _angle = 0.0f;
+const float HORI_SIZE = 100.0f; //static bunker size
+const float VERTI_SIZE = 60.0f;
+
 int _textureFGL, _textureFGC, _textureFGR, _textureLeft, _textureRight,
 _textureBack, _textureTop, _textureFront, _textureFloor, _textureShooting,
 _textureGunOff, _textureGun, _textureArtesis,
@@ -51,15 +50,13 @@ int keySens = 5; // relative to player's movement speed
 // stores which keys are depressed
 bool keys[256];
 
-int w1;
-int h1;
-
 // some variables for gun animation
 clock_t pressTime = clock();
 clock_t releaseTime = clock();
 bool gunOn = false;
 bool spaceDown = false;
 
+// textures base directory
 const string textureDir = "./textures/";
 
 /**
@@ -82,273 +79,17 @@ float vertiOff = 0.0f;
 float horiOff = 0.0f;
 float weirdAngle = 0.0f;
 
-
-class BoundingBox {
-	private:
-		float w; //Width
-		float h; //Height
-		float x; //x
-		float y; //y
-		float z; //z
-	public:
-		BoundingBox() {
-
-		}
-
-		BoundingBox(float wIn, float hIn, float xIn, float yIn, float zIn) {
-			w = wIn;
-			h = hIn;
-			x = xIn;
-			y = yIn;
-			z = zIn;
-		}
-		
-		~BoundingBox() {
-		}
-
-		bool collidesWith(BoundingBox otherBB) {
-			float otherX = otherBB.getX();
-			float otherY = otherBB.getY();
-			float otherZ = otherBB.getZ();
-			float otherW = otherBB.getWidth();
-			float otherH = otherBB.getHeight();
-
-			
-			float otherFront[4][3];
-			float otherLeft[4][3];
-			float otherRight[4][3];
-			float otherBack[4][3];
-
-			float myFront[4][3];
-			float myLeft[4][3];
-			float myRight[4][3];
-			float myBack[4][3];
-	
-			//1 = 'linksboven', 2 = 'rechtsboven', ...
-			float myTop[4][3] = {
-				{x - w/2, y + h/2, z + w/2},
-				{x + w/2, y + h/2, z + w/2},
-				{x + w/2, y + h/2, z - w/2},
-				{x - w/2, y + h/2, z - w/2}
-			};
-			
-			//cout << x << " "  << y << " " << z << endl; 
-			
-			float myBottom[4][3] = {
-				{x - w/2, y - h/2, z + w/2},
-				{x + w/2, y - h/2, z + w/2},
-				{x + w/2, y - h/2, z - w/2},
-				{x - w/2, y - h/2, z - w/2}
-			};
-
-			float otherTop[4][3] = {
-				{otherX - otherW/2, otherY + otherH/2, otherZ + otherW/2},
-				{otherX + otherW/2, otherY + otherH/2, otherZ + otherW/2},
-				{otherX + otherW/2, otherY + otherH/2, otherZ - otherW/2},
-				{otherX - otherW/2, otherY + otherH/2, otherZ - otherW/2}
-			};
-
-			float otherBottom[4][3] = {
-				{otherX - otherW/2, otherY - otherH/2, otherZ + otherW/2},
-				{otherX + otherW/2, otherY - otherH/2, otherZ + otherW/2},
-				{otherX + otherW/2, otherY - otherH/2, otherZ - otherW/2},
-				{otherX - otherW/2, otherY - otherH/2, otherZ - otherW/2}
-			};
-
-			*otherFront[0] = *otherTop[3];
-			*otherFront[1] = *otherTop[2];
-			*otherFront[2] = *otherBottom[3];
-			*otherFront[3] = *otherBottom[2];
-			
-			*myFront[0] = *myTop[3];
-			*myFront[1] = *myTop[2];
-			*myFront[2] = *myBottom[3];
-			*myFront[3] = *myBottom[2];
-
-			*otherLeft[0] = *otherTop[0]; 
-			*otherLeft[1] = *otherTop[3];
-			*otherLeft[2] = *otherBottom[2];
-			*otherLeft[3] = *otherBottom[0];
-
-			*myLeft[0] = *myTop[0]; 
-			*myLeft[1] = *myTop[3];
-			*myLeft[2] = *myBottom[2];
-			*myLeft[3] = *myBottom[0];
-
-			*otherBack[0] = *otherTop[1]; 
-			*otherBack[1] = *otherTop[0];
-			*otherBack[2] = *otherBottom[0];
-			*otherBack[3] = *otherBottom[1];
-
-			*myBack[0] = *myTop[1]; 
-			*myBack[1] = *myTop[0];
-			*myBack[2] = *myBottom[0];
-			*myBack[3] = *myBottom[1];
-
-			*otherRight[0] = *otherTop[2]; 
-			*otherRight[1] = *otherTop[1];
-			*otherRight[2] = *otherBottom[1];
-			*otherRight[3] = *otherBottom[3];
-
-			*myRight[0] = *myTop[2]; 
-			*myRight[1] = *myTop[1];
-			*myRight[2] = *myBottom[1];
-			*myRight[3] = *myBottom[3];
-
-			int i;
-			bool topPlaneIntersect[] = {false,false,false,false};
-			for(i = 0; i < 4; i++) {
-					topPlaneIntersect[i] = 
-					((otherTop[0][0] < myTop[0][0]) && 
-					(otherTop[i][2] > myTop[0][2]) && 
-					(otherTop[i][0] > myTop[1][0]) &&
-					(otherTop[i][2] > myTop[1][2]) &&
-					(otherTop[i][0] < myTop[2][0]) &&
-					(otherTop[i][2] > myTop[2][2]) &&
-					(otherTop[i][0] > myTop[3][0]) &&
-					(otherTop[i][2] > myTop[3][2]));			
-					//cout << topPlaneIntersect[i] << " "; 
-			}		
-			//cout << endl;
-
-			bool frontPlaneIntersect[] = {false,false,false,false};
-			for(i = 0; i < 4; i++) {
-					frontPlaneIntersect[i] = 
-					((otherFront[i][0] < myFront[0][0]) && 
-					(otherFront[i][1] > myFront[0][1]) && 
-					(otherFront[i][0] > myFront[1][0]) &&
-					(otherFront[i][1] > myFront[1][1]) &&
-					(otherFront[i][0] < myFront[2][0]) &&
-					(otherFront[i][1] > myFront[2][1]) &&
-					(otherFront[i][0] > myFront[3][0]) &&
-					(otherFront[i][1] > myFront[3][1]));	
-					//cout << frontPlaneIntersect[i]<< " "; 
-			}		
-			//cout << endl;
-
-			return false;
-		}
-		
-		float getWidth() {
-			return w;
-		}
-		
-		float getHeight() {
-			return h;
-		}
-
-		float getX() {
-			return x;
-		}
-
-		float getY() {
-			return y;
-		}
-
-		float getZ() {
-			return z;
-		}		
-
-		void setX(float xIn) {
-			x = xIn;
-		}
-
-		void setY(float yIn) {
-			y = yIn;
-		}
-
-		void setZ(float zIn) {
-			z = zIn;
-		}
-
-};
-
-class Cylinder {
-	private:
-		float r; //radius
-		float h; //height
-		float x; //Xpos
-		float y; //Ypos
-		float z; //Zpos
-		BoundingBox bb;
-	public:
-
-		Cylinder() {
-
-		}
-
-		Cylinder(float rIn, float hIn, float xIn, float yIn, float zIn) {
-			r = rIn;
-			h = hIn;
-			x = xIn;
-			y = yIn;
-			z = zIn;
-			bb = BoundingBox(r*2,h,x,y,z);
-		}
-		
-		~Cylinder() {
-		
-		}
-
-		bool collidesWithPC(BoundingBox otherBox) {
-			return bb.collidesWith(otherBox);
-		}
-		
-		float getRadius() {
-			return r;
-		}
-		
-		float getHeight() {
-			return h;
-		}
-
-		float getX() {
-			return x;
-		}
-
-		float getY() {
-			return y;
-		}
-
-		float getZ() {
-			return z;
-		}
-
-		void draw() {
-			glPushMatrix();
-			glTranslatef(x, y + (h / 2), z);
-			//http://nehe.gamedev.net/data/lessons/lesson.asp?lesson=18
-			GLUquadricObj *quadratic; 
-			quadratic = gluNewQuadric();			// Create A Pointer To The Quadric Object ( NEW )
-			gluQuadricNormals(quadratic, GLU_SMOOTH);	// Create Smooth Normals ( NEW )
-			gluQuadricTexture(quadratic, GL_TRUE);		// Create Texture Coords ( NEW )
-			gluCylinder(quadratic,r,r,h,32,32);
-
-			glPopMatrix();
-		}
-};
-
+//Game objects
 list<Bullet> bulletList;
 list<SittingDuck> duckList;
 Bunker bunker1;
 Bunker bunker2;
-Cylinder cylinder1;
 Atom atom1;
 Atom atom2;
 Atom atom3;
 Atom atom4;
 SittingDuck sittingDuck1;
-BoundingBox pcBB = BoundingBox(10.0f,PLAYER_EYE_HEIGHT,xPos,yPos,zPos);
 
-void orthogonalStart() {
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    gluOrtho2D(0, w1, 0, h1);
-    glScalef(1, -1, 1);
-    glTranslatef(0, -h1, 0);
-    glMatrixMode(GL_MODELVIEW);
-}
 
 // extra byte toevoegen (RGBA ipv RGB) => alpha channel;
 // 0xFF = transparant, 0x00 = niet doorzichtig
@@ -383,13 +124,6 @@ void toRGBA(unsigned char *dst, unsigned char *src, unsigned int width, unsigned
 }
 
 
-
-void orthogonalEnd() {
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-    glMatrixMode(GL_MODELVIEW);
-}
-
 void handleKeyrelease(unsigned char key, int x1, int y1) {
 	keys[(int) key] = false;
 }
@@ -398,10 +132,7 @@ void handleKeypress(unsigned char key, int x1, int y1) {
 	keys[(int) key] = true;
 }
 
-void doBulletsHitTargets() {
-	
-}
-
+//does player hit stuff?
 bool collides() {
 	//cout << atom1.getDistance(xPos, yPos, zPos) << " " << atom1.getR() << endl;
 	
@@ -413,6 +144,7 @@ bool collides() {
 	(atom4.getDistance(xPos, yPos, zPos) < 10);
 }
 
+//allow the keyboard to rule the world
 void keyboardHandler() {
 	float xrotrad, yrotrad;
 	float speed = 0.3;
@@ -422,36 +154,6 @@ void keyboardHandler() {
 	if(keys[27]){  //Escape key
 		exit(0);
 	}	
-
-	if(gunOn) {
-		_textureGun = _textureShooting;
-		clock_t time = clock();
-		double diff = (time - pressTime) / (double)CLOCKS_PER_SEC;
-		if(diff > 0.1) {
-			gunOn = !(gunOn);
-		}
-		//cout << pressTime << " " << releaseTime << endl;
-	} else {
-		_textureGun = _textureGunOff;
-	}
-
-	if(keys[' ']) {		
-		if(!spaceDown) {
-			//cout << "down" << " "  << endl;
-			spaceDown = true;
-			pressTime = clock();
-			gunOn = true;
-			
-			Bullet bullet = Bullet(xPos, yPos, zPos, xrotrad, yrotrad);
-			bulletList.push_back(bullet);
-		}
-	} else {		
-		if(spaceDown) {
-			//cout << "up" << " " << endl;
-			spaceDown = false;
-			releaseTime = clock();
-		}
-	}
 
 	if((keys['w'] || keys['s'])  && (keys['a'] || keys['d'])) {
 		speed = speed / 2;
@@ -507,6 +209,36 @@ void keyboardHandler() {
 		_textureFront = _textureFGC;
 		bunker1.changeTexture(_textureFront, 0);
 		bunker2.changeTexture(_textureFront, 0);
+	}
+
+	if(gunOn) {
+		_textureGun = _textureShooting;
+		clock_t time = clock();
+		double diff = (time - pressTime) / (double)CLOCKS_PER_SEC;
+		if(diff > 0.1) {
+			gunOn = !(gunOn);
+		}
+		//cout << pressTime << " " << releaseTime << endl;
+	} else {
+		_textureGun = _textureGunOff;
+	}
+
+	if(keys[' ']) {		
+		if(!spaceDown) {
+			//cout << "down" << " "  << endl;
+			spaceDown = true;
+			pressTime = clock();
+			gunOn = true;
+			
+			Bullet bullet = Bullet(xPos, yPos, zPos, xrotrad, yrotrad);
+			bulletList.push_back(bullet);
+		}
+	} else {		
+		if(spaceDown) {
+			//cout << "up" << " " << endl;
+			spaceDown = false;
+			releaseTime = clock();
+		}
 	}
 
 	if (xrot > 360) {
@@ -700,8 +432,6 @@ void handleResize(int w, int h) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(45.0, (float)w / (float)h, 1.0, 1000.0);
-	h1 = h;
-	w1 = w;
 }
 
 
@@ -1024,7 +754,6 @@ void drawScene() {
 	//drawTerrain();
 	bunker1.draw();	
 	bunker2.draw();	
-	cylinder1.draw();	
 	sittingDuck1.draw();
 	atom1.draw();
 	atom2.draw();
@@ -1099,7 +828,6 @@ int main(int argc, char** argv) {
 	int bunkerTextures[] = {_textureFront, _textureRight, _textureBack, _textureLeft};
 	bunker1 = Bunker(HORI_SIZE, VERTI_SIZE, 0, 0, -100, bunkerTextures);
 	bunker2 = Bunker(HORI_SIZE, VERTI_SIZE, 0, 0, 100, bunkerTextures);
-	cylinder1 = Cylinder(10.0f, 1.0f, 350, 0, -100);
 	atom1 = Atom(-100.0f, PLAYER_EYE_HEIGHT, -100.0f, 14); //Si
 	atom2 = Atom(-150.0f, PLAYER_EYE_HEIGHT, -100.0f, 8);  //Oxygen
 	atom3 = Atom(-200.0f, PLAYER_EYE_HEIGHT, -100.0f, 1);  //Hydrogen
