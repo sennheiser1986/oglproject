@@ -56,8 +56,8 @@ bool Bullet::move() {
 		glutSolidSphere(0.1f, 32, 32);
 		
 		glPopMatrix();
-		cout << "Bullet internal coords: " << " " << getX()
-			<< " " << getY() << " " << getZ() << endl;
+		//cout << "Bullet internal coords: " << " " << getX()
+		//	<< " " << getY() << " " << getZ() << endl;
 
 		return false;
 	}
