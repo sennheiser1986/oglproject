@@ -813,7 +813,7 @@ int main(int argc, char** argv) {
 	//glutGameModeString( "1920x1080:32@75" ); //the settings for fullscreen mode
     //glutEnterGameMode(); //set glut to fullscreen using the settings in the line above
 	
-	glutInitWindowSize (800,450);
+	glutInitWindowSize (1280,800);
     glutInitWindowPosition (100, 100);
     glutCreateWindow ("Simple Window"); 
 
