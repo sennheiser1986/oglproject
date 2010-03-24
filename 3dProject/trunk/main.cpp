@@ -261,7 +261,7 @@ void keyboardHandler() {
 void mouseMotion(int x, int y) {
 	int diffx = x - mouseX;
 	int diffy = y - mouseY;
-
+ 
 	xrot += (float) diffy;
 	yrot += (float) diffx;
 	
