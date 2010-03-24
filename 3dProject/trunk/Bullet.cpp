@@ -49,9 +49,9 @@ bool Bullet::move() {
 		float xrot = xrotrad * 180 / PI;
 		float yrot = yrotrad * 180 / PI;
 		glPushMatrix();
-		setX(getX() + sin(yrotrad) * speed * (time + 0.01));
-		setZ(getZ() - cos(yrotrad) * speed * (time + 0.01));
-		setY(getY() - sin(xrotrad) * speed * (time + 0.01));
+		x += sin(yrotrad) * speed * (time + 0.01);
+		z -= cos(yrotrad) * speed * (time + 0.01);
+		y -= sin(xrotrad) * speed * (time + 0.01);
 		glTranslatef(x, y, z);
 		glutSolidSphere(0.1f, 32, 32);
 		
