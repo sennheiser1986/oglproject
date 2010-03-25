@@ -113,7 +113,7 @@
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -179,7 +179,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Helicopter.h"
+				>
+			</File>
+			<File
 				RelativePath=".\imageloader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Md2Model.h"
 				>
 			</File>
 			<File
@@ -219,11 +227,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Helicopter.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\imageloader.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Md2Model.cpp"
 				>
 			</File>
 			<File
