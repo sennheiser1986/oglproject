@@ -2,6 +2,7 @@
 #define HELICOPTER
 
 #include "StaticObject.h"
+#include "FlightPath.h"
 #include "Md2Model.h"
 
 #ifdef __APPLE__
@@ -23,12 +24,17 @@ public:
 	~Helicopter(void);
 	
 	Helicopter(float xIn, float yIn, float zIn);
-	void Helicopter::move(float playerX, float playerY, float playerZ);
+	void Helicopter::moveToPosition(float xPos, float yPos, float zPos);
 	void Helicopter::draw();
+	bool Helicopter::rotate(float degrees);	
+	void Helicopter::setFlightPath(FlightPath inFp);
+	void Helicopter::followFlightPath();
 private:
+	bool flightPathSet;
 	float xrot;
 	float yrot;
-	MD2Model *model;
+	FlightPath fp;
+	MD2Model* model;
 	void Helicopter::init();
 };
 

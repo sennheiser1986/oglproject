@@ -9,6 +9,8 @@
 #include "Atom.h"
 #include "SittingDuck.h"
 #include "Bullet.h"
+#include "Helicopter.h"
+#include "Flightpath.h"
 
 #include "imageloader.h"
 #include "vec3f.h"
@@ -89,6 +91,7 @@ Atom atom1;
 Atom atom2;
 Atom atom3;
 Atom atom4;
+Helicopter heli;
 SittingDuck sittingDuck1;
 
 
@@ -257,6 +260,7 @@ void keyboardHandler() {
 	if (yrot > 360) {
 		yrot -= 360;
 	}	
+
 }
 
 void mouseMotion(int x, int y) {
@@ -759,6 +763,7 @@ void drawScene() {
 	atom1.draw();
 	atom2.draw();
 	atom3.draw();
+	heli.draw();
 	glutSwapBuffers();
 }
 
@@ -799,6 +804,8 @@ void update(int value) {
 		vertiOff -= 0.5f;
 	}
 
+	heli.followFlightPath();
+
 	glutPostRedisplay();
 	glutTimerFunc(40, update, 0);
 }
@@ -832,6 +839,18 @@ int main(int argc, char** argv) {
 	atom1 = Atom(-100.0f, PLAYER_EYE_HEIGHT, -100.0f, 14); //Si
 	atom2 = Atom(-150.0f, PLAYER_EYE_HEIGHT, -100.0f, 8);  //Oxygen
 	atom3 = Atom(-200.0f, PLAYER_EYE_HEIGHT, -100.0f, 1);  //Hydrogen
+
+	float waypoints[12] = {
+		-200.0f, 4*PLAYER_EYE_HEIGHT, -200.0f,
+		-200.0f, 4*PLAYER_EYE_HEIGHT, 200.0f,
+		200.0f, 4*PLAYER_EYE_HEIGHT, 200.0f,
+		200.0f, 4*PLAYER_EYE_HEIGHT, -200.0f
+	};
+	int numWaypoints = 4;
+	FlightPath fp = FlightPath(waypoints, numWaypoints);
+
+	heli = Helicopter(-200.0f, 4*PLAYER_EYE_HEIGHT, -100.0f);
+	heli.setFlightPath(fp);
 
 	sittingDuck1 = SittingDuck(100, PLAYER_EYE_HEIGHT, -100.0f, 5);
 	duckList.push_back(sittingDuck1);

@@ -179,6 +179,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FlightPath.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Helicopter.h"
 				>
 			</File>
@@ -208,6 +212,10 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath=".\helicopter1.bmp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Source Files"
@@ -224,6 +232,10 @@
 			</File>
 			<File
 				RelativePath=".\Bunker.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\FlightPath.cpp"
 				>
 			</File>
 			<File
@@ -257,6 +269,10 @@
 		</Filter>
 		<File
 			RelativePath=".\3dProject.vcproj.Beorn-win7.fionnghall.user"
+			>
+		</File>
+		<File
+			RelativePath=".\helicopter.md2"
 			>
 		</File>
 	</Files>
