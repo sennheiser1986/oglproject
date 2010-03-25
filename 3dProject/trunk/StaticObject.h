@@ -1,4 +1,5 @@
-#pragma once
+#ifndef STATIC_OBJECT
+#define STATIC_OBJECT
 
 class StaticObject
 {
@@ -24,3 +25,5 @@ public:
 	void setR(float rIn);
 	float getDistance(float xIn, float yIn, float zIn);
 };
+
+#endif

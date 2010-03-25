@@ -1,5 +1,5 @@
-#include "StaticObject.h"
 #include <math.h>
+#include "StaticObject.h"
 
 StaticObject::StaticObject(void)
 {

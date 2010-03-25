@@ -1,5 +1,5 @@
 #include <iostream>
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <math.h>
 #include <ctime>
 #include <list>
@@ -10,6 +10,9 @@
 #include "SittingDuck.h"
 #include "Bullet.h"
 
+#include "imageloader.h"
+#include "vec3f.h"
+
 #ifdef __APPLE__
 #include <OpenGL/OpenGL.h>
 #include <GLUT/glut.h>
@@ -17,8 +20,6 @@
 #include <GL/glut.h>
 #endif
 
-#include "imageloader.h"
-#include "vec3f.h"
 #define PI 3.14159265
 
 using namespace std;
