@@ -13,9 +13,9 @@
 #endif
 
 
-#define PITCH_FORWARD -45.0f
+#define PITCH_FORWARD -20.0f
 #define PITCH_LEVEL 0.0f
-#define PITCH_BACKWARD 45.0f
+#define PITCH_BACKWARD 20.0f
 
 class Helicopter :
 	public StaticObject
@@ -35,6 +35,7 @@ private:
 	bool flightPathSet;
 	float pitch;
 	float yaw;
+	int speed;
 	FlightPath fp;
 	MD2Model* model;
 	void Helicopter::init();
