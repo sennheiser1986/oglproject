@@ -28,18 +28,65 @@ void Helicopter::moveToPosition(float xPos, float yPos, float zPos) {
 
 	float length = sqrt(pow(diffX,2) + pow(diffZ,2));
 	
-	float newYrot = atan2(diffX,diffZ) * 180 / PI;
+	float newyaw = atan2(diffX,diffZ) * 180 / PI;
 	
-	if(!(rotate(newYrot))) {
+	if(hasToRotate(newyaw)) {
+		if(hasToChangePitch(PITCH_LEVEL)) {
+			pitchLevel();
+		} else {
+			rotate(newyaw);
+		}
+	} else {
 		if(length > 80 || flightPathSet) {
+			if(hasToChangePitch(PITCH_FORWARD)) {
+				pitchMoveForward();
+			} else {
+				float xNorm = diffX / length;
+				float zNorm = diffZ / length;
 
-			float xNorm = diffX / length;
-			float zNorm = diffZ / length;
-
-			x -= xNorm;
-			z -= zNorm;
+				x -= xNorm;
+				z -= zNorm;
+			}
+		} else {
+			if(hasToChangePitch(PITCH_LEVEL)) {
+				pitchLevel();
+			}
 		}
 	}
+}
+
+void Helicopter::pitchDegrees(float degrees) {
+	if(pitch < degrees - 1.0f) {
+		pitch++;
+	}
+
+	if(pitch < degrees - 0.1f) {
+		pitch += 0.1f;
+	}
+
+	if(pitch > degrees + 1.0f) {
+		pitch--;
+	}
+	if(pitch > degrees + 0.1f) {
+		pitch -= 0.1f;
+	}
+}
+
+bool Helicopter::hasToChangePitch(float degrees) {
+	float diff = pitch - degrees;
+	return (abs(diff) > 0.1f);
+}
+
+void Helicopter::pitchLevel() {
+	pitchDegrees(PITCH_LEVEL);
+}
+
+void Helicopter::pitchMoveForward() {
+	pitchDegrees(PITCH_FORWARD);
+}
+
+void Helicopter::pitchMoveBackward() {
+	pitchDegrees(PITCH_BACKWARD);
 }
 
 void Helicopter::followFlightPath() {
@@ -57,42 +104,50 @@ void Helicopter::followFlightPath() {
 	moveToPosition(xPos,yPos,zPos);
 }
 
-bool Helicopter::rotate(float degrees) {
-	cout << "degrees: " << degrees;
-	cout << " yrotation: " << yrot << endl;
-	float diffRot = yrot - degrees;
-	if(abs(diffRot) > 1.0f) {
-		if(yrot > degrees) {
-			yrot -= 1.0f;
-			return true;
+bool Helicopter::hasToRotate(float degrees) {
+	float diffRot = yaw - degrees;
+	return (abs(diffRot) > 0.1f);
+}
+
+void Helicopter::rotate(float degrees) {
+	float diffRot = yaw - degrees;
+
+	// ensure shortest rotation
+	if(abs(diffRot) > 180) {
+		if(yaw > 0) {
+			yaw = yaw - 360;
+		}
+	}
+
+	if(abs(diffRot) > 1.0f) {		
+		if(yaw > degrees) {
+			yaw -= 1.0f;
 		} 
-		if(yrot < degrees) {
-			yrot += 1.0f;
-			return true;
+		if(yaw < degrees) {
+			yaw += 1.0f;
 		}
 	} else {
 		if(abs(diffRot) > 0.1f) {
-			if(yrot > degrees) {
-				yrot -= 0.1f;
-				return true;
+			if(yaw > degrees) {
+				yaw -= 0.1f;
 			} 
-			if(yrot < degrees) {
-				yrot += 0.1f;
-				return true;
+			if(yaw < degrees) {
+				yaw += 0.1f;
 			}
 		}
 	}
-	return false;
 }
 
 void Helicopter::draw() {
+		cout << x << " " << y << " " << z << " " << yaw  << " " << pitch << " " << endl;
 		glPushMatrix();
-	 
-		glTranslatef(x, y, z);
+		float yawrad = yaw / 180 * PI;
 
+		glTranslatef(x, y, z);
+		glRotatef(pitch, cos(yawrad), 0.0f, -sin(yawrad));
 		glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 		glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
-		glRotatef(yrot, 0.0f, 0.0f, 1.0f);
+		glRotatef(yaw, 0.0f, 0.0f, 1.0f);
 				
 		glScalef(1.0f, 1.0f, 1.0f);
 		model->draw();
@@ -103,7 +158,8 @@ void Helicopter::draw() {
 void Helicopter::init() {
 	   model = MD2Model::load("helicopter.md2");
 	   flightPathSet = false; 
-	   yrot = 0;
+	   yaw = 0;
+	   pitch = 0;
 }
 
 void Helicopter::setFlightPath(FlightPath inFp) {
