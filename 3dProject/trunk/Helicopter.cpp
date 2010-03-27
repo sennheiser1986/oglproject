@@ -44,8 +44,8 @@ void Helicopter::moveToPosition(float xPos, float yPos, float zPos) {
 				float xNorm = diffX / length;
 				float zNorm = diffZ / length;
 
-				x -= xNorm;
-				z -= zNorm;
+				x -= xNorm * speed;
+				z -= zNorm * speed;
 			}
 		} else {
 			if(hasToChangePitch(PITCH_LEVEL)) {
@@ -111,6 +111,7 @@ bool Helicopter::hasToRotate(float degrees) {
 
 void Helicopter::rotate(float degrees) {
 	float diffRot = yaw - degrees;
+	float rotSpeed = speed / 3;
 
 	// ensure shortest rotation
 	if(abs(diffRot) > 180) {
@@ -119,20 +120,29 @@ void Helicopter::rotate(float degrees) {
 		}
 	}
 
-	if(abs(diffRot) > 1.0f) {		
+	if(abs(diffRot) > rotSpeed) {		
 		if(yaw > degrees) {
-			yaw -= 1.0f;
+			yaw -= rotSpeed;
 		} 
 		if(yaw < degrees) {
-			yaw += 1.0f;
+			yaw += rotSpeed;
 		}
 	} else {
-		if(abs(diffRot) > 0.1f) {
+		if(abs(diffRot) > 0.1f * rotSpeed) {
 			if(yaw > degrees) {
-				yaw -= 0.1f;
+				yaw -= 0.1f * rotSpeed;
 			} 
 			if(yaw < degrees) {
-				yaw += 0.1f;
+				yaw += 0.1f * rotSpeed;
+			}
+		} else {
+			if(abs(diffRot) > 0.1f) {
+				if(yaw > degrees) {
+					yaw -= 0.1f;
+				} 
+				if(yaw < degrees) {
+					yaw += 0.1f;
+				}
 			}
 		}
 	}
@@ -160,6 +170,7 @@ void Helicopter::init() {
 	   flightPathSet = false; 
 	   yaw = 0;
 	   pitch = 0;
+	   speed = 10;
 }
 
 void Helicopter::setFlightPath(FlightPath inFp) {
