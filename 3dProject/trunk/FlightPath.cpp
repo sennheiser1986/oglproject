@@ -1,4 +1,7 @@
 #include "FlightPath.h"
+#include <iostream>
+
+using namespace std;
 
 FlightPath::FlightPath(void)
 {
@@ -8,7 +11,7 @@ FlightPath::~FlightPath(void)
 {
 }
 
-FlightPath::FlightPath(float * inWaypoints, int inNumWaypoints) {
+FlightPath::FlightPath(int * inWaypoints, int inNumWaypoints) {
 	numWaypoints = inNumWaypoints;
 	waypoints = inWaypoints;
 	currWaypoint = 0;
@@ -16,22 +19,26 @@ FlightPath::FlightPath(float * inWaypoints, int inNumWaypoints) {
 
 void FlightPath::next() {
 	currWaypoint++;
+	cout << "current waypoint++: " << currWaypoint << endl;
 	if(currWaypoint == numWaypoints) {
 		currWaypoint = 0;
 	}
 }
 
-float FlightPath::getX() {
-	float x = waypoints[currWaypoint * 3 + 0];
+int FlightPath::getX() {
+	int x = waypoints[currWaypoint * 3 + 0];
+	cout << "get x: " << x << endl;
 	return x;
 }
 
-float FlightPath::getY() {
-	float y = waypoints[currWaypoint * 3 + 1];
+int FlightPath::getY() {
+	int y = waypoints[currWaypoint * 3 + 1];
+	cout << "get y: " << y << endl;
 	return y;
 }
 
-float FlightPath::getZ() {
-	float z = waypoints[currWaypoint * 3 + 2];
+int FlightPath::getZ() {
+	int z = waypoints[currWaypoint * 3 + 2];
+	cout << "get z: " << z << endl;
 	return z;
 }

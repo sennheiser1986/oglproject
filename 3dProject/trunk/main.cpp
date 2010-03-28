@@ -194,10 +194,10 @@ void keyboardHandler() {
 	}
 
 	if(keys['q']){  // rotate camera left
-		yrot -= 1.0f * keySens; 
+		yrot -= 1.0f ; 
 	}
 	if(keys['e']){  // rotate camera right			
-		yrot += 1.0f * keySens; 
+		yrot += 1.0f ; 
 	}
 	if(keys['z']){  // move gun left
 		_textureFront = _textureFGL;
@@ -436,7 +436,7 @@ void handleResize(int w, int h) {
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(45.0, (float)w / (float)h, 1.0, 1000.0);
+	gluPerspective(45.0, (float)w / (float)h, 1.0, 5000.0);
 }
 
 
@@ -445,7 +445,7 @@ void drawSkyBox() {
 	//glTranslatef(-xPos, -yPos, -zPos);
 	glRotatef(xrot, 1, 0, 0);
 	glRotatef(yrot, 0, 1, 0);
-	float side = 1000.0f;
+	float side = 5000.0f;
 
 	GLfloat diffuseLightColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
 	GLfloat ambientLightColor[] = {0.4f, 0.4f, 0.4f, 1.0f};
@@ -807,7 +807,7 @@ void update(int value) {
 	heli.followFlightPath();
 
 	glutPostRedisplay();
-	glutTimerFunc(40, update, 0);
+	glutTimerFunc(25, update, 0);
 }
 
 int main(int argc, char** argv) {
@@ -840,12 +840,17 @@ int main(int argc, char** argv) {
 	atom2 = Atom(-150.0f, PLAYER_EYE_HEIGHT, -100.0f, 8);  //Oxygen
 	atom3 = Atom(-200.0f, PLAYER_EYE_HEIGHT, -100.0f, 1);  //Hydrogen
 
-	float waypoints[12] = {
-		-200.0f, 4*PLAYER_EYE_HEIGHT, -200.0f,
-		-200.0f, 4*PLAYER_EYE_HEIGHT, 200.0f,
-		200.0f, 4*PLAYER_EYE_HEIGHT, 200.0f,
-		200.0f, 4*PLAYER_EYE_HEIGHT, -200.0f
+	int waypoints[12] = {
+		-800, 4*PLAYER_EYE_HEIGHT, -800,
+		-800, 4*PLAYER_EYE_HEIGHT, 800,
+		800, 4*PLAYER_EYE_HEIGHT, 800,
+		800, 4*PLAYER_EYE_HEIGHT, -800
 	};
+	int k = 0;
+	for(k = 0; k<12; k++) {
+		cout << waypoints[k] << endl;
+	}
+
 	int numWaypoints = 4;
 	FlightPath fp = FlightPath(waypoints, numWaypoints);
 

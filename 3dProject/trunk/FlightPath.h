@@ -3,15 +3,15 @@
 class FlightPath
 {
 private: 
-	float * waypoints;
+	int * waypoints;
 	int numWaypoints;
 	int currWaypoint;
 public:
 	FlightPath(void);
 	~FlightPath(void);
-	FlightPath(float * inWaypoints, int inNumWaypoints);
+	FlightPath(int * inWaypoints, int inNumWaypoints);
 	void  FlightPath::next();
-	float FlightPath::getX();
-	float FlightPath::getY();
-	float FlightPath::getZ();
+	int FlightPath::getX();
+	int FlightPath::getY();
+	int FlightPath::getZ();
 };
