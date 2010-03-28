@@ -46,6 +46,8 @@ void Helicopter::moveToPosition(float xPos, float yPos, float zPos) {
 
 				x -= xNorm * speed;
 				z -= zNorm * speed;
+
+				cout << x << " " << z << endl;
 			}
 		} else {
 			if(hasToChangePitch(PITCH_LEVEL)) {
@@ -95,7 +97,7 @@ void Helicopter::followFlightPath() {
 	float zPos = fp.getZ();
 
 	float dst = sqrt(pow((xPos - x),2) + pow((yPos - y),2) + pow((zPos - z),2));
-	if(dst < 1) {
+	if(dst <= speed) {
 		fp.next();
 		xPos = fp.getX();
 		yPos = fp.getY();
@@ -149,7 +151,6 @@ void Helicopter::rotate(float degrees) {
 }
 
 void Helicopter::draw() {
-		cout << x << " " << y << " " << z << " " << yaw  << " " << pitch << " " << endl;
 		glPushMatrix();
 		float yawrad = yaw / 180 * PI;
 
