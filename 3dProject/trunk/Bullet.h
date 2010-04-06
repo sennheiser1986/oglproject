@@ -18,4 +18,5 @@ class Bullet: public StaticObject {
 		Bullet(float xIn, float yIn, float zIn, float xRotIn, float yRotIn);
 		bool Bullet::operator==(const Bullet& other) const;
 		bool move();
+		virtual void draw();
 };

@@ -24,9 +24,10 @@ Helicopter::Helicopter(float xIn, float yIn, float zIn) {
 
 void Helicopter::moveToPosition(float xPos, float yPos, float zPos) {
 	float diffX = x - xPos;
+	float diffY = y - yPos;
 	float diffZ = z - zPos;
 
-	float length = sqrt(pow(diffX,2) + pow(diffZ,2));
+	float length = sqrt(pow(diffX,2) + pow(diffY,2) + pow(diffZ,2));
 	
 	float newyaw = atan2(diffX,diffZ) * 180 / PI;
 	
@@ -43,9 +44,11 @@ void Helicopter::moveToPosition(float xPos, float yPos, float zPos) {
 			} else {
 				float xNorm = diffX / length;
 				float zNorm = diffZ / length;
+				float yNorm = diffY / length;
 
 				x -= xNorm * speed;
 				z -= zNorm * speed;
+				y -= yNorm * speed;
 
 				cout << x << " " << z << endl;
 			}
@@ -159,10 +162,21 @@ void Helicopter::draw() {
 		glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 		glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
 		glRotatef(yaw, 0.0f, 0.0f, 1.0f);
-				
 		glScalef(1.0f, 1.0f, 1.0f);
 		model->draw();
 		
+		glBegin(GL_QUADS);
+
+
+		glTranslatef(0.0f, 0.0f, 10.0f);
+
+		float height = 20.0f;
+		float width = 20.0f;
+		float length = 60.0f;
+
+		glScalef(length, width, height);
+		glutSolidCube(1.0);
+
 		glPopMatrix();
 }
 
