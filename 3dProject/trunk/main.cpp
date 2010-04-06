@@ -12,6 +12,8 @@
 #include "Helicopter.h"
 #include "Flightpath.h"
 
+#include "Player.h"
+
 #include "imageloader.h"
 #include "vec3f.h"
 
@@ -40,13 +42,6 @@ int _skyTex[6];
 
 //The forward position relative to the floor
 float _pos = 0;
-float xPos = 0.0f;
-float yPos = PLAYER_EYE_HEIGHT;
-float zPos = 0.0f;
-
-// rotation
-float xrot = 0.0f;
-float yrot = 0.0f;
 
 int keySens = 5; // relative to player's movement speed
 
@@ -93,6 +88,7 @@ Atom atom3;
 Atom atom4;
 Helicopter heli;
 SittingDuck sittingDuck1;
+Player * player = Player::getInstance();
 
 
 // extra byte toevoegen (RGBA ipv RGB) => alpha channel;
@@ -139,7 +135,9 @@ void handleKeypress(unsigned char key, int x1, int y1) {
 //does player hit stuff?
 bool collides() {
 	//cout << atom1.getDistance(xPos, yPos, zPos) << " " << atom1.getR() << endl;
-	
+	float xPos = player->getX();
+	float yPos = player->getY();
+	float zPos = player->getZ();
 	return (bunker1.getDistance(xPos, yPos, zPos) < 10) ||
 	(bunker2.getDistance(xPos, yPos, zPos) < 10) ||
 	(atom1.getDistance(xPos, yPos, zPos) < 10) ||
@@ -152,8 +150,8 @@ bool collides() {
 void keyboardHandler() {
 	float xrotrad, yrotrad;
 	float speed = 0.3;
-	yrotrad = (yrot / 180 * 3.141592654f);
-	xrotrad = (xrot / 180 * 3.141592654f);
+	yrotrad = (player->getYrot() / 180 * 3.141592654f);
+	xrotrad = (player->getXrot() / 180 * 3.141592654f);
 
 	if(keys[27]){  //Escape key
 		exit(0);
@@ -164,40 +162,52 @@ void keyboardHandler() {
 	}
 
 	bool collision = false;
-	float oldXPos = xPos;
-	float oldZPos = zPos;
+	float oldXPos = player->getX();
+	float oldZPos = player->getZ();
 
 	if(keys['w']){  // move camera closer
 		//cout << "w" << " " << endl;	
-		xPos += float(sin(yrotrad)) * speed * keySens;
-		zPos -= float(cos(yrotrad)) * speed * keySens;		
+		player->move(
+			float(sin(yrotrad)) * speed * keySens,
+			0,
+			-float(cos(yrotrad)) * speed * keySens
+		);	
 	}
 	if(keys['s']){  // move camera farther
-		xPos -= float(sin(yrotrad)) * speed * keySens;
-		zPos += float(cos(yrotrad)) * speed * keySens;
+		player->move(
+			-float(sin(yrotrad)) * speed * keySens,
+			0,
+			float(cos(yrotrad)) * speed * keySens
+		);
 	}
 	if(keys['a']){  // move camera left
-		xPos -= float(cos(yrotrad)) * speed * keySens;
-		zPos -= float(sin(yrotrad)) * speed * keySens;
+		player->move(
+			-float(cos(yrotrad)) * speed * keySens,
+			0,
+		    -float(sin(yrotrad)) * speed * keySens
+		);
 	}
-	if(keys['d']){  // move camera right	
-		xPos += float(cos(yrotrad)) * speed * keySens;
-		zPos += float(sin(yrotrad)) * speed * keySens;
+	if(keys['d']){  // move camera right
+		player->move(
+			float(cos(yrotrad)) * speed * keySens,
+			0,
+			float(sin(yrotrad)) * speed * keySens
+		);
 	}
 	
 	//collision detection
 	if(keys['w'] || keys['s']  || keys['a'] || keys['d']) {
 		if(collides()) {
-			xPos = oldXPos;
-			zPos = oldZPos;
+			player->setX(oldXPos);
+			player->setZ(oldZPos);
 		}
 	}
 
 	if(keys['q']){  // rotate camera left
-		yrot -= 1.0f ; 
+		player->rotate(0, -1.0f); 
 	}
 	if(keys['e']){  // rotate camera right			
-		yrot += 1.0f ; 
+		player->rotate(0, 1.0f); 
 	}
 	if(keys['z']){  // move gun left
 		_textureFront = _textureFGL;
@@ -234,6 +244,9 @@ void keyboardHandler() {
 			pressTime = clock();
 			gunOn = true;
 			
+			float xPos = player->getX();
+			float yPos = player->getY();
+			float zPos = player->getZ();
 			Bullet bullet = Bullet(xPos, yPos, zPos, xrotrad, yrotrad);
 			bulletList.push_back(bullet);
 		}
@@ -243,48 +256,17 @@ void keyboardHandler() {
 			spaceDown = false;
 			releaseTime = clock();
 		}
-	}
-
-	if (xrot > 360) {
-		xrot -= 360;
-	}
-
-	if (xrot < -360) {
-		xrot += 360;
-	}
-
-	if (yrot < -360) {
-		yrot += 360;
-	}
-
-	if (yrot > 360) {
-		yrot -= 360;
 	}	
-
 }
 
 void mouseMotion(int x, int y) {
 	int diffx = x - mouseX;
 	int diffy = y - mouseY;
  
-	xrot += (float) diffy;
-	yrot += (float) diffx;
+	float xrot =(float) diffy;
+	float yrot = (float) diffx;
 	
-	if (xrot > 22) {
-		xrot = 22;
-	}
-
-	if (xrot < -40) {
-		xrot = -40;
-	}
-
-	if (yrot < -360) {
-		yrot += 360;
-	}
-
-	if (yrot > 360) {
-		yrot -= 360;
-	}
+	player->rotate(xrot, yrot);
 
 	//cout << "Yaw: " << xrot << " Pitch: " << yrot << endl;
 
@@ -443,8 +425,8 @@ void handleResize(int w, int h) {
 void drawSkyBox() {
 	glPushMatrix();
 	//glTranslatef(-xPos, -yPos, -zPos);
-	glRotatef(xrot, 1, 0, 0);
-	glRotatef(yrot, 0, 1, 0);
+	glRotatef(player->getXrot(), 1, 0, 0);
+	glRotatef(player->getYrot(), 0, 1, 0);
 	float side = 5000.0f;
 
 	GLfloat diffuseLightColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -697,8 +679,13 @@ void camera() {
 	glDisable(GL_BLEND);
 
 	drawSkyBox();
-	float yrotrad = yrot / 180 * PI;
-	float xrotrad = xrot / 180 * PI;
+	float yrotrad = player->getYrot() / 180 * PI;
+	float xrotrad = player->getXrot() / 180 * PI;
+	
+	float xPos = player->getX();
+	float yPos = player->getY();
+	float zPos = player->getZ();
+	
 	gluLookAt(xPos, yPos, zPos, xPos + sin(yrotrad), yPos - sin(xrotrad), zPos - cos(yrotrad), 0, 1, 0);
 }
 
@@ -811,6 +798,7 @@ void update(int value) {
 }
 
 int main(int argc, char** argv) {
+	player->setY(PLAYER_EYE_HEIGHT);
 	int seed = 1268511395;
 	srand(seed);
 	cout << "*Using seed: " << seed << endl;

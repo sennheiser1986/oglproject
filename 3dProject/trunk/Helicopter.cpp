@@ -49,8 +49,6 @@ void Helicopter::moveToPosition(float xPos, float yPos, float zPos) {
 				x -= xNorm * speed;
 				z -= zNorm * speed;
 				y -= yNorm * speed;
-
-				cout << x << " " << z << endl;
 			}
 		} else {
 			if(hasToChangePitch(PITCH_LEVEL)) {
