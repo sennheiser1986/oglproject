@@ -13,6 +13,7 @@ public:
 	float getYrot();
 	void move(float xIn, float yIn, float zIn);
 	void rotate(float xrotIn, float yrotIn);
+	int * Player::getGridCoords();
 
 	static Player * getInstance();
 

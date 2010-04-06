@@ -11,6 +11,8 @@
 #include "Bullet.h"
 #include "Helicopter.h"
 #include "Flightpath.h"
+#include "Hunter.h"
+#include "Map.h"
 
 #include "Player.h"
 
@@ -86,6 +88,7 @@ Atom atom1;
 Atom atom2;
 Atom atom3;
 Atom atom4;
+Hunter hunter1;
 Helicopter heli;
 SittingDuck sittingDuck1;
 Player * player = Player::getInstance();
@@ -798,6 +801,8 @@ void update(int value) {
 }
 
 int main(int argc, char** argv) {
+	player->setX(0);
+	player->setZ(0);
 	player->setY(PLAYER_EYE_HEIGHT);
 	int seed = 1268511395;
 	srand(seed);
@@ -822,11 +827,22 @@ int main(int argc, char** argv) {
 //	_terrain = loadTerrain(name.c_str(), 20);
 
 	int bunkerTextures[] = {_textureFront, _textureRight, _textureBack, _textureLeft};
+	
+	Map * instance = Map::getInstance();
+	instance->writeToFile("map.txt");
+
 	bunker1 = Bunker(HORI_SIZE, VERTI_SIZE, 0, 0, -100, bunkerTextures);
-	bunker2 = Bunker(HORI_SIZE, VERTI_SIZE, 0, 0, 100, bunkerTextures);
+	bunker2 = Bunker(HORI_SIZE, VERTI_SIZE, 200, 0, -100, bunkerTextures);
 	atom1 = Atom(-100.0f, PLAYER_EYE_HEIGHT, -100.0f, 14); //Si
 	atom2 = Atom(-150.0f, PLAYER_EYE_HEIGHT, -100.0f, 8);  //Oxygen
 	atom3 = Atom(-200.0f, PLAYER_EYE_HEIGHT, -100.0f, 1);  //Hydrogen
+
+	instance->writeToFile("map2.txt");
+
+	hunter1 = Hunter(100,0,100);
+	hunter1.move();
+
+	instance->writeToFile("map3.txt");
 
 	int waypoints[12] = {
 		-800, 4*PLAYER_EYE_HEIGHT, -800,

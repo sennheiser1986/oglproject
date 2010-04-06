@@ -40,6 +40,7 @@ public:
   int getValueAt(int row, int col) ;
   int getWidth();
   int getHeight();
+  void Map::writeToFile(char * filename);
 };
 
 

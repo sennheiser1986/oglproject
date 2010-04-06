@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Map.h"
 #include <iostream>
 
 using namespace std;
@@ -35,6 +36,11 @@ float Player::getY() {
 
 float Player::getZ() {
 	return zPos;
+}
+
+int * Player::getGridCoords() {
+	Map * instance = Map::getInstance();
+	return instance->convertWorldCoordToMapCoord(xPos, zPos);
 }
 
 float Player::getYrot() {
