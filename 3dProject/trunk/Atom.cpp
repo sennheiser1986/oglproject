@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <iostream>
+#include "Map.h"
 
 #ifdef __APPLE__
 #include <OpenGL/OpenGL.h>
@@ -68,6 +69,21 @@ void Atom::init() {
 		cout << endl;
 	}
 	r = radius[shellNum-1];
+
+	Map * instance = Map::getInstance();
+	
+	int * minMapCoord = instance->convertWorldCoordToMapCoord(x-r,z+r);
+	int minRow = minMapCoord[0];
+	int minCol = minMapCoord[1];
+
+	int * maxMapCoord = instance->convertWorldCoordToMapCoord(x+r,z-r);
+	int maxRow = maxMapCoord[0];
+	int maxCol = maxMapCoord[1];
+
+	int width = maxCol - minCol;
+	int height = maxRow - minRow;
+
+	instance->markBlock(minRow, minCol, height, width, 9);
 }
 
 Atom::Atom() {
@@ -89,12 +105,17 @@ Atom::~Atom() {
 void Atom::draw() {
 	atomTime = clock();
 	double time = (double)(atomTime - startTime) / CLOCKS_PER_SEC;
-	glEnable(GL_COLOR_MATERIAL);
+	float alpha = 0.3f;
 	
-	glColor3f(0.0f, 1.0f, 1.0f);
+	glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_BLEND); //Enable alpha blending
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Set the blend function
+	
+	glColor4f(0.0f, 1.0f, 1.0f, alpha);
 	glPushMatrix();
 	glTranslatef(x, y, z);
 	glutSolidSphere(1.0,32,32);
+	
 	glPopMatrix();			
 	
 	
@@ -125,7 +146,7 @@ void Atom::draw() {
 		//	cos(speed[shellNumber[i]-1] * angle + phase[i]) * radius[shellNumber[i]-1] * cosScale);	
 		glTranslatef(0, amplitude * sin(angFreq * time + thisPhase) * sinScale,
 			amplitude * cos(angFreq * time + thisPhase) * cosScale);	
-		glColor3f(shellRChan[shellNumber[i]-1], shellGChan[shellNumber[i]-1], shellBChan[shellNumber[i]-1]);
+		glColor4f(shellRChan[shellNumber[i]-1], shellGChan[shellNumber[i]-1], shellBChan[shellNumber[i]-1],alpha);
 		glutSolidSphere(0.5,32,32);
 		glPopMatrix();
 	}

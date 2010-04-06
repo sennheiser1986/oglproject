@@ -61,4 +61,13 @@ bool Bullet::move() {
 
 		return false;
 	}
+
+}
+
+
+void Bullet::draw() {
+	glPushMatrix();
+	glTranslatef(x, y, z);
+	glutSolidSphere(0.1f, 32, 32);
+	glPopMatrix();
 }

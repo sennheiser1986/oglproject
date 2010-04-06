@@ -14,7 +14,7 @@ public:
 	~StaticObject(void);
 	StaticObject(float xIn, float yIn, float zIn);
 
-	void draw();
+	virtual void draw() = 0;
 	float getX();
 	float getY();
 	float getZ();

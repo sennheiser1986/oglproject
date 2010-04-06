@@ -52,3 +52,7 @@ void StaticObject::setR(float rIn) {
 float StaticObject::getDistance(float xIn, float yIn, float zIn) {
 	return sqrt(pow((xIn - x),2) + pow((yIn - y),2) + pow((zIn - z),2)) - r;	
 }
+
+void StaticObject::draw() {
+
+}
