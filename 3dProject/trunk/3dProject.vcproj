@@ -191,11 +191,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Hunter.h"
+				>
+			</File>
+			<File
 				RelativePath=".\imageloader.h"
 				>
 			</File>
 			<File
 				RelativePath=".\Map.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MapSearchNode.h"
 				>
 			</File>
 			<File
@@ -260,6 +268,10 @@
 			</File>
 			<File
 				RelativePath=".\Helicopter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Hunter.cpp"
 				>
 			</File>
 			<File

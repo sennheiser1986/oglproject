@@ -53,9 +53,12 @@ bool Map::markBlock(int row, int col, int h, int w, int cost) {
 			}
 		}
 	}
+	return true;
+}
 
+void Map::writeToFile(char * filename) {
 	ofstream myfile;
-	myfile.open ("example.txt");
+	myfile.open (filename);
 	for(int i = 0; i < height; i++) {
 		for(int j = 0; j < width; j++) {
 			myfile << grid[i][j] ;
@@ -63,9 +66,7 @@ bool Map::markBlock(int row, int col, int h, int w, int cost) {
 		myfile << endl;
 	}
 
-	myfile.close();
-	
-	return true;
+	myfile.close();	
 }
 
 bool Map::mark(int row, int col, int cost) {
