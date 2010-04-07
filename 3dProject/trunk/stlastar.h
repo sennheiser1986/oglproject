@@ -41,7 +41,7 @@ using namespace std;
 
 // Fixed size memory allocator can be disabled to compare performance
 // Uses std new and delete instead if you turn it off
-#define USE_FSA_MEMORY 1
+#define USE_FSA_MEMORY 0
 
 // disable warning that debugging information has lines that are truncated
 // occurs in stl headers
@@ -111,7 +111,7 @@ public: // methods
 
 
 	// constructor just initialises private data
-	AStarSearch( int MaxNodes = 1000 ) :
+	AStarSearch( int MaxNodes = 5000 ) :
 		m_AllocateNodeCount(0),
 #if USE_FSA_MEMORY
 		m_FixedSizeAllocator( MaxNodes ),
