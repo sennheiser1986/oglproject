@@ -5,6 +5,7 @@ using namespace std;
 
 FlightPath::FlightPath(void)
 {
+	numWaypoints = 0;
 }
 
 FlightPath::~FlightPath(void)
@@ -38,4 +39,8 @@ int FlightPath::getY() {
 int FlightPath::getZ() {
 	int z = waypoints[currWaypoint * 3 + 2];
 	return z;
+}
+
+bool FlightPath::hasWaypoints() {
+	return (numWaypoints > 0);
 }

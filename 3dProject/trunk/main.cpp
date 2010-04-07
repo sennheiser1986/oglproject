@@ -852,7 +852,7 @@ int main(int argc, char** argv) {
 	hunter1 = Hunter(600,0,-150);
 
 	clock_t clock1 = clock();
-	hunter1.move();
+	hunter1.followPath();
 	clock_t clock2 = clock();
 	float diff = (float)(clock2 - clock1)/CLOCKS_PER_SEC;
 	cout << "diff is " << diff << endl;
