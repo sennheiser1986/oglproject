@@ -211,6 +211,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PathFind.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Player.h"
 				>
 			</File>
@@ -291,11 +295,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Player.cpp"
+				RelativePath=".\PathFind.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\raytrace_test.cpp"
+				RelativePath=".\Player.cpp"
 				>
 			</File>
 			<File
