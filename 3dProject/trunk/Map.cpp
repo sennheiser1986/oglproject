@@ -70,7 +70,7 @@ void Map::writeToFile(char * filename) {
 }
 
 bool Map::mark(int row, int col, int cost) {
-	if(grid[row][col] == 3) {
+	if(grid[row][col] != 9) {
 		grid[row][col] = cost;
 		return true;
 	} else {

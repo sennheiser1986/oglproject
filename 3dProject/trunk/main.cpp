@@ -839,8 +839,13 @@ int main(int argc, char** argv) {
 
 	instance->writeToFile("map2.txt");
 
-	hunter1 = Hunter(100,0,100);
+	hunter1 = Hunter(600,0,-50);
+
+	clock_t clock1 = clock();
 	hunter1.move();
+	clock_t clock2 = clock();
+	float diff = (float)(clock2 - clock1)/CLOCKS_PER_SEC;
+	cout << "diff is " << diff << endl;
 
 	instance->writeToFile("map3.txt");
 

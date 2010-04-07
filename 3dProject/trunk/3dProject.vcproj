@@ -295,6 +295,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\raytrace_test.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\SittingDuck.cpp"
 				>
 			</File>

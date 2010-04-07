@@ -98,7 +98,6 @@ bool MapSearchNode::GetSuccessors( AStarSearch<MapSearchNode> *astarsearch, MapS
 		&& !((parent_x == x-1) && (parent_y == y))
 	  ) 
 	{
-		cout << GetMap( x-1, y ) << endl;
 		NewNode = MapSearchNode( x-1, y );
 		astarsearch->AddSuccessor( NewNode );
 	}	

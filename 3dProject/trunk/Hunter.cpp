@@ -168,8 +168,7 @@ void Hunter::move() {
 		}
 		int * coords = new int[2];
 		coords = *it;
-		cout << coords[0] << " " << coords[1] << " " << instance->getValueAt(coords[0],coords[1]) << endl;
-		int valAt = instance->getValueAt(coords[0],coords[1]);
+		cout << coords[0] << " " << coords[1] << " " << instance->getValueAt(coords[1],coords[0]) << endl;
 		instance->mark(coords[1], coords[0], i);
 		i++;
 	}
