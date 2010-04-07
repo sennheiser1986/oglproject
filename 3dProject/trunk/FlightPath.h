@@ -11,6 +11,7 @@ public:
 	~FlightPath(void);
 	FlightPath(int * inWaypoints, int inNumWaypoints);
 	void  FlightPath::next();
+	bool FlightPath::hasWaypoints();
 	int FlightPath::getX();
 	int FlightPath::getY();
 	int FlightPath::getZ();
