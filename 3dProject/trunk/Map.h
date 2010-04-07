@@ -31,6 +31,7 @@ private:
   Map & operator=(const Map &){};
  
 public:
+  static const int INACCESSIBLE_FIELD_VALUE = 9;
   static Map *getInstance();
   static void setParams(int width, int height, int cellSide);
   bool mark(int x, int y, int cost);

@@ -48,17 +48,9 @@ bool Bullet::move() {
 	} else {
 		float xrot = xrotrad * 180 / PI;
 		float yrot = yrotrad * 180 / PI;
-		glPushMatrix();
 		x += sin(yrotrad) * speed * (time + 0.01);
 		z -= cos(yrotrad) * speed * (time + 0.01);
 		y -= sin(xrotrad) * speed * (time + 0.01);
-		glTranslatef(x, y, z);
-		glutSolidSphere(0.1f, 32, 32);
-		
-		glPopMatrix();
-		//cout << "Bullet internal coords: " << " " << getX()
-		//	<< " " << getY() << " " << getZ() << endl;
-
 		return false;
 	}
 

@@ -564,7 +564,7 @@ void drawSkyBox() {
 }
 
 
-void drawBullets() {
+void moveBullets() {
 	list<Bullet> copyList(bulletList);
 	list<Bullet>::iterator it;	
 	//cout << bulletList.size() << endl;
@@ -720,6 +720,15 @@ void drawFloor(float y) {
 	glDisable(GL_TEXTURE_2D);
 }
 
+void drawBullets() {
+	list<Bullet>::iterator it;	
+	//cout << bulletList.size() << endl;
+	
+	for (it = bulletList.begin() ; it != bulletList.end(); it++ ) {
+		Bullet b = *it;
+		b.draw();
+	}
+}
 
 void drawScene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
@@ -728,6 +737,7 @@ void drawScene() {
 	
 	keyboardHandler();
 	camera();	
+	moveBullets();
 	drawBullets();
 	//orthogonalStart();
 	//glBegin(GL_QUADS);	
@@ -839,7 +849,7 @@ int main(int argc, char** argv) {
 
 	instance->writeToFile("map2.txt");
 
-	hunter1 = Hunter(600,0,-50);
+	hunter1 = Hunter(600,0,-150);
 
 	clock_t clock1 = clock();
 	hunter1.move();
