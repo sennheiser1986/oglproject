@@ -72,11 +72,11 @@ void Atom::init() {
 
 	Map * instance = Map::getInstance();
 	
-	int * minMapCoord = instance->convertWorldCoordToMapCoord(x-r,z+r);
+	int * minMapCoord = instance->convertWorldCoordToMapCoord(x-r,z-r);
 	int minRow = minMapCoord[0];
 	int minCol = minMapCoord[1];
 
-	int * maxMapCoord = instance->convertWorldCoordToMapCoord(x+r,z-r);
+	int * maxMapCoord = instance->convertWorldCoordToMapCoord(x+r,z+r);
 	int maxRow = maxMapCoord[0];
 	int maxCol = maxMapCoord[1];
 

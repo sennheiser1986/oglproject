@@ -2,6 +2,7 @@
 #define HUNTER
 #include "StaticObject.h"
 #include "FlightPath.h"
+#include <ctime>
 
 #ifdef __APPLE__
 #include <OpenGL/OpenGL.h>
@@ -35,6 +36,7 @@ private:
 	float yaw;
 	float speed;
 	bool reachedEndOfPath;
+	clock_t waypointTime;
 
 };
 

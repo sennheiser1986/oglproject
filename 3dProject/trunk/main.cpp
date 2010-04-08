@@ -820,7 +820,7 @@ void update(int value) {
 }
 
 int main(int argc, char** argv) {
-	playerInstance->setX(1000);
+	playerInstance->setX(800);
 	playerInstance->setZ(1000);
 	playerInstance->setY(PLAYER_EYE_HEIGHT);
 	int seed = 1268511395;
@@ -866,7 +866,7 @@ int main(int argc, char** argv) {
 	// testing purposes:
 	mapInstance->writeToFile("map2.txt");
 
-	hunter1 = Hunter(200,PLAYER_EYE_HEIGHT,200,5);
+	hunter1 = Hunter(800,PLAYER_EYE_HEIGHT,1300,5);
 
 	int waypoints[12] = {
 		0, 4*PLAYER_EYE_HEIGHT, 800,
