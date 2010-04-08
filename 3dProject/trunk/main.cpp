@@ -764,6 +764,7 @@ void drawScene() {
 	atom2.draw();
 	atom3.draw();
 	heli.draw();
+	hunter1.draw();
 	glutSwapBuffers();
 }
 
@@ -805,6 +806,7 @@ void update(int value) {
 	}
 
 	heli.followFlightPath();
+	hunter1.followPath();
 
 	glutPostRedisplay();
 	glutTimerFunc(25, update, 0);
@@ -839,8 +841,30 @@ int main(int argc, char** argv) {
 	int bunkerTextures[] = {_textureFront, _textureRight, _textureBack, _textureLeft};
 	
 	Map * instance = Map::getInstance();
+	int * testcoords = instance->convertWorldCoordToMapCoord(0,0);
+	int * testcoords2 =  instance->convertMapCoordToWorldCoord(testcoords[0],testcoords[1]);
+	cout << testcoords2[0] << "," << testcoords2[1] << endl;
+	testcoords = instance->convertWorldCoordToMapCoord(25,25);
+	testcoords2 =  instance->convertMapCoordToWorldCoord(testcoords[0],testcoords[1]);
+	cout << testcoords2[0] << "," << testcoords2[1] << endl;
+	instance->mark(testcoords[0],testcoords[1],1);
+	testcoords = instance->convertWorldCoordToMapCoord(-25,25);
+	testcoords2 =  instance->convertMapCoordToWorldCoord(testcoords[0],testcoords[1]);
+	cout << testcoords2[0] << "," << testcoords2[1] << endl;
+	instance->mark(testcoords[0],testcoords[1],1);
+	instance->mark(testcoords[0],testcoords[1],2);
+	testcoords = instance->convertWorldCoordToMapCoord(-25,-25);
+	testcoords2 =  instance->convertMapCoordToWorldCoord(testcoords[0],testcoords[1]);
+	cout << testcoords2[0] << "," << testcoords2[1] << endl;
+	instance->mark(testcoords[0],testcoords[1],1);
+	instance->mark(testcoords[0],testcoords[1],4);
+	testcoords = instance->convertWorldCoordToMapCoord(25,-25);
+	testcoords2 =  instance->convertMapCoordToWorldCoord(testcoords[0],testcoords[1]);
+	cout << testcoords2[0] << "," << testcoords2[1] << endl;
+	instance->mark(testcoords[0],testcoords[1],1);
+	instance->mark(testcoords[0],testcoords[1],5);
 	instance->writeToFile("map.txt");
-
+	
 	bunker1 = Bunker(HORI_SIZE, VERTI_SIZE, 0, 0, -100, bunkerTextures);
 	bunker2 = Bunker(HORI_SIZE, VERTI_SIZE, 200, 0, -100, bunkerTextures);
 	atom1 = Atom(-100.0f, PLAYER_EYE_HEIGHT, -100.0f, 14); //Si
@@ -849,15 +873,7 @@ int main(int argc, char** argv) {
 
 	instance->writeToFile("map2.txt");
 
-	hunter1 = Hunter(600,0,-150);
-
-	clock_t clock1 = clock();
-	hunter1.followPath();
-	clock_t clock2 = clock();
-	float diff = (float)(clock2 - clock1)/CLOCKS_PER_SEC;
-	cout << "diff is " << diff << endl;
-
-	instance->writeToFile("map3.txt");
+	hunter1 = Hunter(-200,PLAYER_EYE_HEIGHT,-200);
 
 	int waypoints[12] = {
 		-800, 4*PLAYER_EYE_HEIGHT, -800,

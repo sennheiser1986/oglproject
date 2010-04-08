@@ -20,7 +20,9 @@ FlightPath::FlightPath(int * inWaypoints, int inNumWaypoints) {
 
 void FlightPath::next() {
 	currWaypoint++;
-	cout << "current waypoint++: " << currWaypoint << endl;
+	cout << "current waypoint++: " << waypoints[currWaypoint * 3 + 0] 
+	<< "," << waypoints[currWaypoint * 3 + 1]
+	<< "," << waypoints[currWaypoint * 3 + 2]<< endl;
 	if(currWaypoint == numWaypoints) {
 		currWaypoint = 0;
 	}

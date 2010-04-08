@@ -56,6 +56,21 @@ bool Map::markBlock(int row, int col, int h, int w, int cost) {
 	return true;
 }
 
+int * Map::convertMapCoordToWorldCoord(int row, int col) {
+	int cols = width;
+	int rows = height;
+
+	
+	int x = cellSide * ( col + 1 -  cols/2 );
+	int y = cellSide * ( -row +  rows/2  );
+
+	int * arr = new int[2];
+	arr[0] = x;
+	arr[1] = y;
+
+	return arr;
+}
+
 void Map::writeToFile(char * filename) {
 	ofstream myfile;
 	myfile.open (filename);
