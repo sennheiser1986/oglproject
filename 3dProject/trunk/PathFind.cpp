@@ -60,7 +60,7 @@ bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, 
 	int * coords = new int[2];
 	coords[0] = y0;
 	coords[1] = x0;
-	cout << "before push: " << path.size() << endl;
+	cout << "before push: " << path.size() << "row: " << coords[0] << "col: " << coords[1] << endl;
 	path.push_back(coords);
 	cout << "after push: " << path.size() << endl;
 
@@ -81,7 +81,7 @@ bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, 
 					int * coords = new int[2];
 					coords[0] = oldY;
 					coords[1] = oldX;
-					cout << "before push: " << path.size() << endl;
+					cout << "before push: " << path.size() << "row: " << coords[0] << "col: " << coords[1] << endl;
 					path.push_back(coords);
 					cout << "after push: " << path.size() << endl;
 				}
@@ -120,13 +120,13 @@ bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, 
             y += y_inc;
             error += dx;
         }
-		cout << "x: "<< x << " y: " << y << endl;
+		//cout << "x: "<< x << " y: " << y << endl;
     }
 
 	coords = new int[2];
 	coords[0] = y1;
 	coords[1] = x1;
-	cout << "before push: " << path.size() << endl;
+	cout << "before push: " << path.size() << "row: " << coords[0] << "col: " << coords[1] << endl;
 	path.push_back(coords);
 	cout << "after push: " << path.size() << endl;
 	

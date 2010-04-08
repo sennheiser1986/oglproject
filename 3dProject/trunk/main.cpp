@@ -849,10 +849,8 @@ int main(int argc, char** argv) {
 	
 	// For testing purposes:
 	// /*
-	int * testcoords = mapInstance->convertWorldCoordToMapCoord(0,0);
-	int * testcoords2 =  mapInstance->convertMapCoordToWorldCoord(testcoords[0],testcoords[1]);
-	
-	cout << testcoords2[0] << "," << testcoords2[1] << endl;
+	int * testcoords = playerInstance->getGridCoords();	
+	cout << testcoords[0] << "," << testcoords[1] << endl;
 	mapInstance->mark(testcoords[0],testcoords[1],5);
 	
 	//***/
