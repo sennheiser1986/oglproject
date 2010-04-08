@@ -35,6 +35,7 @@ public:
   static Map *getInstance();
   static void setParams(int width, int height, int cellSide);
   bool mark(int x, int y, int cost);
+  bool debugMark(int x, int y, int cost);
   bool markBlock(int row, int col, int height, int width, int cost);
   int * convertWorldCoordToMapCoord(int xIn, int yIn);
   int * convertMapCoordToWorldCoord(int rowIn, int colIn);

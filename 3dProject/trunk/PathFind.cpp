@@ -24,9 +24,13 @@ bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, 
 	//init
 	int inacc = Map::INACCESSIBLE_FIELD_VALUE;
 	Map * instance = Map::getInstance();
-	int startVal = instance->getValueAt(x0,y0);
-	int endVal = instance->getValueAt(x1,y1);
+	int startVal = instance->getValueAt(y0,x0);
+	int endVal = instance->getValueAt(y1,x1);
 	if(startVal == inacc || endVal == inacc) {
+		int * tempCoords = 	instance->convertMapCoordToWorldCoord(y1, x1);
+		cout << tempCoords[0] << " " << tempCoords[1] << endl;
+		instance->debugMark(y0,x0,7);
+		instance->writeToFile("debugpath.txt");
 		return false;
 	}
 
@@ -52,6 +56,13 @@ bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, 
 	bool obstructed = false;
 
 	//end init
+	
+	int * coords = new int[2];
+	coords[0] = y0;
+	coords[1] = x0;
+	cout << "before push: " << path.size() << endl;
+	path.push_back(coords);
+	cout << "after push: " << path.size() << endl;
 
     while(!((x == x1) && (y == y1)))
     {
@@ -66,12 +77,14 @@ bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, 
 				astarX1 = oldX;
 				astarY1 = oldY;
 
-				int * coords = new int[2];
-				coords[0] = oldY;
-				coords[1] = oldX;
-				cout << "before push: " << path.size() << endl;
-				path.push_back(coords);
-				cout << "after push: " << path.size() << endl;
+				if(!(oldX == x0 && oldY == y0)) {
+					int * coords = new int[2];
+					coords[0] = oldY;
+					coords[1] = oldX;
+					cout << "before push: " << path.size() << endl;
+					path.push_back(coords);
+					cout << "after push: " << path.size() << endl;
+				}
 			} else {
 				
 			}
@@ -110,7 +123,7 @@ bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, 
 		cout << "x: "<< x << " y: " << y << endl;
     }
 
-	int * coords = new int[2];
+	coords = new int[2];
 	coords[0] = y1;
 	coords[1] = x1;
 	cout << "before push: " << path.size() << endl;

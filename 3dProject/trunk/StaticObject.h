@@ -13,6 +13,7 @@ public:
 	StaticObject(void);
 	~StaticObject(void);
 	StaticObject(float xIn, float yIn, float zIn);
+	StaticObject(float xIn, float yIn, float zIn, float rIn);
 
 	virtual void draw() = 0;
 	float getX();

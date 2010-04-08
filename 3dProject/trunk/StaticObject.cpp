@@ -13,6 +13,14 @@ StaticObject::StaticObject(float xIn, float yIn, float zIn) {
 	x = xIn;
 	y = yIn;
 	z = zIn;
+	r = 0;
+}
+
+StaticObject::StaticObject(float xIn, float yIn, float zIn, float rIn) {
+	x = xIn;
+	y = yIn;
+	z = zIn;
+	r = rIn;
 }
 
 float StaticObject::getX() {

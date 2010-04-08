@@ -17,11 +17,8 @@ Hunter::~Hunter(void)
 {
 }
 
-Hunter::Hunter(float xIn, float yIn, float zIn) {
-	x = xIn;
-	y = yIn;
-	z = zIn;
-
+Hunter::Hunter(float xIn, float yIn, float zIn, float rIn): 
+	StaticObject(xIn, yIn, zIn, rIn) {
 	init();
 }
 
@@ -56,62 +53,12 @@ void Hunter::init() {
 void Hunter::draw() {
 	glPushMatrix();
 	glTranslatef(x, y, z);
-	glutSolidSphere(5.0f, 32, 32);
+	glutSolidSphere(r, 32, 32);
 	glPopMatrix();
 }
 
 void Hunter::followPath() {
-	if(! reachedEndOfPath) {
-		if(flightPath.hasWaypoints()) {
-			int xPos = flightPath.getX();
-			int yPos = flightPath.getY();
-			int zPos = flightPath.getZ();
-
-			bool go = true;
-			float dst = sqrt(pow((xPos - x),2) + pow((yPos - y),2) + pow((zPos - z),2));
-			if(dst <= speed) {
-				go = flightPath.next();
-				if(! go) {
-					reachedEndOfPath = true;
-				}
-				xPos = flightPath.getX();
-				yPos = flightPath.getY();
-				zPos = flightPath.getZ();
-			}
-			
-			if(go) {
-				moveToPosition(xPos,yPos,zPos);
-			}
-		}	else {
-			calculatePath();
-			reachedEndOfPath = false;
-			followPath();
-		}	
-	}	else { // end of path reached
-		//to remove
-		Player * playerInstance = Player::getInstance();
-		int xPos = playerInstance->getX();
-		int yPos = playerInstance->getY();
-		int zPos = playerInstance->getZ();		
-
-		Map * mapInstance = Map::getInstance();
-		int * coords = mapInstance->convertWorldCoordToMapCoord(x, z);
-		int hunterX = coords[0];
-		int hunterY = coords[1];
-		
-		coords = playerInstance->getGridCoords();
-		int playerX = coords[0];
-		int playerY = coords[1];
-
-		PathFind pf = PathFind(); 
-
-		if (pf.existStraightPath(hunterX, hunterY, playerX, playerY)) {
-			moveToPosition(xPos, yPos, zPos);
-		} else {
-			reachedEndOfPath = false;
-			flightPath.clear();
-		}
-	}
+	//messy junk
 }
 
 void Hunter::calculatePath() {
