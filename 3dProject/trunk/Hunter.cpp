@@ -58,7 +58,25 @@ void Hunter::draw() {
 }
 
 void Hunter::followPath() {
-	//messy junk
+	 if(flightPath.hasWaypoints()) {
+                int xPos = flightPath.getX();
+                int yPos = flightPath.getY();
+                int zPos = flightPath.getZ();
+
+                float dst = sqrt(pow((xPos - x),2) + pow((yPos - y),2) + pow((zPos - z),2));
+                if(dst <= speed) {
+                        flightPath.next();
+                        xPos = flightPath.getX();
+                        yPos = flightPath.getY();
+                        zPos = flightPath.getZ();
+                }
+                
+                moveToPosition(xPos,yPos,zPos);
+        
+        }       else {
+                calculatePath();
+                followPath();
+        }
 }
 
 void Hunter::calculatePath() {
@@ -86,8 +104,8 @@ void Hunter::calculatePath() {
 	for (it = pathList.begin() ; it != pathList.end(); it++ ) {
 		int * temp = new int[2];
 		temp = *it;
-		int col = temp[0];
-		int row = temp[1];
+		int row = temp[0];
+		int col = temp[1];
 		//mapInstance->mark(row, col,0);
 		cout << row << "," << col << endl;
 		int * temp2 = mapInstance->convertMapCoordToWorldCoord(row, col);
@@ -109,11 +127,11 @@ void Hunter::calculatePath() {
 		waypointRef++;
 	}
 
-	//for(int i = 0; i < numWaypoints; i++) {
-		//cout << waypoints[3*i]  << ","
-		//	<< waypoints[3*i+1] << ","
-		//	<< waypoints[3*i+2] << endl;		
-	//}
+	for(int i = 0; i < numWaypoints; i++) {
+		cout << waypoints[3*i]  << ","
+			<< waypoints[3*i+1] << ","
+			<< waypoints[3*i+2] << endl;		
+	}
 
 	mapInstance->writeToFile("hunterr.txt");
 	flightPath = FlightPath(waypoints, numWaypoints, false);
