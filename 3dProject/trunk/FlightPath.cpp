@@ -12,20 +12,27 @@ FlightPath::~FlightPath(void)
 {
 }
 
-FlightPath::FlightPath(int * inWaypoints, int inNumWaypoints) {
+FlightPath::FlightPath(int * inWaypoints, int inNumWaypoints, bool inLoop) {
 	numWaypoints = inNumWaypoints;
 	waypoints = inWaypoints;
 	currWaypoint = 0;
+	loop = inLoop;
 }
 
-void FlightPath::next() {
-	currWaypoint++;
+bool FlightPath::next() {
+	if(currWaypoint == (numWaypoints - 1)) {
+		if(loop) {
+			currWaypoint = 0;
+		} else {
+			return false;
+		}
+	} else {
+		currWaypoint++;
+	}	
 	cout << "current waypoint++: " << waypoints[currWaypoint * 3 + 0] 
 	<< "," << waypoints[currWaypoint * 3 + 1]
 	<< "," << waypoints[currWaypoint * 3 + 2]<< endl;
-	if(currWaypoint == numWaypoints) {
-		currWaypoint = 0;
-	}
+	return true;	
 }
 
 int FlightPath::getX() {
@@ -45,4 +52,8 @@ int FlightPath::getZ() {
 
 bool FlightPath::hasWaypoints() {
 	return (numWaypoints > 0);
+}
+
+void FlightPath::clear() {
+	numWaypoints = 0;
 }

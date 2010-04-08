@@ -37,6 +37,7 @@ private:
 	float z;
 	float yaw;
 	float speed;
+	bool reachedEndOfPath;
 
 };
 
