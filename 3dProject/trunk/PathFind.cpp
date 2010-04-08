@@ -65,13 +65,15 @@ bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, 
 
 				astarX1 = oldX;
 				astarY1 = oldY;
-			} else {
+
 				int * coords = new int[2];
-				coords[0] = y;
-				coords[1] = x;
+				coords[0] = oldY;
+				coords[1] = oldX;
 				cout << "before push: " << path.size() << endl;
 				path.push_back(coords);
 				cout << "after push: " << path.size() << endl;
+			} else {
+				
 			}
 		} else {
 			if(val != 9) {
@@ -107,6 +109,13 @@ bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, 
         }
 		cout << "x: "<< x << " y: " << y << endl;
     }
+
+	int * coords = new int[2];
+	coords[0] = y1;
+	coords[1] = x1;
+	cout << "before push: " << path.size() << endl;
+	path.push_back(coords);
+	cout << "after push: " << path.size() << endl;
 	
 	cout << "wait" << endl;
 	return true;

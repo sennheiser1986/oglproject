@@ -49,7 +49,8 @@ void Hunter::moveToPosition(float xPos, float yPos, float zPos) {
 
 void Hunter::init() {
 	   yaw = 0;	  
-	   speed = 0.5;
+	   speed = 3;
+	   reachedEndOfPath = false;
 }
 
 void Hunter::draw() {
@@ -60,25 +61,57 @@ void Hunter::draw() {
 }
 
 void Hunter::followPath() {
-	if(flightPath.hasWaypoints()) {
-		int xPos = flightPath.getX();
-		int yPos = flightPath.getY();
-		int zPos = flightPath.getZ();
+	if(! reachedEndOfPath) {
+		if(flightPath.hasWaypoints()) {
+			int xPos = flightPath.getX();
+			int yPos = flightPath.getY();
+			int zPos = flightPath.getZ();
 
-		float dst = sqrt(pow((xPos - x),2) + pow((yPos - y),2) + pow((zPos - z),2));
-		if(dst <= speed) {
-			flightPath.next();
-			xPos = flightPath.getX();
-			yPos = flightPath.getY();
-			zPos = flightPath.getZ();
-		}
+			bool go = true;
+			float dst = sqrt(pow((xPos - x),2) + pow((yPos - y),2) + pow((zPos - z),2));
+			if(dst <= speed) {
+				go = flightPath.next();
+				if(! go) {
+					reachedEndOfPath = true;
+				}
+				xPos = flightPath.getX();
+				yPos = flightPath.getY();
+				zPos = flightPath.getZ();
+			}
+			
+			if(go) {
+				moveToPosition(xPos,yPos,zPos);
+			}
+		}	else {
+			calculatePath();
+			reachedEndOfPath = false;
+			followPath();
+		}	
+	}	else { // end of path reached
+		//to remove
+		Player * playerInstance = Player::getInstance();
+		int xPos = playerInstance->getX();
+		int yPos = playerInstance->getY();
+		int zPos = playerInstance->getZ();		
+
+		Map * mapInstance = Map::getInstance();
+		int * coords = mapInstance->convertWorldCoordToMapCoord(x, z);
+		int hunterX = coords[0];
+		int hunterY = coords[1];
 		
-		moveToPosition(xPos,yPos,zPos);
-	
-	}	else {
-		calculatePath();
-		followPath();
-	}	
+		coords = playerInstance->getGridCoords();
+		int playerX = coords[0];
+		int playerY = coords[1];
+
+		PathFind pf = PathFind(); 
+
+		if (pf.existStraightPath(hunterX, hunterY, playerX, playerY)) {
+			moveToPosition(xPos, yPos, zPos);
+		} else {
+			reachedEndOfPath = false;
+			flightPath.clear();
+		}
+	}
 }
 
 void Hunter::calculatePath() {
@@ -108,7 +141,7 @@ void Hunter::calculatePath() {
 		temp = *it;
 		int col = temp[0];
 		int row = temp[1];
-		mapInstance->mark(row, col,0);
+		//mapInstance->mark(row, col,0);
 		cout << row << "," << col << endl;
 		int * temp2 = mapInstance->convertMapCoordToWorldCoord(row, col);
 		int tempX = temp2[0];
@@ -136,7 +169,7 @@ void Hunter::calculatePath() {
 	//}
 
 	mapInstance->writeToFile("hunterr.txt");
-	flightPath = FlightPath(waypoints, numWaypoints);
+	flightPath = FlightPath(waypoints, numWaypoints, false);
 
 }
 

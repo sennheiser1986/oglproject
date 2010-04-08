@@ -873,7 +873,7 @@ int main(int argc, char** argv) {
 
 	instance->writeToFile("map2.txt");
 
-	hunter1 = Hunter(-200,PLAYER_EYE_HEIGHT,-200);
+	hunter1 = Hunter(-500,PLAYER_EYE_HEIGHT,-500);
 
 	int waypoints[12] = {
 		-800, 4*PLAYER_EYE_HEIGHT, -800,
@@ -887,7 +887,7 @@ int main(int argc, char** argv) {
 	}
 
 	int numWaypoints = 4;
-	FlightPath fp = FlightPath(waypoints, numWaypoints);
+	FlightPath fp = FlightPath(waypoints, numWaypoints, true);
 
 	heli = Helicopter(-200.0f, 4*PLAYER_EYE_HEIGHT, -100.0f);
 	heli.setFlightPath(fp);
