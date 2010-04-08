@@ -27,10 +27,6 @@ bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, 
 	int startVal = instance->getValueAt(x0,y0);
 	int endVal = instance->getValueAt(x1,y1);
 	if(startVal == inacc || endVal == inacc) {
-		int * tempCoords = 	instance->convertMapCoordToWorldCoord(x1, y1);
-		cout << tempCoords[0] << " " << tempCoords[1] << endl;
-		instance->debugMark(x0,y0,7);
-		instance->writeToFile("debugpath.txt");
 		return false;
 	}
 
@@ -60,9 +56,7 @@ bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, 
 	int * coords = new int[2];
 	coords[0] = x0;
 	coords[1] = y0;
-	cout << "before push: " << path.size() << "row: " << coords[0] << "col: " << coords[1] << endl;
 	path.push_back(coords);
-	cout << "after push: " << path.size() << endl;
 
     while(!((x == x1) && (y == y1)))
     {
@@ -82,9 +76,7 @@ bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, 
 					int * coords = new int[2];
 					coords[0] = oldX;
 					coords[1] = oldY;
-					cout << "before push: " << path.size() << "row: " << coords[0] << "col: " << coords[1] << endl;
 					path.push_back(coords);
-					cout << "after push: " << path.size() << endl;
 				}
 			} else {
 				
@@ -97,9 +89,7 @@ bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, 
 				astarY2 = y;
 				list<int *> astarNodes;
 				astarSearch(astarX1, astarY1, astarX2, astarY2, astarNodes);
-				cout << "before insert: " << path.size() << endl;
 				path.insert(path.end(), astarNodes.begin(), astarNodes.end());
-				cout << "after insert: " << path.size() << endl;
 				astarX1 = 0; 
 				astarY1 = 0;
 				astarX2 = 0;
@@ -121,19 +111,13 @@ bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, 
             y += y_inc;
             error += dx;
         }
-		//cout << "x: "<< x << " y: " << y << endl;
     }
 
 	coords = new int[2];
 	coords[0] = x1;
 	coords[1] = y1;
-	cout << "before push: " << path.size() << "row: " << coords[0] << "col: " << coords[1] << endl;
 	path.push_back(coords);
-	cout << "after push: " << path.size() << endl;
 	
-	cout << "wait" << endl;
-	
-		instance->writeToFile("debugpath.txt");
 	return true;
 }
 
