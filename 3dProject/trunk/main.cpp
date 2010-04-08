@@ -91,8 +91,8 @@ Atom atom4;
 Hunter hunter1;
 Helicopter heli;
 SittingDuck sittingDuck1;
-Player * player = Player::getInstance();
-
+Player * playerInstance = Player::getInstance();
+Map * mapInstance = Map::getInstance();
 
 // extra byte toevoegen (RGBA ipv RGB) => alpha channel;
 // 0xFF = transparant, 0x00 = niet doorzichtig
@@ -138,6 +138,7 @@ void handleKeypress(unsigned char key, int x1, int y1) {
 //does player hit stuff?
 bool collides() {
 	//cout << atom1.getDistance(xPos, yPos, zPos) << " " << atom1.getR() << endl;
+	/* Old stuff:
 	float xPos = player->getX();
 	float yPos = player->getY();
 	float zPos = player->getZ();
@@ -147,14 +148,20 @@ bool collides() {
 	(atom2.getDistance(xPos, yPos, zPos) < 10) ||
 	(atom3.getDistance(xPos, yPos, zPos) < 10) ||
 	(atom4.getDistance(xPos, yPos, zPos) < 10);
+	*/
+
+	int * coords = new int[2];
+	coords = playerInstance->getGridCoords();
+	int val = mapInstance->getValueAt(coords[0], coords[1]);
+	return (val == Map::INACCESSIBLE_FIELD_VALUE) ;
 }
 
 //allow the keyboard to rule the world
 void keyboardHandler() {
 	float xrotrad, yrotrad;
 	float speed = 0.3;
-	yrotrad = (player->getYrot() / 180 * 3.141592654f);
-	xrotrad = (player->getXrot() / 180 * 3.141592654f);
+	yrotrad = (playerInstance->getYrot() / 180 * 3.141592654f);
+	xrotrad = (playerInstance->getXrot() / 180 * 3.141592654f);
 
 	if(keys[27]){  //Escape key
 		exit(0);
@@ -165,33 +172,33 @@ void keyboardHandler() {
 	}
 
 	bool collision = false;
-	float oldXPos = player->getX();
-	float oldZPos = player->getZ();
+	float oldXPos = playerInstance->getX();
+	float oldZPos = playerInstance->getZ();
 
 	if(keys['w']){  // move camera closer
 		//cout << "w" << " " << endl;	
-		player->move(
+		playerInstance->move(
 			float(sin(yrotrad)) * speed * keySens,
 			0,
 			-float(cos(yrotrad)) * speed * keySens
 		);	
 	}
 	if(keys['s']){  // move camera farther
-		player->move(
+		playerInstance->move(
 			-float(sin(yrotrad)) * speed * keySens,
 			0,
 			float(cos(yrotrad)) * speed * keySens
 		);
 	}
 	if(keys['a']){  // move camera left
-		player->move(
+		playerInstance->move(
 			-float(cos(yrotrad)) * speed * keySens,
 			0,
 		    -float(sin(yrotrad)) * speed * keySens
 		);
 	}
 	if(keys['d']){  // move camera right
-		player->move(
+		playerInstance->move(
 			float(cos(yrotrad)) * speed * keySens,
 			0,
 			float(sin(yrotrad)) * speed * keySens
@@ -201,16 +208,16 @@ void keyboardHandler() {
 	//collision detection
 	if(keys['w'] || keys['s']  || keys['a'] || keys['d']) {
 		if(collides()) {
-			player->setX(oldXPos);
-			player->setZ(oldZPos);
+			playerInstance->setX(oldXPos);
+			playerInstance->setZ(oldZPos);
 		}
 	}
 
 	if(keys['q']){  // rotate camera left
-		player->rotate(0, -1.0f); 
+		playerInstance->rotate(0, -1.0f); 
 	}
 	if(keys['e']){  // rotate camera right			
-		player->rotate(0, 1.0f); 
+		playerInstance->rotate(0, 1.0f); 
 	}
 	if(keys['z']){  // move gun left
 		_textureFront = _textureFGL;
@@ -247,9 +254,9 @@ void keyboardHandler() {
 			pressTime = clock();
 			gunOn = true;
 			
-			float xPos = player->getX();
-			float yPos = player->getY();
-			float zPos = player->getZ();
+			float xPos = playerInstance->getX();
+			float yPos = playerInstance->getY();
+			float zPos = playerInstance->getZ();
 			Bullet bullet = Bullet(xPos, yPos, zPos, xrotrad, yrotrad);
 			bulletList.push_back(bullet);
 		}
@@ -269,7 +276,7 @@ void mouseMotion(int x, int y) {
 	float xrot =(float) diffy;
 	float yrot = (float) diffx;
 	
-	player->rotate(xrot, yrot);
+	playerInstance->rotate(xrot, yrot);
 
 	//cout << "Yaw: " << xrot << " Pitch: " << yrot << endl;
 
@@ -428,8 +435,8 @@ void handleResize(int w, int h) {
 void drawSkyBox() {
 	glPushMatrix();
 	//glTranslatef(-xPos, -yPos, -zPos);
-	glRotatef(player->getXrot(), 1, 0, 0);
-	glRotatef(player->getYrot(), 0, 1, 0);
+	glRotatef(playerInstance->getXrot(), 1, 0, 0);
+	glRotatef(playerInstance->getYrot(), 0, 1, 0);
 	float side = 5000.0f;
 
 	GLfloat diffuseLightColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -682,12 +689,12 @@ void camera() {
 	glDisable(GL_BLEND);
 
 	drawSkyBox();
-	float yrotrad = player->getYrot() / 180 * PI;
-	float xrotrad = player->getXrot() / 180 * PI;
+	float yrotrad = playerInstance->getYrot() / 180 * PI;
+	float xrotrad = playerInstance->getXrot() / 180 * PI;
 	
-	float xPos = player->getX();
-	float yPos = player->getY();
-	float zPos = player->getZ();
+	float xPos = playerInstance->getX();
+	float yPos = playerInstance->getY();
+	float zPos = playerInstance->getZ();
 	
 	gluLookAt(xPos, yPos, zPos, xPos + sin(yrotrad), yPos - sin(xrotrad), zPos - cos(yrotrad), 0, 1, 0);
 }
@@ -707,13 +714,13 @@ void drawFloor(float y) {
 	
 	glNormal3f(0.0f, 1.0f, 0.0f);
 	glTexCoord2f(2000 / FLOOR_TEXTURE_SIZE, _pos / FLOOR_TEXTURE_SIZE);
-	glVertex3f(-1000.0f, y, -1000.0f);
+	glVertex3f(0, y, 0);
 	glTexCoord2f(2000 / FLOOR_TEXTURE_SIZE, (2000 + _pos) / FLOOR_TEXTURE_SIZE);
-	glVertex3f(-1000.0f, y, 1000.0f);
+	glVertex3f(0, y, 2000.0f);
 	glTexCoord2f(0.0f, (2000 + _pos) / FLOOR_TEXTURE_SIZE);
-	glVertex3f(1000.0f, y, 1000.0f);
+	glVertex3f(2000.0f, y, 2000.0f);
 	glTexCoord2f(0.0f, _pos / FLOOR_TEXTURE_SIZE);
-	glVertex3f(1000.0f, y, -1000.0f);
+	glVertex3f(2000.0f, y, 0);
 	
 	glEnd();
 
@@ -813,9 +820,9 @@ void update(int value) {
 }
 
 int main(int argc, char** argv) {
-	player->setX(0);
-	player->setZ(0);
-	player->setY(PLAYER_EYE_HEIGHT);
+	playerInstance->setX(1000);
+	playerInstance->setZ(1000);
+	playerInstance->setY(PLAYER_EYE_HEIGHT);
 	int seed = 1268511395;
 	srand(seed);
 	cout << "*Using seed: " << seed << endl;
@@ -840,46 +847,34 @@ int main(int argc, char** argv) {
 
 	int bunkerTextures[] = {_textureFront, _textureRight, _textureBack, _textureLeft};
 	
-	Map * instance = Map::getInstance();
-	int * testcoords = instance->convertWorldCoordToMapCoord(0,0);
-	int * testcoords2 =  instance->convertMapCoordToWorldCoord(testcoords[0],testcoords[1]);
-	cout << testcoords2[0] << "," << testcoords2[1] << endl;
-	testcoords = instance->convertWorldCoordToMapCoord(25,25);
-	testcoords2 =  instance->convertMapCoordToWorldCoord(testcoords[0],testcoords[1]);
-	cout << testcoords2[0] << "," << testcoords2[1] << endl;
-	instance->mark(testcoords[0],testcoords[1],1);
-	testcoords = instance->convertWorldCoordToMapCoord(-25,25);
-	testcoords2 =  instance->convertMapCoordToWorldCoord(testcoords[0],testcoords[1]);
-	cout << testcoords2[0] << "," << testcoords2[1] << endl;
-	instance->mark(testcoords[0],testcoords[1],1);
-	instance->mark(testcoords[0],testcoords[1],2);
-	testcoords = instance->convertWorldCoordToMapCoord(-25,-25);
-	testcoords2 =  instance->convertMapCoordToWorldCoord(testcoords[0],testcoords[1]);
-	cout << testcoords2[0] << "," << testcoords2[1] << endl;
-	instance->mark(testcoords[0],testcoords[1],1);
-	instance->mark(testcoords[0],testcoords[1],4);
-	testcoords = instance->convertWorldCoordToMapCoord(25,-25);
-	testcoords2 =  instance->convertMapCoordToWorldCoord(testcoords[0],testcoords[1]);
-	cout << testcoords2[0] << "," << testcoords2[1] << endl;
-	instance->mark(testcoords[0],testcoords[1],1);
-	instance->mark(testcoords[0],testcoords[1],5);
-	instance->writeToFile("map.txt");
+	// For testing purposes:
+	// /*
+	int * testcoords = mapInstance->convertWorldCoordToMapCoord(0,0);
+	int * testcoords2 =  mapInstance->convertMapCoordToWorldCoord(testcoords[0],testcoords[1]);
 	
-	bunker1 = Bunker(HORI_SIZE, VERTI_SIZE, 0, 0, -100, bunkerTextures);
-	bunker2 = Bunker(HORI_SIZE, VERTI_SIZE, 200, 0, -100, bunkerTextures);
-	atom1 = Atom(-100.0f, PLAYER_EYE_HEIGHT, -100.0f, 14); //Si
-	atom2 = Atom(-150.0f, PLAYER_EYE_HEIGHT, -100.0f, 8);  //Oxygen
-	atom3 = Atom(-200.0f, PLAYER_EYE_HEIGHT, -100.0f, 1);  //Hydrogen
+	cout << testcoords2[0] << "," << testcoords2[1] << endl;
+	mapInstance->mark(testcoords[0],testcoords[1],5);
+	
+	//***/
+	// write maps
+	mapInstance->writeToFile("map.txt");
 
-	instance->writeToFile("map2.txt");
+	bunker1 = Bunker(HORI_SIZE, VERTI_SIZE, 800, 0, 1200, bunkerTextures);
+	bunker2 = Bunker(HORI_SIZE, VERTI_SIZE, 1100, 0, 1200, bunkerTextures);
+	atom1 = Atom(600.0f, PLAYER_EYE_HEIGHT, 1200.0f, 14); //Si
+	atom2 = Atom(650.0f, PLAYER_EYE_HEIGHT, 1200.0f, 8);  //Oxygen
+	atom3 = Atom(700.0f, PLAYER_EYE_HEIGHT, 1200.0f, 1);  //Hydrogen
 
-	hunter1 = Hunter(-500,PLAYER_EYE_HEIGHT,-500);
+	// testing purposes:
+	mapInstance->writeToFile("map2.txt");
+
+	hunter1 = Hunter(200,PLAYER_EYE_HEIGHT,200,5);
 
 	int waypoints[12] = {
-		-800, 4*PLAYER_EYE_HEIGHT, -800,
-		-800, 4*PLAYER_EYE_HEIGHT, 800,
+		0, 4*PLAYER_EYE_HEIGHT, 800,
 		800, 4*PLAYER_EYE_HEIGHT, 800,
-		800, 4*PLAYER_EYE_HEIGHT, -800
+		1600, 4*PLAYER_EYE_HEIGHT, 800,
+		1600, 4*PLAYER_EYE_HEIGHT, 1600
 	};
 	int k = 0;
 	for(k = 0; k<12; k++) {
@@ -889,10 +884,10 @@ int main(int argc, char** argv) {
 	int numWaypoints = 4;
 	FlightPath fp = FlightPath(waypoints, numWaypoints, true);
 
-	heli = Helicopter(-200.0f, 4*PLAYER_EYE_HEIGHT, -100.0f);
+	heli = Helicopter(200.0f, 4*PLAYER_EYE_HEIGHT, 200.0f);
 	heli.setFlightPath(fp);
 
-	sittingDuck1 = SittingDuck(100, PLAYER_EYE_HEIGHT, -100.0f, 5);
+	sittingDuck1 = SittingDuck(800.0f, PLAYER_EYE_HEIGHT, 100.0f, 5);
 	duckList.push_back(sittingDuck1);
 
 	glutDisplayFunc(drawScene);

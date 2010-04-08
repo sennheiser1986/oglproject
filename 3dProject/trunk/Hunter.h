@@ -18,7 +18,7 @@ class Hunter :
 public:
 	Hunter(void);
 	~Hunter(void);
-	Hunter(float xIn, float yIn, float zIn);
+	Hunter(float xIn, float yIn, float zIn, float rIn);
 	void draw();
 	void moveToPosition(float xIn, float yIn, float zIn);
 	void followPath();
@@ -32,9 +32,6 @@ private:
 	bool hasToRotate(float degrees);
 	void rotate(float degrees);
 	void init();
-	float x;
-	float y;
-	float z;
 	float yaw;
 	float speed;
 	bool reachedEndOfPath;

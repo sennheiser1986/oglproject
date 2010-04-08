@@ -61,8 +61,8 @@ int * Map::convertMapCoordToWorldCoord(int row, int col) {
 	int rows = height;
 
 	
-	int x = cellSide * ( col + 1 -  cols/2 );
-	int y = cellSide * ( -row +  rows/2  );
+	int x = cellSide *  col;
+	int y = cellSide *  (-row + rows);
 
 	int * arr = new int[2];
 	arr[0] = x;
@@ -93,11 +93,16 @@ bool Map::mark(int row, int col, int cost) {
 	}
 }
 
+bool Map::debugMark(int row, int col, int cost) {	
+		grid[row][col] = cost;
+		return true;
+}
+
 int * Map::convertWorldCoordToMapCoord(int x, int y) {
 	int cols = width;
 	int rows = height;
-	int col = ceil((double)(x / cellSide)) + cols / 2 - 1;
-	int row = rows / 2 - ceil((double)(y / cellSide));
+	int col = ceil((double)(x / cellSide));
+	int row = rows - ceil((double)(y / cellSide)) - 1;
 
 	int * arr = new int[2];
 	arr[0] = row;
