@@ -46,7 +46,7 @@ void Hunter::moveToPosition(float xPos, float yPos, float zPos) {
 
 void Hunter::init() {
 	   yaw = 0;	  
-	   speed = 3;
+	   speed = 2;
 	   reachedEndOfPath = false;
 }
 
@@ -58,25 +58,42 @@ void Hunter::draw() {
 }
 
 void Hunter::followPath() {
-	 if(flightPath.hasWaypoints()) {
-                int xPos = flightPath.getX();
-                int yPos = flightPath.getY();
-                int zPos = flightPath.getZ();
+	if(flightPath.hasWaypoints()) {
+		int xPos = flightPath.getX();
+		int yPos = flightPath.getY();
+		int zPos = flightPath.getZ();
 
-                float dst = sqrt(pow((xPos - x),2) + pow((yPos - y),2) + pow((zPos - z),2));
-                if(dst <= speed) {
-                        flightPath.next();
-                        xPos = flightPath.getX();
-                        yPos = flightPath.getY();
-                        zPos = flightPath.getZ();
-                }
-                
-                moveToPosition(xPos,yPos,zPos);
-        
-        }       else {
-                calculatePath();
-                followPath();
-        }
+		bool go = true;
+		float dst = sqrt(pow((xPos - x),2) + pow((yPos - y),2) + pow((zPos - z),2));
+		if(dst <= speed) {
+			go = flightPath.next();
+			if(! go) {
+				reachedEndOfPath = true;
+			}
+			xPos = flightPath.getX();
+			yPos = flightPath.getY();
+			zPos = flightPath.getZ();
+		}
+
+		if(go) {
+			moveToPosition(xPos,yPos,zPos);
+		} else {
+			Player * playerInstance = Player::getInstance();
+			int playX = playerInstance->getX();
+			int playY = playerInstance->getY();
+			int playZ = playerInstance->getZ();
+			if(getDistance(playX, playY, playZ) >= r) {
+				flightPath.clear();
+				calculatePath();
+				followPath();
+			}
+
+		}
+	} else {
+		flightPath.clear();
+		calculatePath();
+		followPath();
+	}
 }
 
 void Hunter::calculatePath() {
@@ -85,15 +102,15 @@ void Hunter::calculatePath() {
 	Map * mapInstance = Map::getInstance();
 
 	int * playerCoords = playerInstance->getGridCoords();
-	int playerY = playerCoords[0];
-	int playerX = playerCoords[1];
+	int playerRow = playerCoords[0];
+	int playerCol = playerCoords[1];
 
 	int * coords = mapInstance->convertWorldCoordToMapCoord(x, z);
-	int hunterX = coords[0];
-	int hunterY = coords[1];
+	int hunterRow = coords[0];
+	int hunterCol = coords[1];
 
 	list<int *> pathList;
-	pf.calculatePath(hunterX, hunterY, playerX, playerY);
+	pf.calculatePath(hunterRow, hunterCol, playerRow, playerCol);
 	pf.getCalculatedPath(pathList);
 
 	int numWaypoints = pathList.size();
@@ -110,7 +127,7 @@ void Hunter::calculatePath() {
 		int tempX = temp2[0];
 		int tempZ = temp2[1];
 
-		
+		mapInstance->debugMark(row, col, 8);
 		int tempY = playerInstance->getY();
 		
 		waypoints[3 * i + 0] = tempX;
@@ -129,11 +146,11 @@ void Hunter::calculatePath() {
 		cout << waypoints[i * 3 + 2] << endl;
 	}
 
-	mapInstance->writeToFile("hunterr.txt");
 	flightPath = FlightPath(waypoints, numWaypoints, false);
 	flightPath.printWaypoints();
-
+	mapInstance->writeToFile("kaka.txt");
 	*waypoints;
+	waypointTime = clock();
 }
 
 bool Hunter::hasToRotate(float degrees) {

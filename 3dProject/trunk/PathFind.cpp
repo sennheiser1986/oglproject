@@ -24,12 +24,12 @@ bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, 
 	//init
 	int inacc = Map::INACCESSIBLE_FIELD_VALUE;
 	Map * instance = Map::getInstance();
-	int startVal = instance->getValueAt(y0,x0);
-	int endVal = instance->getValueAt(y1,x1);
+	int startVal = instance->getValueAt(x0,y0);
+	int endVal = instance->getValueAt(x1,y1);
 	if(startVal == inacc || endVal == inacc) {
-		int * tempCoords = 	instance->convertMapCoordToWorldCoord(y1, x1);
+		int * tempCoords = 	instance->convertMapCoordToWorldCoord(x1, y1);
 		cout << tempCoords[0] << " " << tempCoords[1] << endl;
-		instance->debugMark(y0,x0,7);
+		instance->debugMark(x0,y0,7);
 		instance->writeToFile("debugpath.txt");
 		return false;
 	}
@@ -58,8 +58,8 @@ bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, 
 	//end init
 	
 	int * coords = new int[2];
-	coords[0] = y0;
-	coords[1] = x0;
+	coords[0] = x0;
+	coords[1] = y0;
 	cout << "before push: " << path.size() << "row: " << coords[0] << "col: " << coords[1] << endl;
 	path.push_back(coords);
 	cout << "after push: " << path.size() << endl;
@@ -67,6 +67,7 @@ bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, 
     while(!((x == x1) && (y == y1)))
     {
         int val = instance->getValueAt(x,y);
+		cout << val << endl;
 		if(!obstructed) {
 			if(val == 9) {
 				if(exitOnObstruction) {
@@ -79,8 +80,8 @@ bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, 
 
 				if(!(oldX == x0 && oldY == y0)) {
 					int * coords = new int[2];
-					coords[0] = oldY;
-					coords[1] = oldX;
+					coords[0] = oldX;
+					coords[1] = oldY;
 					cout << "before push: " << path.size() << "row: " << coords[0] << "col: " << coords[1] << endl;
 					path.push_back(coords);
 					cout << "after push: " << path.size() << endl;
@@ -124,13 +125,15 @@ bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, 
     }
 
 	coords = new int[2];
-	coords[0] = y1;
-	coords[1] = x1;
+	coords[0] = x1;
+	coords[1] = y1;
 	cout << "before push: " << path.size() << "row: " << coords[0] << "col: " << coords[1] << endl;
 	path.push_back(coords);
 	cout << "after push: " << path.size() << endl;
 	
 	cout << "wait" << endl;
+	
+		instance->writeToFile("debugpath.txt");
 	return true;
 }
 
@@ -246,10 +249,10 @@ void PathFind::astarSearch(int x0, int y0, int x1, int y1, list<int *>& out) {
 
 					node->PrintNodeInfo();
 					int * coords = new int[2];
-					coords[0] = node->y;
-					coords[1] = node->x;
+					coords[0] = node->x;
+					coords[1] = node->y;
 					out.push_back(coords);
-					cout << instance->getValueAt(coords[1],coords[0]) << endl;;
+					cout << instance->getValueAt(coords[0],coords[1]) << endl;;
 					steps ++;
 				
 				};

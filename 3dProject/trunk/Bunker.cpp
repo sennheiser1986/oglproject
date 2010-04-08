@@ -26,11 +26,11 @@ Bunker::Bunker(float wIn, float hIn, float xIn, float yIn, float zIn, int* inTex
 
 	Map * instance = Map::getInstance();
 	
-	int * minMapCoord = instance->convertWorldCoordToMapCoord(x-w/2,z+w/2);
+	int * minMapCoord = instance->convertWorldCoordToMapCoord(x-w/2,z-w/2);
 	int minRow = minMapCoord[0];
 	int minCol = minMapCoord[1];
 
-	int * maxMapCoord = instance->convertWorldCoordToMapCoord(x+w/2,z-w/2);
+	int * maxMapCoord = instance->convertWorldCoordToMapCoord(x+w/2,z+w/2);
 	int maxRow = maxMapCoord[0];
 	int maxCol = maxMapCoord[1];
 
