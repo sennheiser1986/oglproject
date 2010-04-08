@@ -1,6 +1,14 @@
-#pragma once
+#ifndef HUNTER
+#define HUNTER
 #include "StaticObject.h"
 #include "FlightPath.h"
+
+#ifdef __APPLE__
+#include <OpenGL/OpenGL.h>
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 
 #define PI 3.14159265
 
@@ -12,17 +20,18 @@ public:
 	~Hunter(void);
 	Hunter(float xIn, float yIn, float zIn);
 	void draw();
-	void Hunter::moveToPosition(float xIn, float yIn, float zIn);
-	void Hunter::followPath();
-	void Hunter::moveToPlayer();
+	void moveToPosition(float xIn, float yIn, float zIn);
+	void followPath();
+	void moveToPlayer();
 	
 
 
 private:
 	FlightPath flightPath;
-	void Hunter::calculatePath();
-	bool Hunter::hasToRotate(float degrees);
-	void Hunter::rotate(float degrees);
+	void calculatePath();
+	bool hasToRotate(float degrees);
+	void rotate(float degrees);
+	void init();
 	float x;
 	float y;
 	float z;
@@ -30,3 +39,5 @@ private:
 	float speed;
 
 };
+
+#endif

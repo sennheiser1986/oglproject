@@ -37,6 +37,7 @@ public:
   bool mark(int x, int y, int cost);
   bool markBlock(int row, int col, int height, int width, int cost);
   int * convertWorldCoordToMapCoord(int xIn, int yIn);
+  int * convertMapCoordToWorldCoord(int rowIn, int colIn);
   int ** getMap();
   int getValueAt(int row, int col) ;
   int getWidth();
