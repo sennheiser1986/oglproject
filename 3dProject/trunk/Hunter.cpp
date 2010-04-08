@@ -98,16 +98,14 @@ void Hunter::calculatePath() {
 
 	int numWaypoints = pathList.size();
 	int * waypoints = new int[3*numWaypoints];
-	int * waypointRef = waypoints; 
 	
 	list<int *>::iterator it;	
+	int i = 0;
 	for (it = pathList.begin() ; it != pathList.end(); it++ ) {
 		int * temp = new int[2];
 		temp = *it;
 		int row = temp[0];
 		int col = temp[1];
-		//mapInstance->mark(row, col,0);
-		cout << row << "," << col << endl;
 		int * temp2 = mapInstance->convertMapCoordToWorldCoord(row, col);
 		int tempX = temp2[0];
 		int tempZ = temp2[1];
@@ -115,27 +113,27 @@ void Hunter::calculatePath() {
 		
 		int tempY = playerInstance->getY();
 		
-		*waypointRef = tempX;
-		//cout << waypointRef << " " << *waypointRef << endl;
-		waypointRef++;
-		*waypointRef = tempY;
-		//cout << waypointRef << " " << *waypointRef << endl;
-		waypointRef++;
-		*waypointRef = tempZ;		
-		//cout << waypointRef << " " << *waypointRef << endl;
-		//cout << endl;
-		waypointRef++;
+		waypoints[3 * i + 0] = tempX;
+		waypoints[3 * i + 1] = tempY;
+		waypoints[3 * i + 2] = tempZ;
+
+		temp2 = mapInstance->convertWorldCoordToMapCoord(tempX, tempZ);
+		cout << temp2[0] << " " << temp2[1] << endl;
+
+		i++;
 	}
 
 	for(int i = 0; i < numWaypoints; i++) {
-		cout << waypoints[3*i]  << ","
-			<< waypoints[3*i+1] << ","
-			<< waypoints[3*i+2] << endl;		
+		cout << waypoints[i * 3 + 0] << " ";
+		cout << waypoints[i * 3 + 1] << " ";
+		cout << waypoints[i * 3 + 2] << endl;
 	}
 
 	mapInstance->writeToFile("hunterr.txt");
 	flightPath = FlightPath(waypoints, numWaypoints, false);
+	flightPath.printWaypoints();
 
+	*waypoints;
 }
 
 bool Hunter::hasToRotate(float degrees) {
