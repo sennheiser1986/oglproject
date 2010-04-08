@@ -134,22 +134,10 @@ void Hunter::calculatePath() {
 		waypoints[3 * i + 1] = tempY;
 		waypoints[3 * i + 2] = tempZ;
 
-		temp2 = mapInstance->convertWorldCoordToMapCoord(tempX, tempZ);
-		cout << temp2[0] << " " << temp2[1] << endl;
-
 		i++;
 	}
 
-	for(int i = 0; i < numWaypoints; i++) {
-		cout << waypoints[i * 3 + 0] << " ";
-		cout << waypoints[i * 3 + 1] << " ";
-		cout << waypoints[i * 3 + 2] << endl;
-	}
-
 	flightPath = FlightPath(waypoints, numWaypoints, false);
-	flightPath.printWaypoints();
-	mapInstance->writeToFile("kaka.txt");
-	*waypoints;
 	waypointTime = clock();
 }
 
