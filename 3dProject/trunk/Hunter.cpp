@@ -106,9 +106,10 @@ void Hunter::calculatePath() {
 	for (it = pathList.begin() ; it != pathList.end(); it++ ) {
 		int * temp = new int[2];
 		temp = *it;
-		int col = temp[1];
-		int row = temp[0];
+		int col = temp[0];
+		int row = temp[1];
 		mapInstance->mark(row, col,0);
+		cout << row << "," << col << endl;
 		int * temp2 = mapInstance->convertMapCoordToWorldCoord(row, col);
 		int tempX = temp2[0];
 		int tempZ = temp2[1];
