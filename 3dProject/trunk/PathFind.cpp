@@ -18,8 +18,9 @@ PathFind::~PathFind() {
 
 }
 
-bool PathFind::raytrace(int x0, int y0, int x1, int y1, bool exitOnObstruction)
+bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, const bool exitOnObstruction)
 {
+	path.empty();
 	//init
 	int inacc = Map::INACCESSIBLE_FIELD_VALUE;
 	Map * instance = Map::getInstance();
@@ -52,7 +53,7 @@ bool PathFind::raytrace(int x0, int y0, int x1, int y1, bool exitOnObstruction)
 
 	//end init
 
-    for (; n > 0; --n)
+    while(!((x == x1) && (y == y1)))
     {
         int val = instance->getValueAt(x,y);
 		if(!obstructed) {
@@ -104,21 +105,9 @@ bool PathFind::raytrace(int x0, int y0, int x1, int y1, bool exitOnObstruction)
             y += y_inc;
             error += dx;
         }
+		cout << "x: "<< x << " y: " << y << endl;
     }
-
-	list<int *>::iterator it;		
-	int i = 0;
-	for (it = path.begin() ; it != path.end(); it++ ) {
-		if(i == 10) {
-			i = 0;
-		}
-		int * coords = new int[2];
-		coords = *it;
-		cout << coords[0] << " " << coords[1] << " " << endl;
-		instance->mark(coords[1], coords[0], 0);
-		i++;
-	}
-
+	
 	cout << "wait" << endl;
 	return true;
 }
