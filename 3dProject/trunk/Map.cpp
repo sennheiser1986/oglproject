@@ -61,8 +61,8 @@ int * Map::convertMapCoordToWorldCoord(int row, int col) {
 	int rows = height;
 
 	
-	int x = cellSide *  col;
-	int y = cellSide *  (-row + rows);
+	int x = cellSide *  col + cellSide/2;
+	int y = cellSide *  row + cellSide/2;
 
 	int * arr = new int[2];
 	arr[0] = x;
@@ -99,10 +99,9 @@ bool Map::debugMark(int row, int col, int cost) {
 }
 
 int * Map::convertWorldCoordToMapCoord(int x, int y) {
-	int cols = width;
-	int rows = height;
-	int col = ceil((double)(x / cellSide));
-	int row = rows - ceil((double)(y / cellSide)) - 1;
+	
+	int col = floor((double)(x / cellSide));
+	int row = floor((double)(y / cellSide));
 
 	int * arr = new int[2];
 	arr[0] = row;

@@ -16,5 +16,6 @@ public:
 	int FlightPath::getX();
 	int FlightPath::getY();
 	int FlightPath::getZ();
+	void printWaypoints();
 	void clear();
 };

@@ -57,3 +57,11 @@ bool FlightPath::hasWaypoints() {
 void FlightPath::clear() {
 	numWaypoints = 0;
 }
+
+void FlightPath::printWaypoints() {
+	for(int i = 0; i < numWaypoints; i++) {
+		cout << waypoints[i * 3 + 0] << " ";
+		cout << waypoints[i * 3 + 1] << " ";
+		cout << waypoints[i * 3 + 2] << endl;
+	}
+}
