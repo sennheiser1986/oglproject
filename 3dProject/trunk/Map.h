@@ -43,6 +43,7 @@ public:
   int getValueAt(int row, int col) ;
   int getWidth();
   int getHeight();
+  int getCellSide();
   void Map::writeToFile(char * filename);
 };
 
