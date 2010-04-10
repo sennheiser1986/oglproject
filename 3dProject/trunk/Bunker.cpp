@@ -25,12 +25,13 @@ Bunker::Bunker(float wIn, float hIn, float xIn, float yIn, float zIn, int* inTex
 	cout << x << " " << z << " " << x-w/2 << " " << x+w/2 <<  " " << z-w/2 << " " << z+w/2;
 
 	Map * instance = Map::getInstance();
-	
-	int * minMapCoord = instance->convertWorldCoordToMapCoord(x-w/2,z-w/2);
+	int cellSide = instance->getCellSide();
+
+	int * minMapCoord = instance->convertWorldCoordToMapCoord(x-w/2-cellSide/2,z-w/2-cellSide/2);
 	int minRow = minMapCoord[0];
 	int minCol = minMapCoord[1];
 
-	int * maxMapCoord = instance->convertWorldCoordToMapCoord(x+w/2,z+w/2);
+	int * maxMapCoord = instance->convertWorldCoordToMapCoord(x+w/2+cellSide/2,z+w/2+cellSide/2);
 	int maxRow = maxMapCoord[0];
 	int maxCol = maxMapCoord[1];
 
@@ -111,7 +112,7 @@ void Bunker::draw() {
 	
 	glBegin(GL_QUADS);
 
-	glNormal3f(1.0, 0.0f, 0.0f);
+	glNormal3f(-1.0, 0.0f, 0.0f);
 	//  x  y  z
 	// -1 -1 -1 = bottom left
 	glTexCoord2f(0.0f, 0.0f);
@@ -135,7 +136,7 @@ void Bunker::draw() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBegin(GL_QUADS);
 
-	glNormal3f(-1.0, 0.0f, 0.0f);
+	glNormal3f(1.0, 0.0f, 0.0f);
 	glTexCoord2f(1.0f, 0.0f);
 	// x  y  z
 	// 1 -1 -1  = bottom right

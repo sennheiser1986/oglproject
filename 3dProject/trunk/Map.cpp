@@ -129,3 +129,7 @@ int Map::getWidth() {
 int Map::getHeight() {
 	return height;
 }
+
+int Map::getCellSide() {
+	return cellSide;
+}

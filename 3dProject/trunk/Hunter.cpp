@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Map.h"
 #include "Hunter.h"
+#include "vec3f.h"
 
 using namespace std;
 
@@ -53,8 +54,52 @@ void Hunter::init() {
 void Hunter::draw() {
 	glPushMatrix();
 	glTranslatef(x, y, z);
-	glutSolidSphere(r, 32, 32);
+	glScalef(r,2*r,r);
+	//glutSolidSphere(r, 32, 32);
+	glEnable(GL_COLOR_MATERIAL);
+	glColor3f(1.0f, 0.1f, 0.1f);
+
+	glBegin(GL_QUADS);
+	glVertex3f(-1,0,-1);
+	glVertex3f(1,0,-1);
+	glVertex3f(1,0,1);
+	glVertex3f(-1,0,1);
+	glEnd();
+
+	
+	//Vec3f vecCenter = Vec3f(0, 1, 0);
+	//Vec3f vecUL = Vec3f(-1, 0, -1);
+	//Vec3f vecUR = Vec3f(1, 0, -1);
+	//Vec3f vecLR = Vec3f(1, 0, 1);
+	//Vec3f vecLL = Vec3f(-1, 0, 1);
+
+	//Vec3f diff1 = vecUL - vecCenter;
+	//Vec3f diff2 = vecUR - vecCenter;
+	//Vec3f diff3 = vecLR - vecCenter;
+	//Vec3f diff4 = vecLR - vecCenter;
+
+	//Vec3f cross1 = diff1.cross(diff2);
+	//Vec3f cross2 = diff2.cross(diff3);
+	//Vec3f cross3 = diff3.cross(diff4);
+	//Vec3f cross4 = diff4.cross(diff1);
+
+
+	glBegin(GL_TRIANGLE_FAN);
+	glVertex3f(0,1,0);
+	//glNormal3f(cross1[0], cross1[1], cross1[2]);
+	glVertex3f(-1,0,-1);
+	//glNormal3f(cross2[0], cross2[1], cross2[2]);
+	glVertex3f(1,0,-1);
+	//glNormal3f(cross3[0], cross3[1], cross3[2]);
+	glVertex3f(1,0,1);
+	//glNormal3f(cross4[0], cross4[1], cross4[2]);
+	glVertex3f(-1,0,1);
+	glEnd();
+
 	glPopMatrix();
+
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glDisable(GL_COLOR_MATERIAL);
 }
 
 void Hunter::followPath() {

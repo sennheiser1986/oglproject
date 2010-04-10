@@ -401,17 +401,17 @@ void initRendering() {
 	string skyName[6];
 
 	skyName[0] = textureDir;
-    skyName[0] += "hotdesert_positive_z.bmp"; //front
+    skyName[0] += "NightSkyFT.bmp"; //front
 	skyName[1] = textureDir;
-    skyName[1] += "hotdesert_positive_x.bmp"; //right
+    skyName[1] += "NightSkyRT.bmp"; //right
 	skyName[2] = textureDir;
-    skyName[2] += "hotdesert_negative_z.bmp"; //back
+    skyName[2] += "NightSkyBK.bmp"; //back
 	skyName[3] = textureDir;
-    skyName[3] += "hotdesert_negative_x.bmp"; //left
+    skyName[3] += "NightSkyLF.bmp"; //left
 	skyName[4] = textureDir;
-    skyName[4] += "hotdesert_positive_y.bmp"; //top
+    skyName[4] += "NightSkyUP.bmp"; //top
 	skyName[5] = textureDir;
-    skyName[5] += "hotdesert_negative_y.bmp"; //bottom
+    skyName[5] += "NightSkyDN.bmp"; //bottom
 
 	int i;
 	for (i = 0; i < 6; i++) {
@@ -439,14 +439,13 @@ void drawSkyBox() {
 	glRotatef(playerInstance->getYrot(), 0, 1, 0);
 	float side = 5000.0f;
 
-	GLfloat diffuseLightColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
-	GLfloat ambientLightColor[] = {0.4f, 0.4f, 0.4f, 1.0f};
+	GLfloat skyboxLightColor[] = {0.2f, 0.2f, 0.2f, 1.0f};
+	GLfloat ambientLightColor[] = {0.02f, 0.02f, 0.02f, 1.0f};
 	GLfloat lightPos[] = {0, 0, -side/2 + 10, 1.0f};
 	GLfloat lightDir[] = {0.0f, -1.0f, -1.0f};
 	
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLightColor);
 	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
-	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lightDir);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, skyboxLightColor);
 	glEnable(GL_LIGHT0);
 
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLightColor);
@@ -568,6 +567,7 @@ void drawSkyBox() {
 	
 	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
+	glDisable(GL_LIGHT0);
 }
 
 
@@ -601,12 +601,50 @@ void moveBullets() {
 }
 
 void camera() {	
-	GLfloat lightPos[] = {0, 0, -5.0f, 1.0f};
-	GLfloat diffuseLightColor[] = {0.4f, 0.4f, 0.4f, 1.0f};
-	glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuseLightColor);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+
+	float x = playerInstance->getX();
+	float y = playerInstance->getY();
+	float z = playerInstance->getZ();
+	float xRot = playerInstance->getXrot();
+	float yRot = playerInstance->getYrot();
+
+	float xRotRad  = xRot / 180 * PI;
+	float yRotRad  = yRot / 180 * PI;
+
+	GLfloat lightPos[] = {0, 0, 0, 1.0f};
+	GLfloat lightColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+
 	glLightfv(GL_LIGHT2, GL_POSITION, lightPos);
+	glLightfv(GL_LIGHT2, GL_AMBIENT, lightColor);
+	
+	GLfloat lightPos2[] = {0, 0, 0, 1.0f};
+	GLfloat lightColor2[] = {4.0f, 4.0f, 4.0f, 1.0f};
+	glLightfv(GL_LIGHT3, GL_POSITION, lightPos2);
+	glLightfv(GL_LIGHT3, GL_DIFFUSE, lightColor2);
+	glLightf(GL_LIGHT3, GL_CONSTANT_ATTENUATION, 0);
+	glLightf(GL_LIGHT3, GL_LINEAR_ATTENUATION, 0.0f);
+	glLightf(GL_LIGHT3, GL_QUADRATIC_ATTENUATION, 0.001f);
+	
+
+	GLfloat lightPos3[] = {0, 0, 0, 1.0f};
+	GLfloat lightColor3[] = {4.0f, 4.0f, 4.0f, 1.0f};
+	GLfloat direction[] = {0, 0, -1};
+	glLightfv(GL_LIGHT4, GL_POSITION, lightPos3);
+	glLightfv(GL_LIGHT4, GL_DIFFUSE, lightColor3);
+	glLightf(GL_LIGHT4, GL_SPOT_EXPONENT, 90.0f);
+	glLightfv(GL_LIGHT4, GL_SPOT_DIRECTION, direction);
+    glLightf(GL_LIGHT4, GL_SPOT_CUTOFF, 20);
+	glLightf(GL_LIGHT4, GL_CONSTANT_ATTENUATION, 0);
+	glLightf(GL_LIGHT4, GL_LINEAR_ATTENUATION, 0.0f);
+	glLightf(GL_LIGHT4, GL_QUADRATIC_ATTENUATION, 0.00005f);
+	
+	glDisable(GL_LIGHT4);
 	glEnable(GL_LIGHT2);
 	glDisable(GL_LIGHT0);
+	glDisable(GL_LIGHT1);
 
 	glPushMatrix();
 	glBegin(GL_QUADS);
@@ -655,12 +693,25 @@ void camera() {
 	glEnd();
 	glPopMatrix();
 
+	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_BLEND);
+
 	glDisable(GL_LIGHT2);
 	glEnable(GL_LIGHT0);
-
+	glEnable(GL_LIGHT1);
+	
 	scale = 0.50f;
 	width = 16 * scale;
 	height = 9 * scale;
+
+	if(_textureGun == _textureShooting) {
+		glEnable(GL_LIGHT3);
+	} else {
+		glDisable(GL_LIGHT3);
+	}
+
+	glEnable(GL_ALPHA_TEST);
+	glEnable(GL_BLEND);
 
 	//gun
 	glBindTexture(GL_TEXTURE_2D, _textureGun);
@@ -684,9 +735,13 @@ void camera() {
 	glVertex3f(-width,  height, -10.0f);	
 	glEnd();
 	glPopMatrix();
-
+	
 	glDisable(GL_ALPHA_TEST);
 	glDisable(GL_BLEND);
+
+	glEnable(GL_LIGHT4);
+
+
 
 	drawSkyBox();
 	float yrotrad = playerInstance->getYrot() / 180 * PI;
@@ -712,6 +767,7 @@ void drawFloor(float y) {
 
 	glBegin(GL_QUADS);
 	
+
 	glNormal3f(0.0f, 1.0f, 0.0f);
 	glTexCoord2f(2000 / FLOOR_TEXTURE_SIZE, _pos / FLOOR_TEXTURE_SIZE);
 	glVertex3f(0, y, 0);
@@ -813,7 +869,7 @@ void update(int value) {
 	}
 
 	heli.followFlightPath();
-	hunter1.followPath();
+	//hunter1.followPath();
 
 	glutPostRedisplay();
 	glutTimerFunc(25, update, 0);
