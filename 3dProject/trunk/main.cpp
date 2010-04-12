@@ -14,6 +14,7 @@
 #include "Hunter.h"
 #include "Necromancer.h"
 #include "Map.h"
+#include "Building.h"
 
 #include "Player.h"
 
@@ -89,6 +90,7 @@ Atom atom1;
 Atom atom2;
 Atom atom3;
 Atom atom4;
+Building building1;
 Necromancer hunter1;
 Helicopter heli;
 SittingDuck sittingDuck1;
@@ -123,7 +125,7 @@ void toRGBA(unsigned char *dst, unsigned char *src, unsigned int width, unsigned
     src += 3;
   }
   clock_t endTime = clock();
-  float diff = (float)(endTime - startTime)/CLOCKS_PER_SEC;
+  float diff = (float)(endTime - startTime) / CLOCKS_PER_SEC;
   cout << "\t\t\tTime to generate Alpha: " << diff << endl;
   cout << "\t\t\tPixels/Sec: " << size / diff << endl;
 }
@@ -441,14 +443,10 @@ void drawSkyBox() {
 	glRotatef(playerInstance->getYrot(), 0, 1, 0);
 	float side = 5000.0f;
 
-	GLfloat skyboxLightColor[] = {0.2f, 0.2f, 0.2f, 1.0f};
-	GLfloat ambientLightColor[] = {0.02f, 0.02f, 0.02f, 1.0f};
+	GLfloat ambientLightColor[] = {1.06f, 1.06f, 1.06f, 1.0f};
 	GLfloat lightPos[] = {0, 0, -side/2 + 10, 1.0f};
 	GLfloat lightDir[] = {0.0f, -1.0f, -1.0f};
 	
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, skyboxLightColor);
-	glEnable(GL_LIGHT0);
 
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLightColor);
 	glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLightColor);
@@ -569,7 +567,6 @@ void drawSkyBox() {
 	
 	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
-	glDisable(GL_LIGHT0);
 }
 
 
@@ -633,9 +630,8 @@ void camera() {
 	glLightf(GL_LIGHT4, GL_LINEAR_ATTENUATION, 0.0f);
 	glLightf(GL_LIGHT4, GL_QUADRATIC_ATTENUATION, 0.00005f);
 	
-	glDisable(GL_LIGHT4);
 	glEnable(GL_LIGHT2);
-	glDisable(GL_LIGHT0);
+	glEnable(GL_LIGHT4);
 	glDisable(GL_LIGHT1);
 
 	glPushMatrix();
@@ -689,7 +685,6 @@ void camera() {
 	glDisable(GL_BLEND);
 
 	glDisable(GL_LIGHT2);
-	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHT1);
 	
 	scale = 0.50f;
@@ -731,7 +726,6 @@ void camera() {
 	glDisable(GL_ALPHA_TEST);
 	glDisable(GL_BLEND);
 
-	glEnable(GL_LIGHT4);
 
 
 
@@ -818,6 +812,7 @@ void drawScene() {
 	atom1.draw();
 	atom2.draw();
 	atom3.draw();
+	building1.draw();
 	heli.draw();
 	hunter1.draw();
 	necromancer1.draw();
@@ -912,6 +907,7 @@ int main(int argc, char** argv) {
 	atom1 = Atom(600.0f, PLAYER_EYE_HEIGHT, 1200.0f, 14); //Si
 	atom2 = Atom(650.0f, PLAYER_EYE_HEIGHT, 1200.0f, 8);  //Oxygen
 	atom3 = Atom(700.0f, PLAYER_EYE_HEIGHT, 1200.0f, 1);  //Hydrogen
+	building1 = Building(1300, 0, 1200, 200, 100, 60);
 
 	
 	// testing purposes:
