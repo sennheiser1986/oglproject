@@ -1,4 +1,7 @@
+#include <iostream>
 #include "Necromancer.h"
+
+using namespace std;
 
 Necromancer::Necromancer(void)
 {
@@ -14,8 +17,10 @@ Necromancer::Necromancer(float xIn, float yIn, float zIn)
 }
 
 void Necromancer::init() {
-	model = MD2Model::load("necromancer.md2");
+	model = MD2Model::load("usmc.md2");
 	model->setAnimation("run");
+	previousAnimTime = clock();
+	speed = 1;
 }
 
 void Necromancer::draw() {
@@ -24,6 +29,11 @@ void Necromancer::draw() {
 	glRotatef(-90, 1, 0, 0);
 	glRotatef(yaw + 90, 0.0f, 0.0f, 1.0f);
 	glScalef(0.35f, 0.35f, 0.35f);
+	clock_t currentTime = clock();
+	float timeDiff = (float)(currentTime - previousAnimTime) / CLOCKS_PER_SEC;
+	cout << timeDiff << endl;
+	model->advance(timeDiff);
+	previousAnimTime = currentTime;
 	model->draw();
 	glPopMatrix();
 }

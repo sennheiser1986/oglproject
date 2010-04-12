@@ -19,6 +19,7 @@ public:
 private:
 	MD2Model* model;
 	void init();
+	clock_t previousAnimTime;
 };
 
 #endif
