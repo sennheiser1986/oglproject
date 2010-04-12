@@ -61,7 +61,6 @@ bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, 
     while(!((x == x1) && (y == y1)))
     {
         int val = instance->getValueAt(x,y);
-		cout << val << endl;
 		if(!obstructed) {
 			if(val == 9) {
 				if(exitOnObstruction) {
@@ -138,7 +137,6 @@ void PathFind::getCalculatedPath(std::list<int*>& out) {
 
 void PathFind::astarSearch(int x0, int y0, int x1, int y1, list<int *>& out) {
 	Map * instance = Map::getInstance();
-	cout << "enter astar search" << endl;
 	AStarSearch<MapSearchNode> astarsearch;
 
 	unsigned int SearchCount = 0;
@@ -212,8 +210,7 @@ void PathFind::astarSearch(int x0, int y0, int x1, int y1, list<int *>& out) {
 
 		if( SearchState == AStarSearch<MapSearchNode>::SEARCH_STATE_SUCCEEDED )
 		{
-			cout << "Search found goal state\n";
-
+			
 				MapSearchNode *node = astarsearch.GetSolutionStart();
 
 	#if DISPLAY_SOLUTION
@@ -236,13 +233,11 @@ void PathFind::astarSearch(int x0, int y0, int x1, int y1, list<int *>& out) {
 					coords[0] = node->x;
 					coords[1] = node->y;
 					out.push_back(coords);
-					cout << instance->getValueAt(coords[0],coords[1]) << endl;;
 					steps ++;
 				
 				};
 
-				cout << "Solution steps " << steps << endl;
-
+				
 				// Once you're done with the solution you can free the nodes up
 				astarsearch.FreeSolutionNodes();
 
@@ -250,18 +245,17 @@ void PathFind::astarSearch(int x0, int y0, int x1, int y1, list<int *>& out) {
 		}
 		else if( SearchState == AStarSearch<MapSearchNode>::SEARCH_STATE_FAILED ) 
 		{
-			cout << "Search terminated. Did not find goal state\n";
+			
 		
 		}
 
 		// Display the number of loops the search went through
-		cout << "SearchSteps : " << SearchSteps << "\n";
-
+		
 		SearchCount ++;
 
 		astarsearch.EnsureMemoryFreed();
 	}
-	cout << "exit astar search" << endl;
+
 }
 
 

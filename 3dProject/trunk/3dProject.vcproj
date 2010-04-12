@@ -211,6 +211,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Necromancer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\PathFind.h"
 				>
 			</File>
@@ -242,6 +246,14 @@
 			>
 			<File
 				RelativePath=".\helicopter1.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\necr.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\usmc.bmp"
 				>
 			</File>
 		</Filter>
@@ -295,6 +307,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Necromancer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\PathFind.cpp"
 				>
 			</File>
@@ -321,6 +337,14 @@
 		</File>
 		<File
 			RelativePath=".\helicopter.md2"
+			>
+		</File>
+		<File
+			RelativePath=".\necromancer.md2"
+			>
+		</File>
+		<File
+			RelativePath=".\usmc.md2"
 			>
 		</File>
 	</Files>

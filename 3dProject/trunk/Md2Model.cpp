@@ -338,7 +338,7 @@ MD2Model* MD2Model::load(const char* filename) {
 	readInt(input);                      //The number of bytes per frame
 	int numTextures = readInt(input);    //The number of textures
 	if (numTextures != 1) {
-		return NULL;
+	//	return NULL;
 	}
 	int numVertices = readInt(input);    //The number of vertices
 	int numTexCoords = readInt(input);   //The number of texture coordinates
@@ -358,6 +358,7 @@ MD2Model* MD2Model::load(const char* filename) {
 	//Load the texture
 	input.seekg(textureOffset, ios_base::beg);
 	input.read(buffer, 64);
+	cout << buffer << endl;
 	if (strlen(buffer) < 5 ||
 		strcmp(buffer + strlen(buffer) - 4, ".bmp") != 0) {
 		return NULL;

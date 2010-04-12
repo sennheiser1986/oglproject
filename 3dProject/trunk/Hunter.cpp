@@ -32,9 +32,9 @@ void Hunter::moveToPosition(float xPos, float yPos, float zPos) {
 	
 	float newyaw = atan2(diffX,diffZ) * 180 / PI;
 	
-	//if(hasToRotate(newyaw)) {
-	//		rotate(newyaw);
-	//} else {
+	if(hasToRotate(newyaw)) {
+			rotate(newyaw);
+	} //else {
 		float xNorm = diffX / length;
 		float zNorm = diffZ / length;
 		float yNorm = diffY / length;
@@ -172,7 +172,6 @@ void Hunter::calculatePath() {
 		int tempX = temp2[0];
 		int tempZ = temp2[1];
 
-		mapInstance->debugMark(row, col, 8);
 		int tempY = playerInstance->getY();
 		
 		waypoints[3 * i + 0] = tempX;
@@ -193,7 +192,7 @@ bool Hunter::hasToRotate(float degrees) {
 
 void Hunter::rotate(float degrees) {
 	float diffRot = yaw - degrees;
-	float rotSpeed = speed / 3;
+	float rotSpeed = speed * 3;
 
 	// ensure shortest rotation
 	if(abs(diffRot) > 180) {

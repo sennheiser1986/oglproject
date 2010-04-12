@@ -20,7 +20,7 @@ public:
 	Hunter(void);
 	~Hunter(void);
 	Hunter(float xIn, float yIn, float zIn, float rIn);
-	void draw();
+	virtual void draw();
 	void moveToPosition(float xIn, float yIn, float zIn);
 	void followPath();
 	void moveToPlayer();
@@ -32,11 +32,12 @@ private:
 	void calculatePath();
 	bool hasToRotate(float degrees);
 	void rotate(float degrees);
-	void init();
-	float yaw;
-	float speed;
+	void init();	
 	bool reachedEndOfPath;
 	clock_t waypointTime;
+protected:
+	float yaw;
+	float speed;
 
 };
 

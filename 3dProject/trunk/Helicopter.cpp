@@ -93,7 +93,6 @@ void Helicopter::pitchMoveBackward() {
 }
 
 void Helicopter::followFlightPath() {
-	fp.printWaypoints();
 	float xPos = fp.getX();
 	float yPos = fp.getY();
 	float zPos = fp.getZ();
