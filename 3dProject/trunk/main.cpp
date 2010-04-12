@@ -12,6 +12,7 @@
 #include "Helicopter.h"
 #include "Flightpath.h"
 #include "Hunter.h"
+#include "Necromancer.h"
 #include "Map.h"
 
 #include "Player.h"
@@ -88,9 +89,10 @@ Atom atom1;
 Atom atom2;
 Atom atom3;
 Atom atom4;
-Hunter hunter1;
+Necromancer hunter1;
 Helicopter heli;
 SittingDuck sittingDuck1;
+Necromancer necromancer1;
 Player * playerInstance = Player::getInstance();
 Map * mapInstance = Map::getInstance();
 
@@ -604,16 +606,6 @@ void camera() {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-
-	float x = playerInstance->getX();
-	float y = playerInstance->getY();
-	float z = playerInstance->getZ();
-	float xRot = playerInstance->getXrot();
-	float yRot = playerInstance->getYrot();
-
-	float xRotRad  = xRot / 180 * PI;
-	float yRotRad  = yRot / 180 * PI;
-
 	GLfloat lightPos[] = {0, 0, 0, 1.0f};
 	GLfloat lightColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
@@ -748,7 +740,7 @@ void camera() {
 	float xrotrad = playerInstance->getXrot() / 180 * PI;
 	
 	float xPos = playerInstance->getX();
-	float yPos = playerInstance->getY();
+	float yPos = playerInstance->getEyeheight();
 	float zPos = playerInstance->getZ();
 	
 	gluLookAt(xPos, yPos, zPos, xPos + sin(yrotrad), yPos - sin(xrotrad), zPos - cos(yrotrad), 0, 1, 0);
@@ -828,6 +820,7 @@ void drawScene() {
 	atom3.draw();
 	heli.draw();
 	hunter1.draw();
+	necromancer1.draw();
 	glutSwapBuffers();
 }
 
@@ -869,7 +862,7 @@ void update(int value) {
 	}
 
 	heli.followFlightPath();
-	//hunter1.followPath();
+	hunter1.followPath();
 
 	glutPostRedisplay();
 	glutTimerFunc(25, update, 0);
@@ -878,7 +871,8 @@ void update(int value) {
 int main(int argc, char** argv) {
 	playerInstance->setX(800);
 	playerInstance->setZ(1000);
-	playerInstance->setY(PLAYER_EYE_HEIGHT);
+	playerInstance->setY(0);
+	playerInstance->setHeight(PLAYER_EYE_HEIGHT);
 	int seed = 1268511395;
 	srand(seed);
 	cout << "*Using seed: " << seed << endl;
@@ -919,10 +913,12 @@ int main(int argc, char** argv) {
 	atom2 = Atom(650.0f, PLAYER_EYE_HEIGHT, 1200.0f, 8);  //Oxygen
 	atom3 = Atom(700.0f, PLAYER_EYE_HEIGHT, 1200.0f, 1);  //Hydrogen
 
+	
 	// testing purposes:
 	mapInstance->writeToFile("map2.txt");
 
-	hunter1 = Hunter(800,PLAYER_EYE_HEIGHT,1300,5);
+	necromancer1 = Necromancer(1000.0f, 0.0f, 1200.0f);
+	hunter1 = Necromancer(800,0.0f,1300.0f);
 
 	int waypoints[12] = {
 		0, 4*PLAYER_EYE_HEIGHT, 800,

@@ -8,11 +8,21 @@ Player * Player::_instance = 0;
 
 Player::Player(void)
 {
+
 }
 
 Player::~Player(void)
 {
 }
+
+float Player::getEyeheight() {
+	return eyeheight + yPos;
+}
+
+void Player::setHeight(float height) {
+	eyeheight = height;
+}
+
 
 void Player::setX(float xIn) {
 	xPos = xIn;
@@ -81,8 +91,6 @@ void Player::move(float xIn, float yIn, float zIn) {
 	xPos += xIn;
 	yPos += yIn;
 	zPos += zIn;
-	cout << "Moved :" << xIn << " " << yIn << " " << zIn;
-	cout << "New : " << xPos << " " << yPos << " " << zPos << endl;
 }
 
 Player * Player::getInstance() {

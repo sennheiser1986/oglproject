@@ -13,16 +13,12 @@
 
 using namespace std;
 
-Bunker::Bunker(float wIn, float hIn, float xIn, float yIn, float zIn, int* inTex) {
+Bunker::Bunker(float wIn, float hIn, float xIn, float yIn, float zIn, int* inTex)
+: StaticObject(xIn, yIn, zIn) {
 	w = wIn;
 	h = hIn;
-	x = xIn;
-	y = yIn;
-	z = zIn;
 	r = sqrt(2* pow(w/2,2));
 	textures = inTex;
-
-	cout << x << " " << z << " " << x-w/2 << " " << x+w/2 <<  " " << z-w/2 << " " << z+w/2;
 
 	Map * instance = Map::getInstance();
 	int cellSide = instance->getCellSide();

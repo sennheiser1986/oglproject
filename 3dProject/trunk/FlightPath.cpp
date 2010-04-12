@@ -29,9 +29,7 @@ bool FlightPath::next() {
 	} else {
 		currWaypoint++;
 	}	
-	cout << "current waypoint++: " << waypoints[currWaypoint * 3 + 0] 
-	<< "," << waypoints[currWaypoint * 3 + 1]
-	<< "," << waypoints[currWaypoint * 3 + 2]<< endl;
+	
 	return true;	
 }
 
