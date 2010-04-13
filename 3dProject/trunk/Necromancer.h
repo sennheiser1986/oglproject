@@ -14,8 +14,7 @@ public:
 	Necromancer(void);
 	~Necromancer(void);
 	Necromancer(float xIn, float yIn, float zIn);
-	
-	void draw();
+	virtual void draw();
 private:
 	MD2Model* model;
 	void init();

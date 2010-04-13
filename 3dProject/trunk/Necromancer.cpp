@@ -12,7 +12,7 @@ Necromancer::~Necromancer(void)
 }
 
 Necromancer::Necromancer(float xIn, float yIn, float zIn) 
-: Hunter(xIn, yIn, zIn, 0) {
+: Hunter(xIn, yIn, zIn) {
 	init();
 }
 
@@ -21,19 +21,32 @@ void Necromancer::init() {
 	model->setAnimation("run");
 	previousAnimTime = clock();
 	speed = 1;
+	setHeight(10);
+	setWidth(3);
 }
 
 void Necromancer::draw() {
 	glPushMatrix();
 	glTranslatef(x, y+8.5, z);
+
+	if(isHit()) {
+		glEnable(GL_COLOR_MATERIAL);
+		glColor3f(1.0f, 0.0f, 0.0f);
+		glutSolidSphere(getWidth(), 32,32);
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glDisable(GL_COLOR_MATERIAL);
+	}
+
 	glRotatef(-90, 1, 0, 0);
 	glRotatef(yaw + 90, 0.0f, 0.0f, 1.0f);
 	glScalef(0.35f, 0.35f, 0.35f);
+	
 	clock_t currentTime = clock();
 	float timeDiff = (float)(currentTime - previousAnimTime) / CLOCKS_PER_SEC;
-	cout << timeDiff << endl;
 	model->advance(timeDiff);
 	previousAnimTime = currentTime;
+	
 	model->draw();
+	
 	glPopMatrix();
 }

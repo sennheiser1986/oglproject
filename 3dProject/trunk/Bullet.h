@@ -8,6 +8,7 @@ class Bullet: public StaticObject {
 		float xrotrad;
 		float yrotrad;
 		float maxTime;
+		float r;
 		clock_t startTime;
 		clock_t bulletTime;
 
@@ -18,5 +19,6 @@ class Bullet: public StaticObject {
 		Bullet(float xIn, float yIn, float zIn, float xRotIn, float yRotIn);
 		bool Bullet::operator==(const Bullet& other) const;
 		bool move();
+		float getR();
 		virtual void draw();
 };

@@ -20,6 +20,7 @@ private:
 	float sinScale;
 	clock_t startTime;
 	clock_t atomTime;
+	float r;
 	
 	void Atom::init();
 

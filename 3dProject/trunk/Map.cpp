@@ -44,15 +44,20 @@ bool Map::markBlock(int row, int col, int h, int w, int cost) {
 	int minRow = row;
 	int minCol = col;
 
-	int maxRow = row + h - 1;
-	int maxCol = col + w - 1; 
-	for(int i = minRow; i <= maxRow; i++) {
-		for(int j = minCol; j <= maxCol; j++) {
+	int maxRow = row + h;
+	int maxCol = col + w; 
+
+	int c = 0;
+	for(int i = minRow; i < maxRow; i++) {
+		for(int j = minCol; j < maxCol; j++) {
 			if(!(mark(i,j,cost))) {
-				return false;
+				//return false;
+			} else {
+				c++;
 			}
 		}
 	}
+	c;
 	return true;
 }
 

@@ -40,7 +40,7 @@ const float VERTI_SIZE = 60.0f;
 
 int _textureFGL, _textureFGC, _textureFGR, _textureLeft, _textureRight,
 _textureBack, _textureTop, _textureFront, _textureFloor, _textureShooting,
-_textureGunOff, _textureGun, _textureArtesis,
+_textureGunOff, _textureGun, _textureArtesis, _textureBuilding,
 mouseX, mouseY;
 int _skyTex[6];
 
@@ -92,9 +92,8 @@ Atom atom3;
 Atom atom4;
 Building building1;
 Necromancer hunter1;
-Helicopter heli;
+//Helicopter heli;
 SittingDuck sittingDuck1;
-Necromancer necromancer1;
 Player * playerInstance = Player::getInstance();
 Map * mapInstance = Map::getInstance();
 
@@ -259,7 +258,7 @@ void keyboardHandler() {
 			gunOn = true;
 			
 			float xPos = playerInstance->getX();
-			float yPos = playerInstance->getY();
+			float yPos = playerInstance->getEyeheight();
 			float zPos = playerInstance->getZ();
 			Bullet bullet = Bullet(xPos, yPos, zPos, xrotrad, yrotrad);
 			bulletList.push_back(bullet);
@@ -391,6 +390,12 @@ void initRendering() {
 	_textureArtesis = loadTexture_RGBA(image);
 
 	name = textureDir;
+	name += "concrete.bmp";
+	image = loadBMP(name.c_str());
+	_textureBuilding = loadMipmappedTexture(image);
+	
+
+	name = textureDir;
 	name += "gun_2_layers_shooting_16w-9h.bmp";
 	image = loadBMP(name.c_str());
 	_textureShooting = loadTexture_RGBA(image);
@@ -443,7 +448,7 @@ void drawSkyBox() {
 	glRotatef(playerInstance->getYrot(), 0, 1, 0);
 	float side = 5000.0f;
 
-	GLfloat ambientLightColor[] = {1.06f, 1.06f, 1.06f, 1.0f};
+	GLfloat ambientLightColor[] = {0.06f, 0.06f, 0.06f, 1.0f};
 	GLfloat lightPos[] = {0, 0, -side/2 + 10, 1.0f};
 	GLfloat lightDir[] = {0.0f, -1.0f, -1.0f};
 	
@@ -586,11 +591,16 @@ void moveBullets() {
 			//cout << bulletList.size() << endl;
 		} else {		
 			//cout << sittingDuck1.getDistance(b.getX(), b.getY(), b.getZ()) << endl;
-			if(sittingDuck1.getDistance(b.getX(), b.getY(), b.getZ()) <= 0) {
+ 			if(sittingDuck1.getDistance(b.getX(), b.getY(), b.getZ()) <= (b.getR() + sittingDuck1.getR())) {
 				sittingDuck1.hit();
 				cout << "Hit target, removing bullet" << endl;
 				addAgain = false;
-			}			
+			}
+			if(hunter1.collidesWith(b.getX(), b.getY(), b.getZ(), b.getR())) {
+				hunter1.setHit();
+				cout << "Hit hunter, removing bullet" << endl;
+				addAgain = false;
+			}
 		}
 		if(addAgain) {
 			//cout << "check" << endl;
@@ -813,9 +823,8 @@ void drawScene() {
 	atom2.draw();
 	atom3.draw();
 	building1.draw();
-	heli.draw();
+	//heli.draw();
 	hunter1.draw();
-	necromancer1.draw();
 	glutSwapBuffers();
 }
 
@@ -856,7 +865,7 @@ void update(int value) {
 		vertiOff -= 0.5f;
 	}
 
-	heli.followFlightPath();
+	//heli.followFlightPath();
 	hunter1.followPath();
 
 	glutPostRedisplay();
@@ -907,13 +916,12 @@ int main(int argc, char** argv) {
 	atom1 = Atom(600.0f, PLAYER_EYE_HEIGHT, 1200.0f, 14); //Si
 	atom2 = Atom(650.0f, PLAYER_EYE_HEIGHT, 1200.0f, 8);  //Oxygen
 	atom3 = Atom(700.0f, PLAYER_EYE_HEIGHT, 1200.0f, 1);  //Hydrogen
-	building1 = Building(1300, 0, 1200, 200, 100, 60);
+	building1 = Building(1300, 0, 1200, 200, 100, 60, _textureBuilding);
 
 	
 	// testing purposes:
 	mapInstance->writeToFile("map2.txt");
 
-	necromancer1 = Necromancer(1000.0f, 0.0f, 1200.0f);
 	hunter1 = Necromancer(800,0.0f,1300.0f);
 
 	int waypoints[12] = {
@@ -930,8 +938,8 @@ int main(int argc, char** argv) {
 	int numWaypoints = 4;
 	FlightPath fp = FlightPath(waypoints, numWaypoints, true);
 
-	heli = Helicopter(200.0f, 4*PLAYER_EYE_HEIGHT, 200.0f);
-	heli.setFlightPath(fp);
+	//heli = Helicopter(200.0f, 4*PLAYER_EYE_HEIGHT, 200.0f);
+	//heli.setFlightPath(fp);
 
 	sittingDuck1 = SittingDuck(800.0f, PLAYER_EYE_HEIGHT, 100.0f, 5);
 	duckList.push_back(sittingDuck1);
