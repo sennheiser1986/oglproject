@@ -22,6 +22,7 @@ Bullet::Bullet(float xIn, float yIn, float zIn, float xRotIn, float yRotIn)
 	startTime = bulletTime = clock();
 	speed = 10;
 	maxTime = 5;
+	r = 0.1f;
 }
 
 	
@@ -60,6 +61,10 @@ bool Bullet::move() {
 void Bullet::draw() {
 	glPushMatrix();
 	glTranslatef(x, y, z);
-	glutSolidSphere(0.1f, 32, 32);
+	glutSolidSphere(r, 32, 32);
 	glPopMatrix();
+}
+
+float Bullet::getR() {
+	return r;
 }

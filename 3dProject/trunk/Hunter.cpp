@@ -1,7 +1,6 @@
 #include <iostream>
 #include <math.h>
 #include <list>
-#include "PathFind.h"
 #include "Player.h"
 #include "Map.h"
 #include "Hunter.h"
@@ -18,9 +17,17 @@ Hunter::~Hunter(void)
 {
 }
 
-Hunter::Hunter(float xIn, float yIn, float zIn, float rIn): 
-	StaticObject(xIn, yIn, zIn, rIn) {
+Hunter::Hunter(float xIn, float yIn, float zIn): 
+	StaticObject(xIn, yIn, zIn) {
 	init();
+}
+
+void Hunter::moveToPlayer() {
+	Player * playerInstance = Player::getInstance();
+	float xPos = playerInstance->getX();
+	float yPos = playerInstance->getY();
+	float zPos = playerInstance->getZ();
+	moveToPosition(xPos, yPos, zPos);
 }
 
 void Hunter::moveToPosition(float xPos, float yPos, float zPos) {
@@ -49,11 +56,19 @@ void Hunter::init() {
 	   yaw = 0;	  
 	   speed = 2;
 	   reachedEndOfPath = false;
+	   pf = PathFind();
+	   useWaypoints = true;
+	   playerVanished = false;
+	   playerVisible = false;
+	   playerCaught = false;
+	   flightPath =  new FlightPath();
+	   hit = false;
 }
 
 void Hunter::draw() {
 	glPushMatrix();
 	glTranslatef(x, y, z);
+	float r = 10;
 	glScalef(r,2*r,r);
 	//glutSolidSphere(r, 32, 32);
 	glEnable(GL_COLOR_MATERIAL);
@@ -102,47 +117,100 @@ void Hunter::draw() {
 	glDisable(GL_COLOR_MATERIAL);
 }
 
+float Hunter::getHeight() {
+	return height;
+}
+
+float Hunter::getWidth() {
+	return width;
+}
+
 void Hunter::followPath() {
-	if(flightPath.hasWaypoints()) {
-		int xPos = flightPath.getX();
-		int yPos = flightPath.getY();
-		int zPos = flightPath.getZ();
-
-		bool go = true;
-		float dst = sqrt(pow((xPos - x),2) + pow((yPos - y),2) + pow((zPos - z),2));
-		if(dst <= speed) {
-			go = flightPath.next();
-			if(! go) {
-				reachedEndOfPath = true;
-			}
-			xPos = flightPath.getX();
-			yPos = flightPath.getY();
-			zPos = flightPath.getZ();
+	if(!hit) {
+		Player * playerInstance = Player::getInstance();
+		Map * mapInstance = Map::getInstance();
+		if(getDistance(playerInstance->getX(), playerInstance->getY(), playerInstance->getZ()) <= speed) {
+			playerCaught = true;
 		}
+		if(!playerCaught) {
+			bool reset = false;			
+			
+			int * playerCoords = playerInstance->getGridCoords();
+			int playerRow = playerCoords[0];
+			int playerCol = playerCoords[1];
 
-		if(go) {
-			moveToPosition(xPos,yPos,zPos);
-		} else {
-			Player * playerInstance = Player::getInstance();
-			int playX = playerInstance->getX();
-			int playY = playerInstance->getY();
-			int playZ = playerInstance->getZ();
-			if(getDistance(playX, playY, playZ) >= r) {
-				flightPath.clear();
-				calculatePath();
-				followPath();
+			int * coords = mapInstance->convertWorldCoordToMapCoord(x, z);
+			int hunterRow = coords[0];
+			int hunterCol = coords[1];
+
+			if(pf.existStraightPath(hunterRow, hunterCol, playerRow, playerCol)) {
+				playerVisible = true;
+				useWaypoints  = false;
+				playerLastSeenX = playerInstance->getX();
+				playerLastSeenY = playerInstance->getY();
+				playerLastSeenZ = playerInstance->getZ();
+				moveToPlayer();
+			} else {
+				if(playerVisible) {
+					playerVanished = true;
+				}
+				playerVisible = false;
 			}
+			if(playerVanished) {
+				if(getDistance(playerLastSeenX, playerLastSeenY, playerLastSeenZ) <= speed) {
+					useWaypoints = true;
+					reset = true;
+				} else {
+					moveToPosition(playerLastSeenX, playerLastSeenY, playerLastSeenZ);
+				}
+			}
+			if(useWaypoints) {
+				cout << flightPath->hasWaypoints() << " " << reset << endl;
+				if(flightPath->hasWaypoints() && (!reset)) {
+					int xPos = flightPath->getX();
+					int yPos = flightPath->getY();
+					int zPos = flightPath->getZ();
 
+					bool go = true;
+					float dst = sqrt(pow((xPos - x),2) + pow((yPos - y),2) + pow((zPos - z),2));
+					if(dst <= speed) {
+						go = flightPath->next();
+						if(! go) {
+							reachedEndOfPath = true;
+						}
+						xPos = flightPath->getX();
+						yPos = flightPath->getY();
+						zPos = flightPath->getZ();
+					}
+
+					if(go) {
+						moveToPosition(xPos,yPos,zPos);
+					} else {
+						int playX = playerInstance->getX();
+						int playY = playerInstance->getY();
+						int playZ = playerInstance->getZ();
+						if(getDistance(playX, playY, playZ) >= speed) {
+							reset = true;
+						}
+
+					}
+				} else {
+					reset = false;
+					playerVanished = false;
+					resetPath();
+					followPath();
+				}
+			}
 		}
-	} else {
-		flightPath.clear();
-		calculatePath();
-		followPath();
 	}
 }
 
+void Hunter::resetPath() {
+	flightPath->clear();
+	calculatePath();
+}
+
 void Hunter::calculatePath() {
-	PathFind pf = PathFind();
 	Player * playerInstance = Player::getInstance();
 	Map * mapInstance = Map::getInstance();
 
@@ -181,7 +249,7 @@ void Hunter::calculatePath() {
 		i++;
 	}
 
-	flightPath = FlightPath(waypoints, numWaypoints, false);
+	flightPath = new FlightPath(waypoints, numWaypoints, false);
 	waypointTime = clock();
 }
 
@@ -227,4 +295,32 @@ void Hunter::rotate(float degrees) {
 			}
 		}
 	}
+}
+
+bool Hunter::collidesWith(float xIn, float yIn, float zIn, float rIn) {
+	bool collision = false;
+	if(width > 0 && height > 0) {
+		float horiDist = getHorizontalDistance(xIn, yIn, zIn) - rIn - width/2;
+		float vertiDist = getVerticalDistance(xIn, yIn, zIn) - rIn - height;
+		if(horiDist < 0 && vertiDist < 0)  {
+			collision = true;
+		}
+	}
+	return collision;
+}
+
+void Hunter::setWidth(float inWidth) {
+	width = inWidth;
+}
+
+void Hunter::setHeight(float inHeight) {
+	height = inHeight;
+}
+
+void Hunter::setHit() {
+	hit = true;
+}
+
+bool Hunter::isHit() {
+	return hit;
 }

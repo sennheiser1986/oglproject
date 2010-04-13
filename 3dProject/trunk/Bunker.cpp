@@ -17,17 +17,16 @@ Bunker::Bunker(float wIn, float hIn, float xIn, float yIn, float zIn, int* inTex
 : StaticObject(xIn, yIn, zIn) {
 	w = wIn;
 	h = hIn;
-	r = sqrt(2* pow(w/2,2));
 	textures = inTex;
 
 	Map * instance = Map::getInstance();
 	int cellSide = instance->getCellSide();
 
-	int * minMapCoord = instance->convertWorldCoordToMapCoord(x-w/2-cellSide/2,z-w/2-cellSide/2);
+	int * minMapCoord = instance->convertWorldCoordToMapCoord(x-w/2-cellSide,z-w/2-cellSide);
 	int minRow = minMapCoord[0];
 	int minCol = minMapCoord[1];
 
-	int * maxMapCoord = instance->convertWorldCoordToMapCoord(x+w/2+cellSide/2,z+w/2+cellSide/2);
+	int * maxMapCoord = instance->convertWorldCoordToMapCoord(x+w/2+cellSide,z+w/2+cellSide);
 	int maxRow = maxMapCoord[0];
 	int maxCol = maxMapCoord[1];
 

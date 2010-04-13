@@ -47,3 +47,7 @@ void SittingDuck::hit() {
 		greenChan = 1.0f;
 	}
 }
+
+float SittingDuck::getR() {
+	return r;
+}

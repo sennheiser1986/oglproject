@@ -218,7 +218,7 @@ void PathFind::astarSearch(int x0, int y0, int x1, int y1, list<int *>& out) {
 	#endif
 				int steps = 0;
 
-				node->PrintNodeInfo();
+				//node->PrintNodeInfo();
 				for( ;; )
 				{
 					node = astarsearch.GetSolutionNext();
@@ -228,7 +228,7 @@ void PathFind::astarSearch(int x0, int y0, int x1, int y1, list<int *>& out) {
 						break;
 					}
 
-					node->PrintNodeInfo();
+					//node->PrintNodeInfo();
 					int * coords = new int[2];
 					coords[0] = node->x;
 					coords[1] = node->y;
