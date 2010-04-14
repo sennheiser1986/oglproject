@@ -28,6 +28,7 @@ public:
 	bool collidesWith(float xIn, float yIn, float zIn, float rIn);
 	void setHeight(float inHeight);
 	void setWidth(float inWidth);
+	void unsetHit();
 	virtual void setHit();
 	bool isHit();
 	float getWidth();
