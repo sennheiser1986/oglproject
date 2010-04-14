@@ -91,7 +91,7 @@ Atom atom2;
 Atom atom3;
 Atom atom4;
 Building building1;
-Necromancer hunter1;
+Necromancer * hunter1;
 Helicopter heli;
 SittingDuck sittingDuck1;
 Player * playerInstance = Player::getInstance();
@@ -579,6 +579,36 @@ void drawSkyBox() {
 	glDisable(GL_LIGHT0);
 }
 
+int makeRandomNumber(int lowest, int highest) {
+	int random_integer;
+	int range=(highest-lowest)+1;
+	random_integer = lowest+int(range*rand()/(RAND_MAX + 1.0));
+	
+	return random_integer;
+}
+
+void spawnHunter() {
+	bool stop = false;
+	int row = 0;
+	int col = 0;
+	while(!stop) {
+		col = makeRandomNumber(mapInstance->getWidth()  / 7 * 3, mapInstance->getWidth()  / 7 * 5);
+		row = makeRandomNumber(mapInstance->getHeight() / 7 * 3, mapInstance->getHeight() / 7 * 5);
+		int val = mapInstance->getValueAt(row, col);
+ 		if(val < 9 && val >= 0) {
+			stop = true;
+		} else {
+			stop = false;
+		}
+	}
+	int * coords = mapInstance->convertMapCoordToWorldCoord(row,col);
+	int x = coords[0];
+	int z = coords[1];
+	int y = 0;
+	hunter1->setX(x);
+	hunter1->setY(y);
+	hunter1->setZ(z);
+}
 
 void moveBullets() {
 	list<Bullet> copyList(bulletList);
@@ -601,10 +631,10 @@ void moveBullets() {
 				cout << "Hit target, removing bullet" << endl;
 				addAgain = false;
 			}
-			if(hunter1.collidesWith(b.getX(), b.getY(), b.getZ(), b.getR())) {
-				hunter1.setHit();
+			if(hunter1->collidesWith(b.getX(), b.getY(), b.getZ(), b.getR())) {
+				hunter1->setHit();
 				cout << "Hit hunter, removing bullet" << endl;
-				addAgain = false;
+				spawnHunter();
 			}
 		}
 		if(addAgain) {
@@ -829,7 +859,10 @@ void drawScene() {
 	atom3.draw();
 	building1.draw();
 	heli.draw();
-	hunter1.draw();
+	hunter1->draw();
+
+	cout << "Player position: " << playerInstance->getX() << " "  << playerInstance->getZ()
+		<< " Hunter position: " << hunter1->getX() << " " << hunter1->getZ() << endl;
 	glutSwapBuffers();
 }
 
@@ -871,7 +904,7 @@ void update(int value) {
 	}
 
 	heli.followFlightPath();
-	hunter1.followPath();
+	hunter1->followPath();
 
 	glutPostRedisplay();
 	glutTimerFunc(25, update, 0);
@@ -927,7 +960,7 @@ int main(int argc, char** argv) {
 	// testing purposes:
 	mapInstance->writeToFile("map2.txt");
 
-	hunter1 = Necromancer(800,0.0f,1300.0f);
+	hunter1 = new Necromancer(800,0.0f,1300.0f);
 
 	int waypoints[6*4] = {
 		1000, 6*PLAYER_EYE_HEIGHT, 1000,
