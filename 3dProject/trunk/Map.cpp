@@ -120,7 +120,7 @@ int ** Map::getMap() {
 }
 
 int Map::getValueAt(int row, int col) {
-	if(row < height && col < width) {
+	if(row < height && col < width && row >= 0 && col >= 0) {
 		return grid[row][col];
 	} else {
 		return 9;
