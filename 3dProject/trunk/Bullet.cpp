@@ -21,7 +21,7 @@ Bullet::Bullet(float xIn, float yIn, float zIn, float xRotIn, float yRotIn)
 	yrotrad = yRotIn;
 	startTime = bulletTime = clock();
 	speed = 10;
-	maxTime = 5;
+	maxTime = 8;
 	r = 0.1f;
 }
 

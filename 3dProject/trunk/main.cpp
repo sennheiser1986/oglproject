@@ -92,7 +92,7 @@ Atom atom3;
 Atom atom4;
 Building building1;
 Necromancer hunter1;
-//Helicopter heli;
+Helicopter heli;
 SittingDuck sittingDuck1;
 Player * playerInstance = Player::getInstance();
 Map * mapInstance = Map::getInstance();
@@ -448,14 +448,18 @@ void drawSkyBox() {
 	glRotatef(playerInstance->getYrot(), 0, 1, 0);
 	float side = 5000.0f;
 
-	GLfloat ambientLightColor[] = {0.06f, 0.06f, 0.06f, 1.0f};
+	GLfloat ambientLightColor[] = {0.03f, 0.03f, 0.03f, 1.0f};
+	GLfloat skyLightColor[] = {0.001f, 0.001f, 0.4f, 1.0f};
 	GLfloat lightPos[] = {0, 0, -side/2 + 10, 1.0f};
 	GLfloat lightDir[] = {0.0f, -1.0f, -1.0f};
 	
 
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLightColor);
 	glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLightColor);
 	glEnable(GL_LIGHT1);
+
+	glLightfv(GL_LIGHT0, GL_AMBIENT, skyLightColor);
+	glEnable(GL_LIGHT0);
+
 
 	glEnable(GL_TEXTURE_2D);
 
@@ -572,6 +576,7 @@ void drawSkyBox() {
 	
 	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
+	glDisable(GL_LIGHT0);
 }
 
 
@@ -823,7 +828,7 @@ void drawScene() {
 	atom2.draw();
 	atom3.draw();
 	building1.draw();
-	//heli.draw();
+	heli.draw();
 	hunter1.draw();
 	glutSwapBuffers();
 }
@@ -865,7 +870,7 @@ void update(int value) {
 		vertiOff -= 0.5f;
 	}
 
-	//heli.followFlightPath();
+	heli.followFlightPath();
 	hunter1.followPath();
 
 	glutPostRedisplay();
@@ -924,22 +929,24 @@ int main(int argc, char** argv) {
 
 	hunter1 = Necromancer(800,0.0f,1300.0f);
 
-	int waypoints[12] = {
-		0, 4*PLAYER_EYE_HEIGHT, 800,
-		800, 4*PLAYER_EYE_HEIGHT, 800,
-		1600, 4*PLAYER_EYE_HEIGHT, 800,
-		1600, 4*PLAYER_EYE_HEIGHT, 1600
+	int waypoints[6*4] = {
+		1000, 6*PLAYER_EYE_HEIGHT, 1000,
+		3000, 4*PLAYER_EYE_HEIGHT, 3000,
+		3000, 6*PLAYER_EYE_HEIGHT, 1000,
+		1000, 4*PLAYER_EYE_HEIGHT, 3000,
+		1000, 6*PLAYER_EYE_HEIGHT, 1000,
+		2500, 4*PLAYER_EYE_HEIGHT, 2500
 	};
 	int k = 0;
 	for(k = 0; k<12; k++) {
 		cout << waypoints[k] << endl;
 	}
 
-	int numWaypoints = 4;
+	int numWaypoints = 6;
 	FlightPath fp = FlightPath(waypoints, numWaypoints, true);
 
-	//heli = Helicopter(200.0f, 4*PLAYER_EYE_HEIGHT, 200.0f);
-	//heli.setFlightPath(fp);
+	heli = Helicopter(200.0f, 4*PLAYER_EYE_HEIGHT, 200.0f);
+	heli.setFlightPath(fp);
 
 	sittingDuck1 = SittingDuck(800.0f, PLAYER_EYE_HEIGHT, 100.0f, 5);
 	duckList.push_back(sittingDuck1);

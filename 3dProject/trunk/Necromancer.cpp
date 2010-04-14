@@ -22,7 +22,7 @@ void Necromancer::init() {
 	previousAnimTime = clock();
 	speed = 1;
 	setHeight(10);
-	setWidth(3);
+	setWidth(5);
 }
 
 void Necromancer::draw() {
