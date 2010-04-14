@@ -20,9 +20,9 @@ void Necromancer::init() {
 	model = MD2Model::load("usmc.md2");
 	model->setAnimation("run");
 	previousAnimTime = clock();
-	speed = 1;
-	setHeight(10);
-	setWidth(5);
+	speed = 2;
+	setHeight(15);
+	setWidth(10);
 }
 
 void Necromancer::draw() {
