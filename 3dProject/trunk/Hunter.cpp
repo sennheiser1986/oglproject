@@ -165,7 +165,6 @@ void Hunter::followPath() {
 				}
 			}
 			if(useWaypoints) {
-				cout << flightPath->hasWaypoints() << " " << reset << endl;
 				if(flightPath->hasWaypoints() && (!reset)) {
 					int xPos = flightPath->getX();
 					int yPos = flightPath->getY();
@@ -319,6 +318,7 @@ void Hunter::setHeight(float inHeight) {
 
 void Hunter::setHit() {
 	hit = true;
+	resetPath();
 }
 
 bool Hunter::isHit() {

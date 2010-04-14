@@ -105,8 +105,8 @@ bool Map::debugMark(int row, int col, int cost) {
 
 int * Map::convertWorldCoordToMapCoord(int x, int y) {
 	
-	int col = floor((double)(x / cellSide));
-	int row = floor((double)(y / cellSide));
+	int col = (int)floor((double)(x / cellSide));
+	int row = (int)floor((double)(y / cellSide));
 
 	int * arr = new int[2];
 	arr[0] = row;
@@ -133,6 +133,14 @@ int Map::getWidth() {
 
 int Map::getHeight() {
 	return height;
+}
+
+int Map::getRealHeight() {
+	return height * cellSide;
+}
+
+int Map::getRealWidth() {
+	return width * cellSide;
 }
 
 int Map::getCellSide() {
