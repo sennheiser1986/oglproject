@@ -99,7 +99,16 @@ Atom::Atom(float xIn, float yIn, float zIn, int numElec) {
 }
 
 Atom::~Atom() {
-
+	delete radius;
+	delete speed;
+	delete shellRChan;
+	delete shellGChan;
+	delete shellBChan;
+	delete rotation;
+	delete phase;
+	delete shellNumber;
+	delete vecNum;
+	delete direction;
 }
 
 void Atom::draw() {

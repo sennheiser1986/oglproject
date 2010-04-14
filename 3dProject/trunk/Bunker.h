@@ -13,5 +13,5 @@ public:
 		void changeTexture(int texture, int index);
 		float getWidth();		
 		float getHeight();
-		void draw();
+		virtual void draw();
 };
