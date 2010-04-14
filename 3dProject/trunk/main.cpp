@@ -608,6 +608,7 @@ void spawnHunter() {
 	hunter1->setX(x);
 	hunter1->setY(y);
 	hunter1->setZ(z);
+	hunter1->unsetHit();
 }
 
 void moveBullets() {

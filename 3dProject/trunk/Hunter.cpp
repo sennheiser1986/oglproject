@@ -321,6 +321,10 @@ void Hunter::setHit() {
 	resetPath();
 }
 
+void Hunter::unsetHit() {
+	hit = false;
+}
+
 bool Hunter::isHit() {
 	return hit;
 }
