@@ -35,18 +35,18 @@ void Necromancer::draw() {
 		glutSolidSphere(getWidth(), 32,32);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glDisable(GL_COLOR_MATERIAL);
-	}
+	} else {
 
-	glRotatef(-90, 1, 0, 0);
-	glRotatef(yaw + 90, 0.0f, 0.0f, 1.0f);
-	glScalef(0.35f, 0.35f, 0.35f);
-	
-	clock_t currentTime = clock();
-	float timeDiff = (float)(currentTime - previousAnimTime) / CLOCKS_PER_SEC;
-	model->advance(timeDiff);
-	previousAnimTime = currentTime;
-	
-	model->draw();
-	
+		glRotatef(-90, 1, 0, 0);
+		glRotatef(yaw + 90, 0.0f, 0.0f, 1.0f);
+		glScalef(0.35f, 0.35f, 0.35f);
+		
+		clock_t currentTime = clock();
+		float timeDiff = (float)(currentTime - previousAnimTime) / CLOCKS_PER_SEC;
+		model->advance(timeDiff);
+		previousAnimTime = currentTime;
+		
+		model->draw();
+	}
 	glPopMatrix();
 }
