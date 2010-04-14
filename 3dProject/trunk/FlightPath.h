@@ -11,11 +11,11 @@ public:
 	FlightPath(void);
 	~FlightPath(void);
 	FlightPath(int * inWaypoints, int inNumWaypoints, bool inLoop);
-	bool  FlightPath::next();
-	bool FlightPath::hasWaypoints();
-	int FlightPath::getX();
-	int FlightPath::getY();
-	int FlightPath::getZ();
+	bool next();
+	bool hasWaypoints();
+	int getX();
+	int getY();
+	int getZ();
 	void printWaypoints();
 	void clear();
 };

@@ -28,5 +28,5 @@ public:
 	Atom();
 	Atom(float xIn, float yIn, float zIn, int numElec);
 	~Atom();
-	void draw();
+	virtual void draw();
 };
