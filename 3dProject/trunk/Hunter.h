@@ -4,6 +4,8 @@
 #include "FlightPath.h"
 #include "PathFind.h"
 #include <ctime>
+#include <cstdlib>
+#include <cmath>
 
 #ifdef __APPLE__
 #include <OpenGL/OpenGL.h>
