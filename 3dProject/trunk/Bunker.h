@@ -1,6 +1,8 @@
 #ifndef BUNKER
 #define BUNKER
 
+#include StaticObject
+
 class Bunker :
 	public StaticObject
 {

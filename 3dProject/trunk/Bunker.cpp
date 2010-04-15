@@ -1,4 +1,3 @@
-#include "StaticObject.h"
 #include "Bunker.h"
 #include "Map.h"
 #include <math.h>
