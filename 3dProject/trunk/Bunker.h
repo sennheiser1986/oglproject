@@ -1,7 +1,7 @@
 #ifndef BUNKER
 #define BUNKER
 
-#include StaticObject
+#include "StaticObject.h"
 
 class Bunker :
 	public StaticObject
