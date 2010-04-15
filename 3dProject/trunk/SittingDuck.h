@@ -7,8 +7,8 @@ class SittingDuck :
 public:
 	SittingDuck(void);
 	~SittingDuck(void);
-	SittingDuck::SittingDuck(int xIn, int yIn, int zIn, int rIn);
-	void SittingDuck::hit();
+	SittingDuck(int xIn, int yIn, int zIn, int rIn);
+	void hit();
 	void draw();
 	float getR();
 private:

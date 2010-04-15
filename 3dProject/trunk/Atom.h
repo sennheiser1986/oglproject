@@ -2,7 +2,8 @@
 #include "StaticObject.h"
 #include <ctime>
 
-class Atom: public StaticObject {
+class Atom :
+	public StaticObject {
 private:
 	int numElectrons;
 	// electrons per shell <=  2 * [(shellNumber) ^ 2]

@@ -26,11 +26,11 @@ public:
 	~Helicopter(void);
 	
 	Helicopter(float xIn, float yIn, float zIn);
-	void Helicopter::moveToPosition(float xPos, float yPos, float zPos);
-	void Helicopter::draw();
-	void Helicopter::rotate(float degrees);	
-	void Helicopter::setFlightPath(FlightPath inFp);
-	void Helicopter::followFlightPath();
+	void moveToPosition(float xPos, float yPos, float zPos);
+	void draw();
+	void rotate(float degrees);	
+	void setFlightPath(FlightPath inFp);
+	void followFlightPath();
 private:
 	bool flightPathSet;
 	float pitch;
@@ -38,13 +38,13 @@ private:
 	int speed;
 	FlightPath fp;
 	MD2Model* model;
-	void Helicopter::init();
-	void Helicopter::pitchMoveForward();
-	void Helicopter::pitchMoveBackward();
-	void Helicopter::pitchLevel();
-	void Helicopter::pitchDegrees(float degrees);	
-	bool Helicopter::hasToRotate(float degrees);
-	bool Helicopter::hasToChangePitch(float degrees);
+	void init();
+	void pitchMoveForward();
+	void pitchMoveBackward();
+	void pitchLevel();
+	void pitchDegrees(float degrees);	
+	bool hasToRotate(float degrees);
+	bool hasToChangePitch(float degrees);
 };
 
 
