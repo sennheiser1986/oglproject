@@ -54,7 +54,6 @@ bool FlightPath::hasWaypoints() {
 
 void FlightPath::clear() {
 	numWaypoints = 0;
-	delete waypoints;
 }
 
 void FlightPath::printWaypoints() {
