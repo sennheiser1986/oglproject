@@ -20,7 +20,7 @@ public:
 	void PrintNodeInfo(); 
 
 private:
-	int MapSearchNode::GetMap(int x, int y);
+	int GetMap(int x, int y);
 
 };
 

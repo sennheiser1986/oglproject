@@ -1,8 +1,7 @@
-#include <math.h>
+#include <cmath>
 #include "Helicopter.h"
 #define PI 3.14159265
 
-using namespace std;
 
 Helicopter::Helicopter(void)
 {
@@ -76,7 +75,7 @@ void Helicopter::pitchDegrees(float degrees) {
 }
 
 bool Helicopter::hasToChangePitch(float degrees) {
-	float diff = pitch - degrees;
+	float diff = pitch - degrees; 
 	return (abs(diff) > 0.1f);
 }
 

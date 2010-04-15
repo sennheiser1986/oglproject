@@ -23,7 +23,7 @@ private:
 	clock_t atomTime;
 	float r;
 	
-	void Atom::init();
+	void init();
 
 public:	
 	Atom();
