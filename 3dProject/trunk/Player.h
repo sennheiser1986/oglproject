@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PLAYER_H
+#define PLAYER_H
 
 class Player
 {
@@ -31,8 +32,8 @@ private:
 
 	void fixValues();
 
-	Player(const Player &){};
-	Player & operator=(const Player &){};
 
 	static Player * _instance;
 };
+
+#endif

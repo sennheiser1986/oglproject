@@ -12,8 +12,6 @@ private:
 
   Map();
   ~Map();
-  Map(const Map &){};
-  Map & operator=(const Map &){};
  
 public:
   static const int INACCESSIBLE_FIELD_VALUE = 9;
@@ -31,7 +29,7 @@ public:
   int getRealWidth();
   int getRealHeight();
   int getCellSide();
-  void writeToFile(char * filename);
+  void writeToFile(const char * filename);
 };
 
 

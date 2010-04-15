@@ -6,8 +6,9 @@ class MapSearchNode
 {
 
 public:
-	unsigned int x;	 // the (x,y) positions of the node
-	unsigned int y;	
+	//changed from unsigned int to int because of compiler warnings
+	int x;	 // the (x,y) positions of the node
+	int y;	
 	
 	MapSearchNode() { x = y = 0; }
 	MapSearchNode( unsigned int px, unsigned int py ) { x=px; y=py; }

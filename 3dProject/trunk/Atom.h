@@ -1,4 +1,6 @@
-#pragma once
+#ifndef ATOM_H
+#define ATOM_H
+
 #include "StaticObject.h"
 #include <ctime>
 
@@ -31,3 +33,5 @@ public:
 	~Atom();
 	virtual void draw();
 };
+
+#endif

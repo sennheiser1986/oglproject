@@ -1,4 +1,6 @@
-#pragma once
+#ifndef WALL_H
+#define WALL_H
+
 #include "StaticObject.h"
 
 class Wall: 
@@ -19,3 +21,4 @@ private:
 	int wallTexture;
 	bool mark;
 };
+#endif

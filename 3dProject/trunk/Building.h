@@ -1,4 +1,6 @@
-#pragma once
+#ifndef BUILDING_H
+#define BUILDING_H
+
 #include "StaticObject.h"
 #include "Wall.h"
 #include <list>
@@ -23,3 +25,5 @@ private:
 
 	std::list<Wall> walls;
 };
+
+#endif
