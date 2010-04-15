@@ -1,5 +1,5 @@
 #include <iostream>
-//#include <stdlib.h>
+#include <stdlib.h>
 #include <math.h>
 #include <ctime>
 #include <list>
@@ -10,7 +10,7 @@
 #include "SittingDuck.h"
 #include "Bullet.h"
 #include "Helicopter.h"
-#include "Flightpath.h"
+#include "FlightPath.h"
 #include "Hunter.h"
 #include "Necromancer.h"
 #include "Map.h"

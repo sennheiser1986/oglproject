@@ -4,7 +4,6 @@
 #include <cmath>
 #include <iostream>
 #include "Map.h"
-#include "stlastar.h"
 #include "MapSearchNode.h"
 #include "PathFind.h"
 
