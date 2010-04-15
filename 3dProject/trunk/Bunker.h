@@ -1,6 +1,7 @@
 #pragma once
 
-class Bunker: public StaticObject {
+class Bunker :
+	public StaticObject {
 private:
 		float w; //Width
 		float h; //Height

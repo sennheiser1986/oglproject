@@ -29,7 +29,7 @@ private:
 	Player(void);
 	~Player(void);
 
-	void Player::fixValues();
+	void fixValues();
 
 	Player(const Player &){};
 	Player & operator=(const Player &){};

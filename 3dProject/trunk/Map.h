@@ -28,7 +28,7 @@ public:
   int getRealWidth();
   int getRealHeight();
   int getCellSide();
-  void Map::writeToFile(char * filename);
+  void writeToFile(char * filename);
 };
 
 
