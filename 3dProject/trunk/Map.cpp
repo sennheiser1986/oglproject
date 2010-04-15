@@ -48,24 +48,20 @@ bool Map::markBlock(int row, int col, int h, int w, int cost) {
 	int maxCol = col + w; 
 
 	int c = 0;
+	bool errors = false;
 	for(int i = minRow; i < maxRow; i++) {
 		for(int j = minCol; j < maxCol; j++) {
 			if(!(mark(i,j,cost))) {
-				//return false;
+				errors = true;
 			} else {
 				c++;
 			}
 		}
 	}
-	c;
-	return true;
+	return errors;
 }
 
 int * Map::convertMapCoordToWorldCoord(int row, int col) {
-	int cols = width;
-	int rows = height;
-
-	
 	int x = cellSide *  col + cellSide/2;
 	int y = cellSide *  row + cellSide/2;
 
@@ -76,7 +72,7 @@ int * Map::convertMapCoordToWorldCoord(int row, int col) {
 	return arr;
 }
 
-void Map::writeToFile(char * filename) {
+void Map::writeToFile(const char * filename) {
 	ofstream myfile;
 	myfile.open (filename);
 	for(int i = 0; i < height; i++) {

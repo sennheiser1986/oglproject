@@ -36,10 +36,6 @@ Wall::Wall(float xIn, float yIn, float zIn, float inWidth, float inLength, float
 		int markWidth = maxCol - minCol;
 		int markHeight = maxRow - minRow;
 
-		if(length > width) {
-			int f = 0 +  1;
-		}
-
 		instance->markBlock(minRow, minCol, markHeight, markWidth, 9);
 	}
 }

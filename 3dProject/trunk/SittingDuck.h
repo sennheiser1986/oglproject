@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SITTINGDUCK_H
+#define SITTINGDUCK_H
+
 #include "StaticObject.h"
 
 class SittingDuck :
@@ -17,3 +19,4 @@ private:
 	float blueChan;
 	float r;
 };
+#endif

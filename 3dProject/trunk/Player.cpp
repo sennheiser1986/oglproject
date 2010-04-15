@@ -50,7 +50,7 @@ float Player::getZ() {
 
 int * Player::getGridCoords() {
 	Map * instance = Map::getInstance();
-	return instance->convertWorldCoordToMapCoord(xPos, zPos);
+	return instance->convertWorldCoordToMapCoord((int)xPos, (int)zPos);
 }
 
 float Player::getYrot() {

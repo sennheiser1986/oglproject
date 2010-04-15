@@ -1,4 +1,5 @@
-#pragma once
+#ifndef FLIGHTPATH_H
+#define FLIGHTPATH_H
 
 class FlightPath
 {
@@ -19,3 +20,5 @@ public:
 	void printWaypoints();
 	void clear();
 };
+
+#endif

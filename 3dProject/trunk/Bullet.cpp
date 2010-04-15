@@ -47,8 +47,6 @@ bool Bullet::move() {
 	//cout << "killit" << endl;
 		return true;
 	} else {
-		float xrot = xrotrad * 180 / PI;
-		float yrot = yrotrad * 180 / PI;
 		x += sin(yrotrad) * speed * (time + 0.01);
 		z -= cos(yrotrad) * speed * (time + 0.01);
 		y -= sin(xrotrad) * speed * (time + 0.01);

@@ -174,7 +174,6 @@ void keyboardHandler() {
 		speed = speed / 2;
 	}
 
-	bool collision = false;
 	float oldXPos = playerInstance->getX();
 	float oldZPos = playerInstance->getZ();
 
@@ -450,8 +449,9 @@ void drawSkyBox() {
 
 	GLfloat ambientLightColor[] = {0.03f, 0.03f, 0.03f, 1.0f};
 	GLfloat skyLightColor[] = {0.001f, 0.001f, 0.4f, 1.0f};
-	GLfloat lightPos[] = {0, 0, -side/2 + 10, 1.0f};
-	GLfloat lightDir[] = {0.0f, -1.0f, -1.0f};
+	//unused:
+	//GLfloat lightPos[] = {0, 0, -side/2 + 10, 1.0f};
+	//GLfloat lightDir[] = {0.0f, -1.0f, -1.0f};
 	
 
 	glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLightColor);
