@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <cmath>
 #include "Helicopter.h"
 #define PI 3.14159265
