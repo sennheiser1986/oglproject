@@ -1,5 +1,6 @@
 #include <math.h>
 #include "stlastar.h"
+#include "Map.h"
 
 class MapSearchNode
 {
