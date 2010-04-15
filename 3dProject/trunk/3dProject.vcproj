@@ -324,11 +324,111 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
+				RelativePath=".\textures\artesis.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\back.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\checkerboard.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\concrete.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\front_gun_center.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\front_gun_left.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\front_gun_right.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\gun_2_layers_16w-9h.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\gun_2_layers_shooting_16w-9h.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\heightmap.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\helicopter1.bmp"
 				>
 			</File>
 			<File
+				RelativePath=".\textures\hotdesert_negative_x.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\hotdesert_negative_y.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\hotdesert_negative_z.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\hotdesert_positive_x.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\hotdesert_positive_y.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\hotdesert_positive_z.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\left.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\necr.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\NightSkyBK.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\NightSkyDN.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\NightSkyFT.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\NightSkyLF.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\NightSkyRT.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\NightSkyUP.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\right.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\textures\top.bmp"
 				>
 			</File>
 			<File
