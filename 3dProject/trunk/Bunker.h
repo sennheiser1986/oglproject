@@ -1,7 +1,9 @@
-#pragma once
+#ifndef BUNKER
+#define BUNKER
 
 class Bunker :
-	public StaticObject {
+	public StaticObject
+{
 private:
 		float w; //Width
 		float h; //Height
@@ -16,3 +18,5 @@ public:
 		float getHeight();
 		virtual void draw();
 };
+
+#endif
