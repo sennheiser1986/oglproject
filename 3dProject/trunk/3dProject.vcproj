@@ -396,7 +396,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\necr.bmp"
+				RelativePath=".\models\necr.bmp"
 				>
 			</File>
 			<File
@@ -432,7 +432,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\usmc.bmp"
+				RelativePath=".\models\usmc.bmp"
 				>
 			</File>
 		</Filter>
@@ -531,15 +531,15 @@
 			>
 		</File>
 		<File
-			RelativePath=".\necromancer.md2"
+			RelativePath=".\models\necromancer.md2"
 			>
 		</File>
 		<File
-			RelativePath=".\README.txt"
+			RelativePath=".\readme.txt"
 			>
 		</File>
 		<File
-			RelativePath=".\usmc.md2"
+			RelativePath=".\models\usmc.md2"
 			>
 		</File>
 	</Files>
