@@ -1,7 +1,15 @@
 oglproject_linux_x86-64 :
-	filetype: ELF 64-bit LSB executable
-	platform: linux x86-64
-	compiler: gcc-4.4.1
+	filetype:      ELF 64-bit LSB executable
+	platform:      intel x86-64
+	compiler:      gcc-4.4.1
+	distribution:  OpenSUSE 11.2
+	glibc-2.6.4
+	
+oglproject_linux_x86-32 :
+	filetype:      ELF 32-bit LSB executable
+	platform:      intel 80386
+	compiler:      gcc-4.4.1
+	distribution:  OpenSUSE 11.2
 	glibc-2.6.4
 	
 oglproject_windows_32bit.exe :
