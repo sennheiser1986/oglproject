@@ -862,8 +862,8 @@ void drawScene() {
 	heli.draw();
 	hunter1->draw();
 
-	cout << "Player position: " << playerInstance->getX() << " "  << playerInstance->getZ()
-		<< " Hunter position: " << hunter1->getX() << " " << hunter1->getZ() << endl;
+//	cout << "Player position: " << playerInstance->getX() << " "  << playerInstance->getZ()
+//		<< " Hunter position: " << hunter1->getX() << " " << hunter1->getZ() << endl;
 	glutSwapBuffers();
 }
 
