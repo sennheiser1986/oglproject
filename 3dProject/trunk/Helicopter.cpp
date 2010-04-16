@@ -179,7 +179,7 @@ void Helicopter::draw() {
 }
 
 void Helicopter::init() {
-	   model = MD2Model::load("models/helicopter.md2");
+	   model = MD2Model::load("helicopter.md2");
 	   flightPathSet = false; 
 	   yaw = 0;
 	   pitch = 0;
