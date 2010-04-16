@@ -18,8 +18,11 @@ public:
 	int * getGridCoords();
 	float getEyeheight();
 	static Player * getInstance();
+	bool isHit();
+	void setHit(bool inHit);
 
 private:
+	bool hit;
 	float xPos;
 	float yPos;
 	float zPos;
