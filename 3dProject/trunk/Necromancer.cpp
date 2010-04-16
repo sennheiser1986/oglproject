@@ -17,7 +17,7 @@ Necromancer::Necromancer(float xIn, float yIn, float zIn)
 }
 
 void Necromancer::init() {
-	model = MD2Model::load("usmc.md2");
+	model = MD2Model::load("models/usmc.md2");
 	model->setAnimation("run");
 	previousAnimTime = clock();
 	speed = 2;
