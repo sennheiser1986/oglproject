@@ -519,11 +519,23 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath=".\astar_license.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\astar_readme.txt"
+			>
+		</File>
+		<File
 			RelativePath=".\helicopter.md2"
 			>
 		</File>
 		<File
 			RelativePath=".\necromancer.md2"
+			>
+		</File>
+		<File
+			RelativePath=".\README.txt"
 			>
 		</File>
 		<File
