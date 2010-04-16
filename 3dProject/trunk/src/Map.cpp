@@ -37,7 +37,7 @@ Map::Map() {
 }
 
 Map::~Map() {
-	delete grid;
+	//delete grid;
 }
 
 bool Map::markBlock(int row, int col, int h, int w, int cost) {
