@@ -8,7 +8,7 @@ Player * Player::_instance = 0;
 
 Player::Player(void)
 {
-
+	hit = false;
 }
 
 Player::~Player(void)
@@ -88,14 +88,27 @@ void Player::fixValues() {
 
 
 void Player::move(float xIn, float yIn, float zIn) {
-	xPos += xIn;
-	yPos += yIn;
-	zPos += zIn;
+	if(!hit) {
+		xPos += xIn;
+		yPos += yIn;
+		zPos += zIn;
+	}
 }
 
 Player * Player::getInstance() {
 	if(!_instance) {
-		_instance = new Player;
+		_instance = new Player();
 	}
 	return _instance;
+}
+
+bool Player::isHit() {
+	return hit;
+}
+
+void Player::setHit(bool inHit) {
+	hit = inHit;
+	if(hit) {
+		cout << "Player is hit!" << endl;
+	}
 }
