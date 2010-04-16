@@ -80,25 +80,7 @@ void Hunter::draw() {
 	glVertex3f(1,0,1);
 	glVertex3f(-1,0,1);
 	glEnd();
-
 	
-	//Vec3f vecCenter = Vec3f(0, 1, 0);
-	//Vec3f vecUL = Vec3f(-1, 0, -1);
-	//Vec3f vecUR = Vec3f(1, 0, -1);
-	//Vec3f vecLR = Vec3f(1, 0, 1);
-	//Vec3f vecLL = Vec3f(-1, 0, 1);
-
-	//Vec3f diff1 = vecUL - vecCenter;
-	//Vec3f diff2 = vecUR - vecCenter;
-	//Vec3f diff3 = vecLR - vecCenter;
-	//Vec3f diff4 = vecLR - vecCenter;
-
-	//Vec3f cross1 = diff1.cross(diff2);
-	//Vec3f cross2 = diff2.cross(diff3);
-	//Vec3f cross3 = diff3.cross(diff4);
-	//Vec3f cross4 = diff4.cross(diff1);
-
-
 	glBegin(GL_TRIANGLE_FAN);
 	glVertex3f(0,1,0);
 	//glNormal3f(cross1[0], cross1[1], cross1[2]);
@@ -126,13 +108,15 @@ float Hunter::getWidth() {
 }
 
 void Hunter::followPath() {
-	if(!hit) {
+	if(!hit) { //only move if not hit
 		Player * playerInstance = Player::getInstance();
 		Map * mapInstance = Map::getInstance();
 		if(getDistance(playerInstance->getX(), playerInstance->getY(), playerInstance->getZ()) <= speed) {
+			//set to true if player is close enough
 			playerCaught = true;
 		}
 		if(!playerCaught) {
+			//we haven't caught Player, so we hunt him down
 			bool reset = false;			
 			
 			int * playerCoords = playerInstance->getGridCoords();
@@ -144,6 +128,9 @@ void Hunter::followPath() {
 			int hunterCol = coords[1];
 
 			if(pf.existStraightPath(hunterRow, hunterCol, playerRow, playerCol)) {
+				//there is an unobstructed path to the player
+				//(line of sight)
+				//so we can just "move closer"
 				playerVisible = true;
 				useWaypoints  = false;
 				playerLastSeenX = playerInstance->getX();
@@ -151,12 +138,20 @@ void Hunter::followPath() {
 				playerLastSeenZ = playerInstance->getZ();
 				moveToPlayer();
 			} else {
+				//there is an obstruction around which we have to move
 				if(playerVisible) {
+					//player WAS visible, 
+					//and is not anymore
 					playerVanished = true;
 				}
 				playerVisible = false;
 			}
 			if(playerVanished) {
+				//go to the position where the player was last seen
+				//if we already got there, and the player is still not visible
+				//(otherwise we wouldn't be in this scope)
+				//this means that we have to calculate a path to the player
+				//because we're not going to get there using line of sight only
 				if(getDistance(playerLastSeenX, playerLastSeenY, playerLastSeenZ) <= speed) {
 					useWaypoints = true;
 					reset = true;
@@ -165,6 +160,11 @@ void Hunter::followPath() {
 				}
 			}
 			if(useWaypoints) {
+				//this piece of code is reached when we need waypoints
+				//because there is no line of sight
+
+				//make sure that our path has been calculated
+				//and that we don't need a new one
 				if(flightPath->hasWaypoints() && (!reset)) {
 					int xPos = flightPath->getX();
 					int yPos = flightPath->getY();
@@ -172,9 +172,11 @@ void Hunter::followPath() {
 
 					bool go = true;
 					float dst = sqrt(pow((xPos - x),2) + pow((yPos - y),2) + pow((zPos - z),2));
-					if(dst <= speed) {
-						go = flightPath->next();
+					
+					if(dst <= speed) { // we have reached the current waypoint
+						go = flightPath->next(); // get next waypoint
 						if(! go) {
+							//there was no next waypoint
 							reachedEndOfPath = true;
 						}
 						xPos = flightPath->getX();
@@ -189,11 +191,15 @@ void Hunter::followPath() {
 						int playY = playerInstance->getY();
 						int playZ = playerInstance->getZ();
 						if(getDistance(playX, playY, playZ) >= speed) {
+							//we have reached the end of the path
+							//and the player is still far away
+							//==> path is expired
 							reset = true;
 						}
-
 					}
 				} else {
+					// we have to recalculate the path because
+					// there is none or it has become expired
 					reset = false;
 					playerVanished = false;
 					resetPath();

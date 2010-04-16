@@ -31,18 +31,18 @@ void Helicopter::moveToPosition(float xPos, float yPos, float zPos) {
 	
 	float newyaw = atan2(diffX,diffZ) * 180 / PI;
 	
-	if(hasToRotate(newyaw)) {
+	if(hasToRotate(newyaw)) { //rotate before moving
 		if(hasToChangePitch(PITCH_LEVEL)) {
 			pitchLevel();
 		} else {
 			rotate(newyaw);
 		}
 	} else {
-		if(length > 80 || flightPathSet) {
-			if(hasToChangePitch(PITCH_FORWARD)) {
+		if(length > 80 || flightPathSet) { // only move if waypoint is far enough
+			if(hasToChangePitch(PITCH_FORWARD)) { //make nose tilt forward
 				pitchMoveForward();
 			} else {
-				float xNorm = diffX / length;
+				float xNorm = diffX / length; //do the actual move
 				float zNorm = diffZ / length;
 				float yNorm = diffY / length;
 
@@ -51,8 +51,8 @@ void Helicopter::moveToPosition(float xPos, float yPos, float zPos) {
 				y -= yNorm * speed;
 			}
 		} else {
-			if(hasToChangePitch(PITCH_LEVEL)) {
-				pitchLevel();
+			if(hasToChangePitch(PITCH_LEVEL)) { //we arent moving,
+				pitchLevel();                   //so we level the nose
 			}
 		}
 	}
