@@ -17,6 +17,13 @@ PathFind::~PathFind() {
 
 }
 
+
+/*line drawing:
+http://playtechs.blogspot.com/2007/03/raytracing-on-grid.html
+
+A*
+http://code.google.com/p/a-star-algorithm-implementation/
+*/
 bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, const bool exitOnObstruction)
 {
 	path.empty();

@@ -28,8 +28,7 @@ bool FlightPath::next() {
 		}
 	} else {
 		currWaypoint++;
-	}	
-	
+	}		
 	return true;	
 }
 
