@@ -57,6 +57,7 @@ clock_t pressTime = clock();
 clock_t releaseTime = clock();
 bool gunOn = false;
 bool spaceDown = false;
+bool qwerty = true;
 
 // textures base directory
 const string textureDir = "./textures/";
@@ -137,6 +138,10 @@ void handleKeyrelease(unsigned char key, int x1, int y1) {
 void handleKeypress(unsigned char key, int x1, int y1) {
 	//cout << "key : " << key << " " << (int)key << endl;
 	keys[(int) key] = true;
+
+	if(key == 'p') {
+		qwerty = !(qwerty); // toggle qwerty mode
+	}
 }
 
 //does player hit stuff?
@@ -167,18 +172,36 @@ void keyboardHandler() {
 	yrotrad = (playerInstance->getYrot() / 180 * 3.141592654f);
 	xrotrad = (playerInstance->getXrot() / 180 * 3.141592654f);
 
+
+	int backwards = 's';
+	int forwards  = 'w';
+	int left      = 'a';
+	int right     = 'd';
+	int rotLeft   = 'q';
+	int rotRight  = 'e';
+	int gunLeft   = 'z';
+	int gunCenter = 'x';
+	int gunRight  = 'c';
+
+	if(!qwerty) {
+		forwards = 'z';
+		left     = 'q';
+		gunLeft  = 'w';
+		rotLeft  = 'a';
+	}
+
 	if(keys[27]){  //Escape key
 		exit(0);
-	}	
+	}
 
-	if((keys['w'] || keys['s'])  && (keys['a'] || keys['d'])) {
+	if((keys[forwards] || keys[backwards])  && (keys[left] || keys[right])) {
 		speed = speed / 2;
 	}
 
 	float oldXPos = playerInstance->getX();
 	float oldZPos = playerInstance->getZ();
 
-	if(keys['w']){  // move camera closer
+	if(keys[forwards]){  // move camera closer
 		//cout << "w" << " " << endl;	
 		playerInstance->move(
 			float(sin(yrotrad)) * speed * keySens,
@@ -186,21 +209,21 @@ void keyboardHandler() {
 			-float(cos(yrotrad)) * speed * keySens
 		);	
 	}
-	if(keys['s']){  // move camera farther
+	if(keys[backwards]){  // move camera farther
 		playerInstance->move(
 			-float(sin(yrotrad)) * speed * keySens,
 			0,
 			float(cos(yrotrad)) * speed * keySens
 		);
 	}
-	if(keys['a']){  // move camera left
+	if(keys[left]){  // move camera left
 		playerInstance->move(
 			-float(cos(yrotrad)) * speed * keySens,
 			0,
 		    -float(sin(yrotrad)) * speed * keySens
 		);
 	}
-	if(keys['d']){  // move camera right
+	if(keys[right]){  // move camera right
 		playerInstance->move(
 			float(cos(yrotrad)) * speed * keySens,
 			0,
@@ -209,30 +232,30 @@ void keyboardHandler() {
 	}
 	
 	//collision detection
-	if(keys['w'] || keys['s']  || keys['a'] || keys['d']) {
+	if(keys[forwards] || keys[backwards]  || keys[left] || keys[right]) {
 		if(collides()) {
 			playerInstance->setX(oldXPos);
 			playerInstance->setZ(oldZPos);
 		}
 	}
 
-	if(keys['q']){  // rotate camera left
+	if(keys[rotLeft]){  // rotate camera left
 		playerInstance->rotate(0, -1.0f); 
 	}
-	if(keys['e']){  // rotate camera right			
+	if(keys[rotRight]){  // rotate camera right			
 		playerInstance->rotate(0, 1.0f); 
 	}
-	if(keys['z']){  // move gun left
+	if(keys[gunLeft]){  // move gun left
 		_textureFront = _textureFGL;
 		bunker1.changeTexture(_textureFront, 0);
 		bunker2.changeTexture(_textureFront, 0);
 	}
-	if(keys['c']){  // move gun right
+	if(keys[gunRight]){  // move gun right
 		_textureFront = _textureFGR;
 		bunker1.changeTexture(_textureFront, 0);
 		bunker2.changeTexture(_textureFront, 0);
 	}
-	if(keys['x']){  // center gun 
+	if(keys[gunCenter]){  // center gun 
 		_textureFront = _textureFGC;
 		bunker1.changeTexture(_textureFront, 0);
 		bunker2.changeTexture(_textureFront, 0);
@@ -623,6 +646,7 @@ void moveBullets() {
 		bool addAgain = true;
 		bulletList.remove(b);
 		if(b.move()) {
+			// move returns true if  the bullet has reached its timeout
 			//cout << "removing bullet" << endl;
 			addAgain = false;
 			//cout << bulletList.size() << endl;
@@ -637,6 +661,7 @@ void moveBullets() {
 				hunter1->setHit();
 				cout << "Hit hunter, removing bullet" << endl;
 				spawnHunter();
+				addAgain = false;
 			}
 		}
 		if(addAgain) {
