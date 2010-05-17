@@ -135,6 +135,7 @@ void handleKeyrelease(unsigned char key, int x1, int y1) {
 }
 
 void handleKeypress(unsigned char key, int x1, int y1) {
+	//cout << "key : " << key << " " << (int)key << endl;
 	keys[(int) key] = true;
 }
 
@@ -639,7 +640,6 @@ void moveBullets() {
 			}
 		}
 		if(addAgain) {
-			//cout << "check" << endl;
 			bulletList.push_back(b);
 		}
 	}
