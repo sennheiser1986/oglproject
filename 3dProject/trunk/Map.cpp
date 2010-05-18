@@ -6,8 +6,8 @@
 using namespace std;
 
 Map * Map::_instance = 0;
-int Map::width = 500;
-int Map::height = 500;
+int Map::width = 300;
+int Map::height = 300;
 int Map::cellSide = 10;
 
 void Map::setParams(int inWidth, int inHeight, int inCellSide) {
