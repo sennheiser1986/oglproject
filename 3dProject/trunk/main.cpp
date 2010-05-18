@@ -629,6 +629,7 @@ void spawnHunter() {
 	int x = coords[0];
 	int z = coords[1];
 	int y = 0;
+
 	hunter1->setX(x);
 	hunter1->setY(y);
 	hunter1->setZ(z);
@@ -826,14 +827,14 @@ void drawFloor(float y) {
 	
 
 	glNormal3f(0.0f, 1.0f, 0.0f);
-	glTexCoord2f(2000 / FLOOR_TEXTURE_SIZE, _pos / FLOOR_TEXTURE_SIZE);
+	glTexCoord2f(3000 / FLOOR_TEXTURE_SIZE, _pos / FLOOR_TEXTURE_SIZE);
 	glVertex3f(0, y, 0);
-	glTexCoord2f(2000 / FLOOR_TEXTURE_SIZE, (2000 + _pos) / FLOOR_TEXTURE_SIZE);
-	glVertex3f(0, y, 2000.0f);
-	glTexCoord2f(0.0f, (2000 + _pos) / FLOOR_TEXTURE_SIZE);
-	glVertex3f(2000.0f, y, 2000.0f);
+	glTexCoord2f(3000 / FLOOR_TEXTURE_SIZE, (3000 + _pos) / FLOOR_TEXTURE_SIZE);
+	glVertex3f(0, y, 3000.0f);
+	glTexCoord2f(0.0f, (3000 + _pos) / FLOOR_TEXTURE_SIZE);
+	glVertex3f(3000.0f, y, 3000.0f);
 	glTexCoord2f(0.0f, _pos / FLOOR_TEXTURE_SIZE);
-	glVertex3f(2000.0f, y, 0);
+	glVertex3f(3000.0f, y, 0);
 	
 	glEnd();
 
