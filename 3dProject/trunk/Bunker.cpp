@@ -1,3 +1,8 @@
+/* 
+ *   3dProject
+ *   Geert d'Hoine
+ *   (c) 2010
+ */ 
 #include "Bunker.h"
 #include "Map.h"
 #include <math.h>

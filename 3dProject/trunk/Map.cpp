@@ -1,3 +1,8 @@
+/* 
+ *   3dProject
+ *   Geert d'Hoine
+ *   (c) 2010
+ */ 
 #include "Map.h"
 #include <iostream>
 #include <fstream>

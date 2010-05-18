@@ -1,3 +1,9 @@
+/* 
+ *   3dProject
+ *   Geert d'Hoine
+ *   (c) 2010
+ */ 
+
 #include "Player.h"
 #include "Map.h"
 #include <iostream>

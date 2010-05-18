@@ -1,3 +1,8 @@
+/* 
+ *   3dProject
+ *   Geert d'Hoine
+ *   (c) 2010
+ */ 
 #ifndef HUNTER
 #define HUNTER
 #include "StaticObject.h"

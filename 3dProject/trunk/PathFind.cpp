@@ -1,5 +1,9 @@
-// raytrace_test.cpp : Defines the entry point for the console application.
-//
+/* 
+ *   3dProject
+ *   Geert d'Hoine
+ *   (c) 2010
+ */ 
+
 
 #include <cmath>
 #include <iostream>
@@ -19,10 +23,7 @@ PathFind::~PathFind() {
 
 
 /*line drawing:
-http://playtechs.blogspot.com/2007/03/raytracing-on-grid.html
-
-A*
-http://code.google.com/p/a-star-algorithm-implementation/
+based on: http://playtechs.blogspot.com/2007/03/raytracing-on-grid.html
 */
 bool PathFind::raytrace(const int x0, const int y0, const int x1, const int y1, const bool exitOnObstruction)
 {
@@ -141,6 +142,9 @@ void PathFind::getCalculatedPath(std::list<int*>& out) {
 	out = copyList;
 }
 
+/* A*:
+http://code.google.com/p/a-star-algorithm-implementation/
+*/
 void PathFind::astarSearch(int x0, int y0, int x1, int y1, list<int *>& out) {
 	AStarSearch<MapSearchNode> astarsearch;
 
