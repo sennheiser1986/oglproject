@@ -1,3 +1,8 @@
+/* 
+ *   3dProject
+ *   Geert d'Hoine
+ *   (c) 2010
+ */ 
 #ifndef FLIGHTPATH_H
 #define FLIGHTPATH_H
 

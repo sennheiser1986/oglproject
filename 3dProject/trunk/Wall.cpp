@@ -1,4 +1,8 @@
-#include "Wall.h"
+/* 
+ *   3dProject
+ *   Geert d'Hoine
+ *   (c) 2010
+ */ #include "Wall.h"
 #include "Map.h"
 
 #ifdef __APPLE__

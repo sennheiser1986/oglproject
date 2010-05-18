@@ -1,3 +1,8 @@
+/* 
+ *   3dProject
+ *   Geert d'Hoine
+ *   (c) 2010
+ */ 
 #include <iostream>
 #include <stdlib.h>
 #include <math.h>
