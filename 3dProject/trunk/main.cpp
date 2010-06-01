@@ -609,10 +609,8 @@ void drawSkyBox() {
 }
 
 int makeRandomNumber(int lowest, int highest) {
-	int random_integer;
 	int range=(highest-lowest)+1;
-	random_integer = lowest+int(range*rand()/(RAND_MAX + 1.0));
-	
+	int random_integer = rand() % range + lowest;
 	return random_integer;
 }
 
@@ -621,8 +619,8 @@ void spawnHunter() {
 	int row = 0;
 	int col = 0;
 	while(!stop) {
-		col = makeRandomNumber(mapInstance->getWidth()  / 7 * 3, mapInstance->getWidth()  / 7 * 5);
-		row = makeRandomNumber(mapInstance->getHeight() / 7 * 3, mapInstance->getHeight() / 7 * 5);
+		col = makeRandomNumber(mapInstance->getWidth()  / 7 * 1, mapInstance->getWidth()  / 7 * 3);
+		row = makeRandomNumber(mapInstance->getHeight() / 7 * 1, mapInstance->getHeight() / 7 * 3);
 		int val = mapInstance->getValueAt(row, col);
  		if(val < 9 && val >= 0) {
 			stop = true;
@@ -630,6 +628,7 @@ void spawnHunter() {
 			stop = false;
 		}
 	}
+	
 	int * coords = mapInstance->convertMapCoordToWorldCoord(row,col);
 	int x = coords[0];
 	int z = coords[1];
